@@ -29,7 +29,11 @@ const NavItem = ({ title, icon, onClick, selected }) => {
         >
           {icon}
         </ListItemIcon>
-        <ListItemText primary={title} sx={{ color: selected ? '#0078D7' : 'black' }} />
+        <ListItemText
+          primary={title}
+          sx={{ color: selected ? '#0078D7' : 'black' }}
+          primaryTypographyProps={{ fontSize: '0.875rem' }}
+        />
       </ListItemButton>
     </ListItem>
   );

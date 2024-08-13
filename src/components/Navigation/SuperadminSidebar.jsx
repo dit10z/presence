@@ -20,8 +20,10 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import NavItem from './NavItem';
 
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
 const drawerWidth = 240;
-// const collapsedDrawerWidth = 60;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -59,6 +61,8 @@ const SuperAdminSidebar = () => {
     router.push('/login');
   };
 
+  const isMenuOpen = Boolean(anchorEl);
+
   const listMenu = [
     { title: 'Dashboard', icon: <DashboardIcon />, path: '/' },
     {
@@ -82,38 +86,54 @@ const SuperAdminSidebar = () => {
       <CssBaseline />
       <AppBar position="fixed" open={open} elevation={0}>
         <Toolbar
-          style={{
+          sx={{
             backgroundColor: 'white',
             boxShadow: 'none',
             borderBottom: '1px solid #E5E5E5',
             color: 'black',
+            justifyContent: 'space-between',
           }}
         >
-          <Typography variant="h6" fontWeight="bold" noWrap sx={{ flexGrow: 1 }}>
-            Hello Robert👋🏻
-          </Typography>
-          <Box>
-            <IconButton onClick={handleMenuClick} sx={{ p: 0 }}>
-              <Avatar alt="Robert Allen" src="/mock/dummy_avatar.png" variant="rounded" />
-            </IconButton>
-            <Typography variant="body2" sx={{ display: 'inline', ml: 1 }}>
-              Robert Allen
+          <Stack>
+            <Typography variant="h6" fontWeight="bold" noWrap>
+              Hello Robert👋🏻
             </Typography>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-            >
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </Menu>
+            <Typography variant="body2" color={`${theme.palette.grey[400]}`}>
+              Good Morning! Now it's Thursday, May 20th 2020.
+            </Typography>
+          </Stack>
+          <Box border={`1px ${theme.palette.grey[300]} solid`} borderRadius="0.5rem" padding="0.125rem">
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <IconButton sx={{ p: 0 }}>
+                <Avatar alt="Robert Allen" src="/mock/dummy_avatar.png" variant="rounded" />
+              </IconButton>
+              <Stack>
+                <Typography variant="body2" sx={{ display: 'inline' }}>
+                  Robert Allen
+                </Typography>
+                <Typography variant="body2" sx={{ display: 'inline' }} color={`${theme.palette.grey[400]}`}>
+                  SuperAdmin
+                </Typography>
+              </Stack>
+              <IconButton onClick={handleMenuClick} sx={{ p: 0 }}>
+                {isMenuOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={isMenuOpen}
+                onClose={handleMenuClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </Stack>
           </Box>
         </Toolbar>
       </AppBar>
@@ -135,13 +155,7 @@ const SuperAdminSidebar = () => {
         </DrawerHeader>
         <List sx={{ padding: '1rem' }}>
           {listMenu.map((item, index) => (
-            <NavItem
-              key={index}
-              title={item.title}
-              icon={item.icon}
-              // selected={router.pathname === item.path}
-              // onClick={() => router.push(item.path)}
-            />
+            <NavItem key={index} title={item.title} icon={item.icon} />
           ))}
         </List>
         <Box sx={{ flexGrow: 1 }} />
