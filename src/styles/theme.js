@@ -1,8 +1,11 @@
-import { createTheme } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
+import { createTheme } from '@mui/material/styles';
 
 // Create a theme instance.
 const theme = createTheme({
+  typography: {
+    fontFamily: ['"Lexend"', '"Mulish"', 'Arial', 'sans-serif'].join(','),
+  },
   palette: {
     primary: {
       main: '#556cd6',

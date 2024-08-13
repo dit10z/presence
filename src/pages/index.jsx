@@ -1,14 +1,14 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Administrators from "./Administators";
-// import Attendances from "./Attendances";
+import Attendances from "./Attendances";
 import Auth from "./Auth";
 import Companies from "./Companies";
 import Dashboard from "./Dashboard";
-// import Departments from "./Departments";
-// import Employees from "./Employees";
-// import Holidays from "./Holidays";
-// import Leaves from "./Leaves";
+import Departments from "./Departments";
+import Employees from "./Employees";
+import Holidays from "./Holidays";
+import Leaves from "./Leaves";
 import Settings from "./Settings";
 import PrivateRoute from "./PrivateRoute"; // Import PrivateRoute
 import { AdminSidebar, SuperadminSidebar } from "../components/Navigation";

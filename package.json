@@ -22,6 +22,10 @@
     "formik": "^2.4.6",
     "frontend-presence-app": "file:",
     "jwt-decode": "^4.0.0",
+<<<<<<< HEAD
+=======
+    "path": "^0.12.7",
+>>>>>>> ed35fc09cdff3fee8317fdb86faf9317092c45a3
     "react": "latest",
     "react-dom": "latest",
     "react-hook-form": "^7.52.2",
