@@ -1,101 +1,93 @@
-# Frontend Presence App - Material UI & Vite.js
+# Frontend Presence App
 
-## Overview
 
-This project is a frontend application designed for managing presence and various administrative tasks within an internal system. The project is built using **Vite.js** for fast development and build processes, and **Material UI** for a rich and responsive user interface. The application is modular, with clearly separated concerns for different features such as attendance tracking, employee management, and more.
 
-### Key Features:
-- **Role-Based Access Control**: Different dashboards and sidebars for Admin and Superadmin users.
-- **Dynamic Routing**: Handles navigation and access control based on user roles and authentication status.
-- **Form Handling**: Utilizes `react-hook-form` and `Yup` for form validation and management.
-- **State Management**: Manages global state using Redux, making it easier to handle complex state logic across the app.
+## Getting started
 
-## How to Use
+To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
-To start using the project, follow these steps:
+Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
-### 1. Clone the Repository:
+## Add your files
 
-```bash
-git clone https://gitlab.cloudias79.com/internal-apps/presence-app/frontend-presence-app.git
-cd frontend-presence-app
+- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
+- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+
+```
+cd existing_repo
+git remote add origin https://gitlab.cloudias79.com/internal-apps/presence-app/frontend-presence-app.git
+git branch -M main
+git push -uf origin main
 ```
 
-### 2. Install Dependencies:
+## Integrate with your tools
 
-```bash
-npm install
-```
+- [ ] [Set up project integrations](https://gitlab.cloudias79.com/internal-apps/presence-app/frontend-presence-app/-/settings/integrations)
 
-### 3. Run the Development Server:
+## Collaborate with your team
 
-```bash
-npm run dev
-```
+- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
+- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
+- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
+- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
+- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
 
-The application will be available at `http://localhost:3000`.
+## Test and Deploy
 
-## Project Structure
+Use the built-in continuous integration in GitLab.
 
-Here’s a general overview of the project structure:
+- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
+- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
+- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
+- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
+- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
 
-```plaintext
-frontend-presence-app/
-├── public/                   # Public assets like favicon, images, and index.html
-│   └── vite.svg
-├── src/                      # Main source code for the application
-│   ├── components/           # Reusable UI components
-│   │   ├── Forms/            # Forms for various entities like Administrator and Employee
-│   │   │   ├── Administrator/
-│   │   │   └── Employee/
-│   │   ├── Navigation/       # Navigation components like Sidebar and Header
-│   │   ├── Copyright.jsx     # Footer component
-│   │   ├── CustomButton.jsx  # Custom Button component
-│   │   └── CustomModal.jsx   # Custom Modal component
-│   ├── constants/            # Global constants like color schemes and messages
-│   │   ├── colors.js
-│   │   └── messages.js
-│   ├── pages/                # Main pages of the application
-│   │   ├── Administrators/
-│   │   ├── Attendances/
-│   │   ├── Auth/
-│   │   ├── Companies/
-│   │   ├── Dashboard/
-│   │   ├── Departments/
-│   │   ├── Employees/
-│   │   ├── Holidays/
-│   │   ├── Leaves/
-│   │   ├── PrivateRoute/     # Components for protecting routes that require authentication
-│   │   └── Settings/
-│   ├── redux/                # Redux store configuration and slices
-│   │   ├── actions.js        # Redux actions
-│   │   ├── reducers.js       # Root reducer combining all slices
-│   │   ├── selectors.js      # Selector functions for accessing state in the store
-│   │   └── store.js          # Store configuration
-│   ├── services/             # API services and utility functions
-│   │   ├── authProvider.js   # Authentication service provider
-│   │   └── axiosInstance.js  # Axios instance configuration for API calls
-│   ├── styles/               # Global styles and Material UI theme configuration
-│   │   └── theme.js
-│   ├── App.jsx               # Main application component handling routing and layout
-│   ├── main.jsx              # Entry point of the application where React is mounted to the DOM
-├── .gitignore                # Git ignore file
-├── index.html                # Main HTML template
-├── package-lock.json         # Auto-generated file for locking dependencies versions
-├── package.json              # NPM configuration file for the project
-└── README.md                 # Project documentation
-```
+***
 
-## The Idea Behind the Project
+# Editing this README
 
-This project leverages **Vite.js** for fast builds and hot module replacement (HMR), making the development process quick and efficient. **Material UI** is used to provide a consistent, modern, and responsive user interface. By integrating Redux for state management, the application is able to manage complex state logic, while `react-hook-form` ensures that form handling is robust and easy to maintain.
+When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
 
-## What's Next?
+## Suggestions for a good README
 
-Now that you have a working frontend application, you can further develop it by:
+Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
 
-- Integrating with backend services for data persistence and business logic.
-- Expanding the UI/UX to meet the needs of your users.
-- Implementing additional features such as reporting, notifications, and more.
+## Name
+Choose a self-explaining name for your project.
 
-For more detailed guidance, refer to the [Material UI documentation](https://mui.com/) and the [Vite.js documentation](https://vitejs.dev/).
+## Description
+Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+
+## Badges
+On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+
+## Visuals
+Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+
+## Installation
+Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+
+## Usage
+Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+
+## Support
+Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+
+## Roadmap
+If you have ideas for releases in the future, it is a good idea to list them in the README.
+
+## Contributing
+State if you are open to contributions and what your requirements are for accepting them.
+
+For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+
+You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+
+## Authors and acknowledgment
+Show your appreciation to those who have contributed to the project.
+
+## License
+For open source projects, say how it is licensed.
+
+## Project status
+If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
