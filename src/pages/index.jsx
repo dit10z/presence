@@ -1,33 +1,26 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Administrators from "./Administators";
-import Attendances from "./Attendances";
-import Auth from "./Auth";
-import Companies from "./Companies";
-import Dashboard from "./Dashboard";
-import Departments from "./Departments";
-import Employees from "./Employees";
-import Holidays from "./Holidays";
-import Leaves from "./Leaves";
-import Settings from "./Settings";
-import PrivateRoute from "./PrivateRoute"; // Import PrivateRoute
-import { AdminSidebar, SuperadminSidebar } from "../components/Navigation";
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import Administrators from './Administators';
+
+import Auth from './Auth';
+
+import Dashboard from './Dashboard';
+
+import { SuperadminSidebar } from '../components/Navigation';
+import PrivateRoute from './PrivateRoute'; // Import PrivateRoute
+import Settings from './Settings';
 
 const Pages = () => {
   // Dummy variables for authentication and role
-  const isAuthenticated = false; // Change to `false` to simulate a user not logged in
-  const userRole = "admin"; // Possible values: 'admin', 'superadmin'
+  const isAuthenticated = true; // Change to `false` to simulate a user not logged in
+  const userRole = 'superadmin'; // Possible values: 'admin', 'superadmin'
 
   return (
     <>
       {/* Conditional Sidebar Rendering */}
-      {isAuthenticated && userRole === "superadmin" && (
+      {isAuthenticated && userRole === 'superadmin' && (
         // <div>Superadmin Sidebar</div> // Replace with actual Sidebar component for Superadmin
         <SuperadminSidebar />
-      )}
-      {isAuthenticated && userRole === "admin" && (
-        // <div>Admin Sidebar</div> // Replace with actual Sidebar component for Admin
-        <AdminSidebar />
       )}
 
       <Routes>
@@ -48,54 +41,6 @@ const Pages = () => {
           element={
             <PrivateRoute isAuthenticated={isAuthenticated}>
               <Administrators />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/attendances"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Attendances />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/companies"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Companies />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/departments/*"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Departments />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/employees/*"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Employees />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/holidays"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Holidays />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/leaves"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Leaves />
             </PrivateRoute>
           }
         />
