@@ -22,6 +22,7 @@ import NavItem from './NavItem';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { useRouter } from '../../hooks/use-router';
 
 const drawerWidth = 240;
 
@@ -45,6 +46,7 @@ const AppBar = styled(MuiAppBar, {
 
 const SuperAdminSidebar = () => {
   const theme = useTheme();
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = true;
 
@@ -68,9 +70,9 @@ const SuperAdminSidebar = () => {
     {
       title: 'All Administrators',
       icon: <PeopleAltIcon />,
-      path: '/all-administrators',
+      path: '/administrators',
     },
-    { title: 'All Companies', icon: <PeopleAltIcon />, path: '/all-companies' },
+    { title: 'All Companies', icon: <PeopleAltIcon />, path: '/companies' },
   ];
 
   const DrawerHeader = styled('div')(({ theme }) => ({
@@ -150,12 +152,18 @@ const SuperAdminSidebar = () => {
       >
         <DrawerHeader>
           <Stack direction="row" alignItems="center" marginX="auto" marginTop="2rem">
-            <img src="/Logo/logo-79.png" alt="Logo padepokan 79" width="170px" />
+            <img
+              src="/Logo/logo-79.png"
+              alt="Logo padepokan 79"
+              width="170px"
+              onClick={() => router.push('/')}
+              style={{ cursor: 'pointer' }}
+            />
           </Stack>
         </DrawerHeader>
         <List sx={{ padding: '1rem' }}>
           {listMenu.map((item, index) => (
-            <NavItem key={index} title={item.title} icon={item.icon} />
+            <NavItem key={index} title={item.title} icon={item.icon} onClick={() => router.push(item.path)} />
           ))}
         </List>
         <Box sx={{ flexGrow: 1 }} />
