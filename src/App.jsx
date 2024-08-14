@@ -10,8 +10,8 @@ export default function App() {
       <Container maxWidth="lg">
         <Box sx={{ my: 4 }}>
           <Pages /> {/* Ini akan mengatur semua routing dan halaman */}
-          {/* <ProTip />
-          <Copyright /> */}
+          {/* <ProTip /> */}
+          {/* <Copyright /> */}
         </Box>
       </Container>
     </Router>

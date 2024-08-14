@@ -7,8 +7,8 @@ import Auth from './Auth';
 import Dashboard from './Dashboard';
 
 import { SuperadminSidebar } from '../components/Navigation';
+import CompaniesList from './Companies';
 import PrivateRoute from './PrivateRoute'; // Import PrivateRoute
-import Settings from './Settings';
 
 const Pages = () => {
   // Dummy variables for authentication and role
@@ -45,10 +45,10 @@ const Pages = () => {
           }
         />
         <Route
-          path="/settings"
+          path="/companies"
           element={
             <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Settings />
+              <CompaniesList />
             </PrivateRoute>
           }
         />
