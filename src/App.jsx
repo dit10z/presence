@@ -1,8 +1,8 @@
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import Pages from './pages';
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import Pages from "./pages";
 
 export default function App() {
   return (

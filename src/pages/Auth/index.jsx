@@ -9,19 +9,17 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
-import Hero from "../../assets/hero-signin.png"; // Replace with the correct path to your image
-import Logo from "../../assets/logo.png"; // Replace with the correct path to your logo
+import Hero from "../../assets/hero-signin.png";
+import Logo from "../../assets/logo.png";
 
-// Container to center the card on the page
 const SignInContainer = styled(Box)({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  minHeight: "100vh",
+  maxHeight: "100vh",
   backgroundColor: "#f5f5f5",
 });
 
-// Main card component
 const SignInCard = styled(Box)({
   display: "flex",
   flexDirection: "row",
@@ -35,12 +33,12 @@ const SignInCard = styled(Box)({
 
 const FormSection = styled(Box)({
   width: "40%",
-  padding: "60px 40px", // Adjust as necessary
+  padding: "60px 40px",
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
-  alignItems: "flex-start", // Align items to the left
-  textAlign: "left", // Align text to the left
+  alignItems: "flex-start",
+  textAlign: "left",
 });
 
 const StyledTextField = styled(TextField)({
@@ -102,7 +100,6 @@ const Login = () => {
               fullWidth
               defaultValue="********"
               InputProps={{
-                // Replace with your eye icon
                 endAdornment: (
                   <img
                     src="path/to/your/eye-icon.png"
