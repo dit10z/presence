@@ -1,5 +1,8 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
+import { DatePicker } from "@mui/x-date-pickers";
+import CustomButton from "../../components/CustomButton";
+import { Add, Delete, Edit, Search, Visibility } from "@mui/icons-material";
 import {
   TableContainer,
   TableBody,
@@ -16,7 +19,6 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import Search from "@mui/icons-material/Search";
 const data = [
   {
     company: "ArutalaLab",
@@ -114,30 +116,36 @@ const AdminTabel = () => {
                 <TableCell>{row.email}</TableCell>
                 <TableCell>{row.date}</TableCell>
                 <TableCell>
-                  <IconButton>Visibility</IconButton>
-                  <IconButton>Edit</IconButton>
-                  <IconButton>Delete</IconButton>
+                  <IconButton>
+                    <Visibility />
+                  </IconButton>
+                  <IconButton>
+                    <Edit />
+                  </IconButton>
+                  <IconButton>
+                    <Delete />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50]}
+            component="div"
+            count={data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          ></TablePagination>
         </TableBody>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 50]}
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      ></TablePagination>
     </Box>
   );
 };
 const AdminButton = () => {
   return (
     <Box>
-      <Stack direction="row">
+      <Stack direction="row" gap={1}>
         <TextField
           select
           label="Company"
@@ -154,23 +162,10 @@ const AdminButton = () => {
           </IconButton>
           <TextField label="Search" variant="outlined" />
         </Box>
-
-        <Button
-          variant="outlined"
-          color="primary"
-          // startIcon={<DateRange />}
-          style={{ marginRight: "20px" }}
-        >
-          Date Filter
-        </Button>
-
-        <Button
-          variant="contained"
-          color="primary"
-          // startIcon={<Add />}
-        >
+        <DatePicker label="Date Filter" />
+        <CustomButton variant="contained" color="primary" startIcon={<Add />}>
           Add New Administrator
-        </Button>
+        </CustomButton>
       </Stack>
     </Box>
   );
@@ -178,7 +173,6 @@ const AdminButton = () => {
 const Administrators = () => {
   return (
     <div>
-      <Typography>All Administrator</Typography>
       <AdminButton />
       <AdminTabel />
     </div>
