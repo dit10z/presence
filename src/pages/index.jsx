@@ -1,21 +1,24 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Administrators from "./Administators";
-import Auth from "./Auth";
-import Companies from "./Companies";
-import Dashboard from "./Dashboard";
-import PrivateRoute from "./PrivateRoute"; // Import PrivateRoute
-import { SuperadminSidebar } from "../components/Navigation";
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import Administrators from './Administators';
+
+import Auth from './Auth';
+
+import Dashboard from './Dashboard';
+
+import { SuperadminSidebar } from '../components/Navigation';
+import CompaniesList from './Companies';
+import PrivateRoute from './PrivateRoute'; // Import PrivateRoute
 
 const Pages = () => {
   // Dummy variables for authentication and role
-  const isAuthenticated = false; // Change to `false` to simulate a user not logged in
-  const userRole = "admin"; // Possible values: 'admin', 'superadmin'
+  const isAuthenticated = true; // Change to `false` to simulate a user not logged in
+  const userRole = 'superadmin'; // Possible values: 'admin', 'superadmin'
 
   return (
     <>
       {/* Conditional Sidebar Rendering */}
-      {isAuthenticated && userRole === "superadmin" && (
+      {isAuthenticated && userRole === 'superadmin' && (
         // <div>Superadmin Sidebar</div> // Replace with actual Sidebar component for Superadmin
         <SuperadminSidebar />
       )}
@@ -45,7 +48,7 @@ const Pages = () => {
           path="/companies"
           element={
             <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Companies />
+              <CompaniesList />
             </PrivateRoute>
           }
         />
