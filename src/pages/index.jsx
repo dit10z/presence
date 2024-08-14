@@ -6,6 +6,7 @@ import Auth from './Auth';
 
 import Dashboard from './Dashboard';
 
+import { Box, Container } from '@mui/material';
 import { SuperadminSidebar } from '../components/Navigation';
 import CompaniesList from './Companies';
 import PrivateRoute from './PrivateRoute'; // Import PrivateRoute
@@ -31,25 +32,37 @@ const Pages = () => {
         <Route
           path="/"
           element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Dashboard />
-            </PrivateRoute>
+            <Container maxWidth="lg">
+              <Box sx={{ my: 4 }}>
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <Dashboard />
+                </PrivateRoute>
+              </Box>
+            </Container>
           }
         />
         <Route
           path="/administrators"
           element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Administrators />
-            </PrivateRoute>
+            <Container maxWidth="lg">
+              <Box sx={{ my: 4 }}>
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <Administrators />
+                </PrivateRoute>
+              </Box>
+            </Container>
           }
         />
         <Route
           path="/companies"
           element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <CompaniesList />
-            </PrivateRoute>
+            <Container maxWidth="lg">
+              <Box sx={{ my: 4 }}>
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <CompaniesList />
+                </PrivateRoute>
+              </Box>
+            </Container>
           }
         />
       </Routes>
