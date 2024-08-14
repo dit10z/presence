@@ -84,6 +84,26 @@ const SuperAdminSidebar = () => {
     ...theme.mixins.toolbar,
   }));
 
+  // Get the current date and time
+  const currentDate = new Date();
+  const hours = currentDate.getHours();
+  const minutes = currentDate.getMinutes();
+  const day = currentDate.getDate();
+  const month = currentDate.toLocaleString('default', { month: 'long' });
+  const year = currentDate.getFullYear();
+
+  // Determine the time of day
+  let timeOfDay;
+  if (hours >= 5 && hours < 12) {
+    timeOfDay = 'morning';
+  } else if (hours >= 12 && hours < 17) {
+    timeOfDay = 'afternoon';
+  } else if (hours >= 17 && hours < 21) {
+    timeOfDay = 'evening';
+  } else {
+    timeOfDay = 'night';
+  }
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -100,12 +120,15 @@ const SuperAdminSidebar = () => {
         >
           <Stack>
             <Typography variant="h6" fontWeight="bold" noWrap>
-              {location.pathname === '/' && ' Hello Robert👋🏻'}
+              {location.pathname === '/' && `Hello Robert👋🏻`}
               {location.pathname === '/administrators' && 'All Administators'}
               {location.pathname === '/companies' && 'All Companies'}
             </Typography>
             <Typography variant="body2" color={`${theme.palette.grey[400]}`}>
-              {location.pathname === '/' && "Good Morning! Now it's Thursday, May 20th 2020."}
+              {location.pathname === '/' &&
+                `Good ${timeOfDay}! Now it's ${currentDate.toLocaleString('en-US', {
+                  weekday: 'long',
+                })}, ${month} ${day}th, ${year}.`}
               {location.pathname === '/administrators' && 'All Administators Information'}
               {location.pathname === '/companies' && 'All Companies Information'}
             </Typography>
