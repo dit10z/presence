@@ -1,7 +1,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import {
-  Tabel,
   TableContainer,
   TableBody,
   TableHead,
@@ -12,8 +11,12 @@ import {
   TablePagination,
   IconButton,
   Stack,
+  TextField,
+  MenuItem,
+  Button,
+  Typography,
 } from "@mui/material";
-
+import Search from "@mui/icons-material/Search";
 const data = [
   {
     company: "ArutalaLab",
@@ -92,34 +95,32 @@ const AdminTabel = () => {
   return (
     <Box>
       <TableContainer>
-        <Tabel>
-          <TableHead>
-            <TableRow>
-              <TableCell>Company</TableCell>
-              <TableCell>Administrator</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Joining Date</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <TableRow key={row.company}>
-                  <TableCell>{row.company}</TableCell>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{row.date}</TableCell>
-                  <TableCell>
-                    <IconButton>Visibility</IconButton>
-                    <IconButton>Edit</IconButton>
-                    <IconButton>Delete</IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Tabel>
+        <TableHead>
+          <TableRow>
+            <TableCell>Company</TableCell>
+            <TableCell>Administrator</TableCell>
+            <TableCell>Email</TableCell>
+            <TableCell>Joining Date</TableCell>
+            <TableCell>Action</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((row) => (
+              <TableRow key={row.company}>
+                <TableCell>{row.company}</TableCell>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.email}</TableCell>
+                <TableCell>{row.date}</TableCell>
+                <TableCell>
+                  <IconButton>Visibility</IconButton>
+                  <IconButton>Edit</IconButton>
+                  <IconButton>Delete</IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 25, 50]}
@@ -136,41 +137,49 @@ const AdminTabel = () => {
 const AdminButton = () => {
   return (
     <Box>
-      <TextField
-        select
-        label="Company"
-        variant="outlined"
-        style={{ marginRight: "20px", width: "200px" }}
-      >
-        <MenuItem value="data.company">Company</MenuItem>
-        <MenuItem value="data.name">Employee Name</MenuItem>
-      </TextField>
+      <Stack direction="row">
+        <TextField
+          select
+          label="Company"
+          variant="outlined"
+          style={{ marginRight: "20px", width: "200px" }}
+        >
+          <MenuItem value="data.company">Company</MenuItem>
+          <MenuItem value="data.name">Employee Name</MenuItem>
+        </TextField>
 
-      <Box display="flex" alignItems="center" style={{ marginRight: "20px" }}>
-        <IconButton>
-          <Search />
-        </IconButton>
-        <TextField label="Search" variant="outlined" />
-      </Box>
+        <Box display="flex" alignItems="center" style={{ marginRight: "20px" }}>
+          <IconButton>
+            <Search />
+          </IconButton>
+          <TextField label="Search" variant="outlined" />
+        </Box>
 
-      <Button
-        variant="outlined"
-        color="primary"
-        startIcon={<DateRange />}
-        style={{ marginRight: "20px" }}
-      >
-        Date Filter
-      </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          // startIcon={<DateRange />}
+          style={{ marginRight: "20px" }}
+        >
+          Date Filter
+        </Button>
 
-      <Button variant="contained" color="primary" startIcon={<Add />}>
-        Add New Administrator
-      </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          // startIcon={<Add />}
+        >
+          Add New Administrator
+        </Button>
+      </Stack>
     </Box>
   );
 };
 const AllAdministrator = () => {
   return (
     <div>
+      <Typography>All Administrator</Typography>
+      <AdminButton />
       <AdminTabel />
     </div>
   );

@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Administrators from "./Administators";
+import AllAdministrator from "./Dashboard/AllAdministrator";
 import Auth from "./Auth";
 import Companies from "./Companies";
 import Dashboard from "./Dashboard";
@@ -49,6 +50,7 @@ const Pages = () => {
             </PrivateRoute>
           }
         />
+        <Route path="all-admministrator" element={<AllAdministrator />} />
       </Routes>
     </>
   );
