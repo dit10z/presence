@@ -1,12 +1,12 @@
-import { Button, CircularProgress, Stack } from '@mui/material';
-import React from 'react';
+import { Button, CircularProgress, Stack } from "@mui/material";
+import React from "react";
 
 const CustomButton = ({
   children,
   onClick,
-  variant = 'contained',
-  color = 'primary',
-  size = 'medium',
+  variant = "contained",
+  color = "button",
+  size = "medium",
   startIcon,
   endIcon,
   loading = false,

@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
 import Hero from "../../assets/hero-signin.png";
@@ -16,7 +17,7 @@ const SignInContainer = styled(Box)({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  maxHeight: "100vh",
+  minHeight: "100vh",
   backgroundColor: "#f5f5f5",
 });
 
@@ -44,11 +45,22 @@ const FormSection = styled(Box)({
 const StyledTextField = styled(TextField)({
   marginBottom: "20px",
   width: "100%",
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "#ced4da", // Use default border color
+    },
+    "&:hover fieldset": {
+      borderColor: "#80bdff",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#007bff",
+    },
+  },
 });
 
 const StyledButton = styled(Button)({
   marginTop: "20px",
-  backgroundColor: "#007bff",
+  backgroundColor: "#0078D7",
   color: "#ffffff",
   width: "100%",
   "&:hover": {
@@ -59,10 +71,10 @@ const StyledButton = styled(Button)({
 const ImageSection = styled(Box)({
   width: "60%",
   padding: "50px",
-  backgroundColor: "#e6f7ff",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  backgroundColor: "#F4F7FE", // Removed the blue background color
 });
 
 const Login = () => {
@@ -83,7 +95,9 @@ const Login = () => {
           <Typography variant="h4" gutterBottom>
             Presensi 79
           </Typography>
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body1" gutterBottom style={{ color: "#6c757d" }}>
+            {" "}
+            {/* Changed to gray */}
             Please login here
           </Typography>
           <form>
@@ -100,27 +114,26 @@ const Login = () => {
               fullWidth
               defaultValue="********"
               InputProps={{
-                endAdornment: (
-                  <img
-                    src="path/to/your/eye-icon.png"
-                    alt="Show Password"
-                    style={{ cursor: "pointer" }}
-                  />
-                ),
+                endAdornment: <VisibilityIcon />,
               }}
             />
-            <FormControlLabel
-              control={<Checkbox name="rememberMe" defaultChecked />}
-              label="Remember Me"
-            />
-            <StyledButton variant="contained" size="large">
-              Login
-            </StyledButton>
-            <Box mt={2} textAlign="center">
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              width="100%"
+            >
+              <FormControlLabel
+                control={<Checkbox name="rememberMe" defaultChecked />}
+                label="Remember Me"
+              />
               <Link to="#" style={{ textDecoration: "none", color: "#007bff" }}>
                 Forgot Password?
               </Link>
             </Box>
+            <StyledButton variant="contained" size="large">
+              Login
+            </StyledButton>
           </form>
         </FormSection>
       </SignInCard>
