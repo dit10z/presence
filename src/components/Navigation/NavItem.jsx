@@ -1,5 +1,6 @@
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import React from 'react';
+import theme from '../../styles/theme';
 
 const NavItem = ({ title, icon, onClick, selected }) => {
   return (
@@ -11,11 +12,13 @@ const NavItem = ({ title, icon, onClick, selected }) => {
           justifyContent: 'initial',
           px: 2.5,
           color: selected ? 'white' : '#586A84',
-          borderRadius: '0.5rem',
-          backgroundColor: selected ? '#0078D7' : 'inherit',
+          backgroundColor: selected ? 'rgba(0, 120, 215, 0.2)' : 'inherit',
+          borderWidth: '10px',
+          borderLeft: selected ? '4px solid' : '',
+          borderRadius: '0.2rem',
+          borderLeftColor: selected ? `${theme.palette.primary.main}` : 'inherit',
           '&:hover': {
-            backgroundColor: 'rgba(0, 120, 215, 0.5)',
-            color: 'white',
+            backgroundColor: 'rgba(0, 120, 215, 0.2)',
           },
         }}
       >
@@ -24,15 +27,15 @@ const NavItem = ({ title, icon, onClick, selected }) => {
             minWidth: 0,
             mr: 1.5,
             justifyContent: 'center',
-            color: selected ? 'white' : '#586A84',
+            color: selected ? `${theme.palette.primary.main}` : 'inherit',
           }}
         >
           {icon}
         </ListItemIcon>
         <ListItemText
           primary={title}
-          sx={{ color: selected ? '#0078D7' : 'black' }}
-          primaryTypographyProps={{ fontSize: '0.875rem' }}
+          sx={{ color: selected ? `${theme.palette.primary.main}` : 'black' }}
+          primaryTypographyProps={{ fontSize: '0.860rem', fontWeight: selected ? '700' : '400' }}
         />
       </ListItemButton>
     </ListItem>
