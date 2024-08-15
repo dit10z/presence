@@ -408,8 +408,8 @@ const CompaniesList = () => {
         </Box>
       </Box>
       <ModalAddNewCompany
-        open={open}
-        onClose={newCompanyModal}
+        open={newCompanyModal}
+        onClose={handleClose}
         title="Add"
       ></ModalAddNewCompany>
     </Grid>
