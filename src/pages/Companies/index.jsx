@@ -224,7 +224,6 @@ const CompaniesList = () => {
           {/* Filter and Search */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <TextField
-              style={{ width: '300px' }}
               placeholder="Search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
