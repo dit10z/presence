@@ -1,12 +1,14 @@
-import { Box } from "@mui/material";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { SuperadminSidebar } from "../components/Navigation";
 import Administrators from "./Administators";
+
 import Auth from "./Auth";
-import CompaniesList from "./Companies";
+
 import Dashboard from "./Dashboard";
-import AdminDetail from "./Administators/AdminDetail";
+
+import { Box } from "@mui/material";
+import { SuperadminSidebar } from "../components/Navigation";
+import CompaniesList from "./Companies";
 import PrivateRoute from "./PrivateRoute"; // Import PrivateRoute
 
 const Pages = () => {
@@ -15,7 +17,11 @@ const Pages = () => {
 
   return (
     <>
-      {isAuthenticated && userRole === "superadmin" && <SuperadminSidebar />}
+      {/* Conditional Sidebar Rendering */}
+      {isAuthenticated && userRole === "superadmin" && (
+        // <div>Superadmin Sidebar</div> // Replace with actual Sidebar component for Superadmin
+        <SuperadminSidebar />
+      )}
 
       <Box
         sx={{
@@ -26,6 +32,7 @@ const Pages = () => {
         }}
       >
         <Routes>
+          {/* Public Route */}
           <Route path="/login" element={<Auth />} />
 
           <Route

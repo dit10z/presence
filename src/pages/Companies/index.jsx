@@ -134,7 +134,7 @@
 
 // export default CompaniesList;
 
-import { Add, Delete, Edit, Search, Visibility } from '@mui/icons-material';
+import { Add, Delete, Edit, Search, Visibility } from "@mui/icons-material";
 import {
   Avatar,
   Box,
@@ -146,15 +146,16 @@ import {
   Stack,
   TextField,
   Typography,
-} from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
-import React, { useState } from 'react';
-import CustomButton from '../../components/CustomButton';
-import CustomDataGrid from '../../components/CustomDataGrid';
-import theme from '../../styles/theme';
+} from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import React, { useState } from "react";
+import CustomButton from "../../components/CustomButton";
+import CustomDataGrid from "../../components/CustomDataGrid";
+import theme from "../../styles/theme";
+import ModalAddNewCompany from "../../components/Modal/ModalAddNewCompany";
 
 const CompaniesList = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
   const [date, setDate] = useState(null); // Single date state
@@ -163,26 +164,26 @@ const CompaniesList = () => {
   const totalRowCount = 100;
 
   const columns = [
-    { field: 'company', headerName: 'Company Name', flex: 1 },
+    { field: "company", headerName: "Company Name", flex: 1 },
     {
-      field: 'name',
-      headerName: 'Administrator Name',
+      field: "name",
+      headerName: "Administrator Name",
       flex: 1,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <Avatar sx={{ mr: 2 }} />
           <Typography>{params.value}</Typography>
         </Box>
       ),
     },
-    { field: 'email', headerName: 'Email', flex: 1 },
-    { field: 'date', headerName: 'Joining Date', flex: 1 },
+    { field: "email", headerName: "Email", flex: 1 },
+    { field: "date", headerName: "Joining Date", flex: 1 },
     {
-      field: 'actions',
-      headerName: 'Action',
+      field: "actions",
+      headerName: "Action",
       flex: 1,
       renderCell: () => (
-        <Box sx={{ display: 'flex', justifyContent: 'stretch' }}>
+        <Box sx={{ display: "flex", justifyContent: "stretch" }}>
           <IconButton aria-label="view">
             <Visibility />
           </IconButton>
@@ -198,31 +199,143 @@ const CompaniesList = () => {
   ];
 
   const rows = [
-    { id: 1, company: 'ArutalaLab', name: 'Darlene Robertson', email: 'darlene@gmail.com', date: 'June 28, 2024' },
-    { id: 2, company: 'ArutalaLab', name: 'Floyd Miles', email: 'floyd@gmail.com', date: 'June 03, 2024' },
-    { id: 3, company: 'ArutalaLab', name: 'Darlene Robertson', email: 'darlene@gmail.com', date: 'June 28, 2024' },
-    { id: 4, company: 'ArutalaLab', name: 'Floyd Miles', email: 'floyd@gmail.com', date: 'June 03, 2024' },
-    { id: 5, company: 'ArutalaLab', name: 'Darlene Robertson', email: 'darlene@gmail.com', date: 'June 28, 2024' },
-    { id: 6, company: 'ArutalaLab', name: 'Floyd Miles', email: 'floyd@gmail.com', date: 'June 03, 2024' },
-    { id: 7, company: 'ArutalaLab', name: 'Darlene Robertson', email: 'darlene@gmail.com', date: 'June 28, 2024' },
-    { id: 8, company: 'ArutalaLab', name: 'Floyd Miles', email: 'floyd@gmail.com', date: 'June 03, 2024' },
-    { id: 9, company: 'ArutalaLab', name: 'Darlene Robertson', email: 'darlene@gmail.com', date: 'June 28, 2024' },
-    { id: 10, company: 'ArutalaLab', name: 'Floyd Miles', email: 'floyd@gmail.com', date: 'June 03, 2024' },
-    { id: 11, company: 'ArutalaLab', name: 'Darlene Robertson', email: 'darlene@gmail.com', date: 'June 28, 2024' },
-    { id: 12, company: 'ArutalaLab', name: 'Floyd Miles', email: 'floyd@gmail.com', date: 'June 03, 2024' },
-    { id: 13, company: 'ArutalaLab', name: 'Darlene Robertson', email: 'darlene@gmail.com', date: 'June 28, 2024' },
-    { id: 14, company: 'ArutalaLab', name: 'Floyd Miles', email: 'floyd@gmail.com', date: 'June 03, 2024' },
-    { id: 15, company: 'ArutalaLab', name: 'Darlene Robertson', email: 'darlene@gmail.com', date: 'June 28, 2024' },
-    { id: 16, company: 'ArutalaLab', name: 'Floyd Miles', email: 'floyd@gmail.com', date: 'June 03, 2024' },
+    {
+      id: 1,
+      company: "ArutalaLab",
+      name: "Darlene Robertson",
+      email: "darlene@gmail.com",
+      date: "June 28, 2024",
+    },
+    {
+      id: 2,
+      company: "ArutalaLab",
+      name: "Floyd Miles",
+      email: "floyd@gmail.com",
+      date: "June 03, 2024",
+    },
+    {
+      id: 3,
+      company: "ArutalaLab",
+      name: "Darlene Robertson",
+      email: "darlene@gmail.com",
+      date: "June 28, 2024",
+    },
+    {
+      id: 4,
+      company: "ArutalaLab",
+      name: "Floyd Miles",
+      email: "floyd@gmail.com",
+      date: "June 03, 2024",
+    },
+    {
+      id: 5,
+      company: "ArutalaLab",
+      name: "Darlene Robertson",
+      email: "darlene@gmail.com",
+      date: "June 28, 2024",
+    },
+    {
+      id: 6,
+      company: "ArutalaLab",
+      name: "Floyd Miles",
+      email: "floyd@gmail.com",
+      date: "June 03, 2024",
+    },
+    {
+      id: 7,
+      company: "ArutalaLab",
+      name: "Darlene Robertson",
+      email: "darlene@gmail.com",
+      date: "June 28, 2024",
+    },
+    {
+      id: 8,
+      company: "ArutalaLab",
+      name: "Floyd Miles",
+      email: "floyd@gmail.com",
+      date: "June 03, 2024",
+    },
+    {
+      id: 9,
+      company: "ArutalaLab",
+      name: "Darlene Robertson",
+      email: "darlene@gmail.com",
+      date: "June 28, 2024",
+    },
+    {
+      id: 10,
+      company: "ArutalaLab",
+      name: "Floyd Miles",
+      email: "floyd@gmail.com",
+      date: "June 03, 2024",
+    },
+    {
+      id: 11,
+      company: "ArutalaLab",
+      name: "Darlene Robertson",
+      email: "darlene@gmail.com",
+      date: "June 28, 2024",
+    },
+    {
+      id: 12,
+      company: "ArutalaLab",
+      name: "Floyd Miles",
+      email: "floyd@gmail.com",
+      date: "June 03, 2024",
+    },
+    {
+      id: 13,
+      company: "ArutalaLab",
+      name: "Darlene Robertson",
+      email: "darlene@gmail.com",
+      date: "June 28, 2024",
+    },
+    {
+      id: 14,
+      company: "ArutalaLab",
+      name: "Floyd Miles",
+      email: "floyd@gmail.com",
+      date: "June 03, 2024",
+    },
+    {
+      id: 15,
+      company: "ArutalaLab",
+      name: "Darlene Robertson",
+      email: "darlene@gmail.com",
+      date: "June 28, 2024",
+    },
+    {
+      id: 16,
+      company: "ArutalaLab",
+      name: "Floyd Miles",
+      email: "floyd@gmail.com",
+      date: "June 03, 2024",
+    },
     // Add more rows as needed
   ];
 
+  const [newCompanyModal, setNewCompanyModal] = useState(false);
+
+  const handleOpen = () => setNewCompanyModal(true);
+  const handleClose = () => setNewCompanyModal(false);
+
   return (
-    <Grid border={`1px solid ${theme.palette.grey[300]}`} borderRadius={'10px'} padding={2.5}>
+    <Grid
+      border={`1px solid ${theme.palette.grey[300]}`}
+      borderRadius={"10px"}
+      padding={2.5}
+    >
       <Box sx={{ p: 3 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
+          }}
+        >
           {/* Filter and Search */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <TextField
               placeholder="Search"
               value={searchQuery}
@@ -244,7 +357,12 @@ const CompaniesList = () => {
               renderInput={(params) => <TextField {...params} />}
             />
 
-            <CustomButton variant="contained" color="primary" startIcon={<Add />}>
+            <CustomButton
+              variant="contained"
+              color="primary"
+              startIcon={<Add />}
+              onClick={handleOpen}
+            >
               Add New Administrator
             </CustomButton>
           </Stack>
@@ -263,7 +381,14 @@ const CompaniesList = () => {
           hidePagination={true}
         />
         {/* Entries adn Pagination Controls */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: 3,
+          }}
+        >
           <TextField
             select
             value={pageSize}
@@ -275,9 +400,18 @@ const CompaniesList = () => {
             <MenuItem value={30}>30</MenuItem>
           </TextField>
 
-          <Pagination count={Math.ceil(totalRowCount / pageSize)} page={page} onChange={(e, value) => setPage(value)} />
+          <Pagination
+            count={Math.ceil(totalRowCount / pageSize)}
+            page={page}
+            onChange={(e, value) => setPage(value)}
+          />
         </Box>
       </Box>
+      <ModalAddNewCompany
+        open={open}
+        onClose={newCompanyModal}
+        title="Add"
+      ></ModalAddNewCompany>
     </Grid>
   );
 };
