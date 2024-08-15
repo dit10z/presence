@@ -13,7 +13,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import CustomButton from "./CustomButton";
+import CustomButton from "../CustomButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -36,7 +36,7 @@ const FormField = styled(TextField)({
   width: "100%",
 });
 
-const CustomModal = ({ open, onClose }) => {
+const ModalEditAdmin = ({ open, onClose }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -170,4 +170,4 @@ const CustomModal = ({ open, onClose }) => {
   );
 };
 
-export default CustomModal;
+export default ModalEditAdmin;

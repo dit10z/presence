@@ -7,12 +7,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
-import Hero from "../../assets/hero-signin.png"; // Replace with the correct path to your image
-import Logo from "../../assets/logo.png"; // Replace with the correct path to your logo
+import Hero from "../../assets/hero-signin.png";
+import Logo from "../../assets/logo.png";
 
-// Container to center the card on the page
 const SignInContainer = styled(Box)({
   display: "flex",
   alignItems: "center",
@@ -21,7 +21,6 @@ const SignInContainer = styled(Box)({
   backgroundColor: "#f5f5f5",
 });
 
-// Main card component
 const SignInCard = styled(Box)({
   display: "flex",
   flexDirection: "row",
@@ -35,22 +34,33 @@ const SignInCard = styled(Box)({
 
 const FormSection = styled(Box)({
   width: "40%",
-  padding: "60px 40px", // Adjust as necessary
+  padding: "60px 40px",
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
-  alignItems: "flex-start", // Align items to the left
-  textAlign: "left", // Align text to the left
+  alignItems: "flex-start",
+  textAlign: "left",
 });
 
 const StyledTextField = styled(TextField)({
   marginBottom: "20px",
   width: "100%",
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "#ced4da", // Use default border color
+    },
+    "&:hover fieldset": {
+      borderColor: "#80bdff",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#007bff",
+    },
+  },
 });
 
 const StyledButton = styled(Button)({
   marginTop: "20px",
-  backgroundColor: "#007bff",
+  backgroundColor: "#0078D7",
   color: "#ffffff",
   width: "100%",
   "&:hover": {
@@ -61,10 +71,10 @@ const StyledButton = styled(Button)({
 const ImageSection = styled(Box)({
   width: "60%",
   padding: "50px",
-  backgroundColor: "#e6f7ff",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  backgroundColor: "#F4F7FE", // Removed the blue background color
 });
 
 const Login = () => {
@@ -85,7 +95,9 @@ const Login = () => {
           <Typography variant="h4" gutterBottom>
             Presensi 79
           </Typography>
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body1" gutterBottom style={{ color: "#6c757d" }}>
+            {" "}
+            {/* Changed to gray */}
             Please login here
           </Typography>
           <form>
@@ -102,28 +114,26 @@ const Login = () => {
               fullWidth
               defaultValue="********"
               InputProps={{
-                // Replace with your eye icon
-                endAdornment: (
-                  <img
-                    src="path/to/your/eye-icon.png"
-                    alt="Show Password"
-                    style={{ cursor: "pointer" }}
-                  />
-                ),
+                endAdornment: <VisibilityIcon />,
               }}
             />
-            <FormControlLabel
-              control={<Checkbox name="rememberMe" defaultChecked />}
-              label="Remember Me"
-            />
-            <StyledButton variant="contained" size="large">
-              Login
-            </StyledButton>
-            <Box mt={2} textAlign="center">
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              width="100%"
+            >
+              <FormControlLabel
+                control={<Checkbox name="rememberMe" defaultChecked />}
+                label="Remember Me"
+              />
               <Link to="#" style={{ textDecoration: "none", color: "#007bff" }}>
                 Forgot Password?
               </Link>
             </Box>
+            <StyledButton variant="contained" size="large">
+              Login
+            </StyledButton>
           </form>
         </FormSection>
       </SignInCard>
