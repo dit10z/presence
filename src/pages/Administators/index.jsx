@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers";
 import CustomButton from "../../components/CustomButton";
@@ -83,8 +83,11 @@ const data = [
 ];
 
 const AdminTabel = () => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(0);
+  const [date, setDate] = useState(null);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
