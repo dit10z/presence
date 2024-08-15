@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Card,
@@ -20,9 +20,31 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Grid from "@mui/material/Grid2";
+import theme from "../../styles/theme";
+import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
+import ModalChangePhotoAdmin from "../../components/Modal/ModalChangePhotoAdmin";
 const AdminDetail = () => {
+  const [modalEditAdmin, setModalEditAdmin] = useState(false);
+  const [modalChangePhotoAdmin, setModalChangePhotoAdmin] = useState(false);
+
+  const handleModalEditAdminOpen = () => {
+    setModalEditAdmin(!modalEditAdmin);
+  };
+  const handleModalEditAdminClose = () => {
+    setModalEditAdmin(false);
+  };
+  const handleModalChangePhotoAdminOpen = () => {
+    setModalChangePhotoAdmin(!modalChangePhotoAdmin);
+  };
+  const handleModalChangePhotoAdminClose = () => {
+    setModalChangePhotoAdmin(false);
+  };
   return (
-    <div>
+    <Grid
+      border={`1px solid ${theme.palette.grey[300]}`}
+      borderRadius={"10px"}
+      padding={2.5}
+    >
       <Box>
         <Box>
           <Grid
@@ -61,7 +83,7 @@ const AdminDetail = () => {
                 >
                   <Typography component="div" variant="h6">
                     Darlene Robertson
-                    <IconButton>
+                    <IconButton onClick={handleModalChangePhotoAdminOpen}>
                       <img src="/mock/image-edit.svg" alt="edit icon" />
                     </IconButton>
                   </Typography>
@@ -81,6 +103,7 @@ const AdminDetail = () => {
                   color="primary"
                   startIcon={<Edit />}
                   size="medium"
+                  onClick={handleModalEditAdminOpen}
                 >
                   Edit Profile
                 </CustomButton>
@@ -147,7 +170,18 @@ const AdminDetail = () => {
           </TabContext>
         </Box>
       </Box>
-    </div>
+
+      <ModalEditAdmin
+        open={modalEditAdmin}
+        onClose={handleModalEditAdminClose}
+        title="Edit Profile"
+      />
+      <ModalChangePhotoAdmin
+        open={modalChangePhotoAdmin}
+        onClose={handleModalChangePhotoAdminClose}
+        title="Change Photo"
+      />
+    </Grid>
   );
 };
 

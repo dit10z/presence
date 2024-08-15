@@ -5,7 +5,7 @@ import Administrators from "./Administators";
 import Auth from "./Auth";
 
 import Dashboard from "./Dashboard";
-
+import AdminDetail from "./Administators/AdminDetail";
 import { Box } from "@mui/material";
 import { SuperadminSidebar } from "../components/Navigation";
 import CompaniesList from "./Companies";
