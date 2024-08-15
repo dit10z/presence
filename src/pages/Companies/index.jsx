@@ -25,7 +25,7 @@ const CompaniesList = () => {
           {/* Filter and Search */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <TextField
-              placeholder="Search"
+              placeholder="gantikan kata kunci..."
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
