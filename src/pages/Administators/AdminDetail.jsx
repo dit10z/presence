@@ -97,47 +97,47 @@ const AdminDetail = () => {
             </Box>
             <TabPanel value="1">
               <Grid container spacing={2} sx={{ marginTop: 2 }}>
-                <Grid item xs={12} sm={6}>
+                <Grid item size={6}>
                   <TextField
                     fullWidth
                     label="First Name"
-                    variant="outlined"
+                    variant="standard"
                     defaultValue="Darlene"
                     InputProps={{ readOnly: true }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item size={6}>
                   <TextField
                     fullWidth
                     label="Last Name"
-                    variant="outlined"
+                    variant="standard"
                     defaultValue="Robertson"
                     InputProps={{ readOnly: true }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item size={6}>
                   <TextField
                     fullWidth
                     label="Username"
-                    variant="outlined"
+                    variant="standard"
                     defaultValue="darlenekrobertson79"
                     InputProps={{ readOnly: true }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item size={6}>
                   <TextField
                     fullWidth
                     label="Email Address"
-                    variant="outlined"
+                    variant="standard"
                     defaultValue="darlene@gmail.com"
                     InputProps={{ readOnly: true }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item size={6}>
                   <TextField
                     fullWidth
                     label="Company Origin"
-                    variant="outlined"
+                    variant="standard"
                     defaultValue="Padepokan79"
                     InputProps={{ readOnly: true }}
                   />

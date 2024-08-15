@@ -146,16 +146,6 @@ const AdminButton = () => {
   return (
     <Box>
       <Stack direction="row" gap={1}>
-        <TextField
-          select
-          label="Company"
-          variant="outlined"
-          style={{ marginRight: "20px", width: "200px" }}
-        >
-          <MenuItem value="data.company">Company</MenuItem>
-          <MenuItem value="data.name">Employee Name</MenuItem>
-        </TextField>
-
         <Box display="flex" alignItems="center" style={{ marginRight: "20px" }}>
           <IconButton>
             <Search />
