@@ -11,13 +11,23 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import theme from "../../styles/theme";
 
 import { DatePicker } from "@mui/x-date-pickers";
 import CustomButton from "../../components/CustomButton";
+import ModalAddNewAdmin from "../../components/Modal/ModalAddNewAdmin";
+import CustomModal from "../../components/CustomModal";
+import ModalChangePhotoAdmin from "../../components/Modal/ModalChangePhotoAdmin";
+import ModalAddNewCompany from "../../components/Modal/ModalAddNewCompany";
+import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
 
 const CompaniesList = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <Grid
       border={`1px solid ${theme.palette.grey[300]}`}
@@ -54,8 +64,9 @@ const CompaniesList = () => {
               variant="contained"
               color="primary"
               startIcon={<Add />}
+              onClick={handleOpen}
             >
-              Add New Administrator
+              Add New Company
             </CustomButton>
           </Stack>
         </Box>
@@ -177,6 +188,11 @@ const CompaniesList = () => {
           <Pagination count={6} page={1} />
         </Box>
       </Box>
+      <ModalAddNewCompany
+        open={open}
+        onClose={handleClose}
+        title="Add"
+      ></ModalAddNewCompany>
     </Grid>
   );
 };

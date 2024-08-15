@@ -23,42 +23,51 @@ const Pages = () => {
         <SuperadminSidebar />
       )}
 
-      <Routes>
-        {/* Public Route */}
-        <Route path="/login" element={<Auth />} />
+      <Box
+        sx={{
+          display: "flex",
+          flexGrow: 1,
+          width: `calc(100% - 240px)`,
+          ml: "240px",
+        }}
+      >
+        <Routes>
+          {/* Public Route */}
+          <Route path="/login" element={<Auth />} />
 
-        <Route
-          path="/"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              {/* <Container sx={{ width: '100%', p: 0 }}> */}
-              <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
-                <Dashboard />
-              </Box>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/administrators"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
-                <Administrators />
-              </Box>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/companies"
-          element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
-                <CompaniesList />
-              </Box>
-            </PrivateRoute>
-          }
-        />
-      </Routes>
+          <Route
+            path="/"
+            element={
+              <PrivateRoute isAuthenticated={isAuthenticated}>
+                {/* <Container sx={{ width: '100%', p: 0 }}> */}
+                <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
+                  <Dashboard />
+                </Box>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/administrators"
+            element={
+              <PrivateRoute isAuthenticated={isAuthenticated}>
+                <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
+                  <Administrators />
+                </Box>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/companies"
+            element={
+              <PrivateRoute isAuthenticated={isAuthenticated}>
+                <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
+                  <CompaniesList />
+                </Box>
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </Box>
     </>
   );
 };

@@ -9,7 +9,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import CustomButton from "./CustomButton";
+import CustomButton from "../CustomButton";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -81,7 +81,7 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
           >
             Cancel
           </CustomButton>
-          <CustomButton variant="contained" color="button" text="white">
+          <CustomButton variant="contained" color="primary" text="white">
             Add
           </CustomButton>
         </Box>

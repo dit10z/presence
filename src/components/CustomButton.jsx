@@ -5,7 +5,7 @@ const CustomButton = ({
   children,
   onClick,
   variant = "contained",
-  color = "button",
+  color = "primary",
   size = "medium",
   startIcon,
   endIcon,
