@@ -5,7 +5,7 @@ import Administrators from "./Administators";
 import Auth from "./Auth";
 
 import Dashboard from "./Dashboard";
-
+import AdminDetail from "./Administators/AdminDetail";
 import { Box } from "@mui/material";
 import { SuperadminSidebar } from "../components/Navigation";
 import CompaniesList from "./Companies";
@@ -52,6 +52,16 @@ const Pages = () => {
               <PrivateRoute isAuthenticated={isAuthenticated}>
                 <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
                   <Administrators />
+                </Box>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin-detail"
+            element={
+              <PrivateRoute isAuthenticated={isAuthenticated}>
+                <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
+                  <AdminDetail />
                 </Box>
               </PrivateRoute>
             }
