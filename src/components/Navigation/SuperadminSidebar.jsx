@@ -1,5 +1,5 @@
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import {
   Avatar,
   Box,
@@ -15,29 +15,29 @@ import {
   Toolbar,
   Typography,
   useTheme,
-} from '@mui/material';
-import React, { useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-import NavItem from './NavItem';
+} from "@mui/material";
+import React, { useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import NavItem from "./NavItem";
 
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { useRouter } from '../../hooks/use-router';
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { useRouter } from "../../hooks/use-router";
 
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
+  shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
+  transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -61,25 +61,25 @@ const SuperAdminSidebar = () => {
 
   const handleLogout = () => {
     // Logic for logout
-    router.push('/login');
+    router.push("/login");
   };
 
   const isMenuOpen = Boolean(anchorEl);
 
   const listMenu = [
-    { title: 'Dashboard', icon: <DashboardIcon />, path: '/' },
+    { title: "Dashboard", icon: <DashboardIcon />, path: "/" },
     {
-      title: 'All Administrators',
+      title: "All Administrators",
       icon: <PeopleAltIcon />,
-      path: '/administrators',
+      path: "/administrators",
     },
-    { title: 'All Companies', icon: <PeopleAltIcon />, path: '/companies' },
+    { title: "All Companies", icon: <PeopleAltIcon />, path: "/companies" },
   ];
 
-  const DrawerHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+  const DrawerHeader = styled("div")(({ theme }) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
     padding: theme.spacing(0, 1),
     ...theme.mixins.toolbar,
   }));
@@ -89,77 +89,98 @@ const SuperAdminSidebar = () => {
   const hours = currentDate.getHours();
   const minutes = currentDate.getMinutes();
   const day = currentDate.getDate();
-  const month = currentDate.toLocaleString('default', { month: 'long' });
+  const month = currentDate.toLocaleString("default", { month: "long" });
   const year = currentDate.getFullYear();
 
   // Determine the time of day
   let timeOfDay;
   if (hours >= 5 && hours < 12) {
-    timeOfDay = 'morning';
+    timeOfDay = "morning";
   } else if (hours >= 12 && hours < 17) {
-    timeOfDay = 'afternoon';
+    timeOfDay = "afternoon";
   } else if (hours >= 17 && hours < 21) {
-    timeOfDay = 'evening';
+    timeOfDay = "evening";
   } else {
-    timeOfDay = 'night';
+    timeOfDay = "night";
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open} elevation={0}>
         <Toolbar
           sx={{
-            backgroundColor: 'white',
-            boxShadow: 'none',
-            borderBottom: '1px solid #E5E5E5',
-            color: 'black',
-            justifyContent: 'space-between',
-            paddingY: '1rem',
+            backgroundColor: "white",
+            boxShadow: "none",
+            borderBottom: "1px solid #E5E5E5",
+            color: "black",
+            justifyContent: "space-between",
+            paddingY: "1rem",
           }}
         >
           <Stack>
             <Typography variant="h6" fontWeight="bold" noWrap>
-              {location.pathname === '/' && `Hello Robert👋🏻`}
-              {location.pathname === '/administrators' && 'All Administators'}
-              {location.pathname === '/companies' && 'All Companies'}
+              {location.pathname === "/" && `Hello Robert👋🏻`}
+              {location.pathname === "/administrators" && "All Administators"}
+              {location.pathname === "/companies" && "All Companies"}
             </Typography>
             <Typography variant="body2" color={`${theme.palette.grey[400]}`}>
-              {location.pathname === '/' &&
-                `Good ${timeOfDay}! Now it's ${currentDate.toLocaleString('en-US', {
-                  weekday: 'long',
-                })}, ${month} ${day}th, ${year}.`}
-              {location.pathname === '/administrators' && 'All Administators Information'}
-              {location.pathname === '/companies' && 'All Companies Information'}
+              {location.pathname === "/" &&
+                `Good ${timeOfDay}! Now it's ${currentDate.toLocaleString(
+                  "en-US",
+                  {
+                    weekday: "long",
+                  }
+                )}, ${month} ${day}th, ${year}.`}
+              {location.pathname === "/administrators" &&
+                "All Administators Information"}
+              {location.pathname === "/companies" &&
+                "All Companies Information"}
             </Typography>
           </Stack>
-          <Box border={`1px ${theme.palette.grey[300]} solid`} borderRadius="0.5rem" padding="0.125rem">
+          <Box
+            border={`1px ${theme.palette.grey[300]} solid`}
+            borderRadius="0.5rem"
+            padding="0.125rem"
+          >
             <Stack direction="row" alignItems="center" spacing={2}>
               <IconButton sx={{ p: 0 }}>
-                <Avatar alt="Robert Allen" src="/mock/dummy_avatar.png" variant="rounded" />
+                <Avatar
+                  alt="Robert Allen"
+                  src="/mock/dummy_avatar.png"
+                  variant="rounded"
+                />
               </IconButton>
               <Stack>
-                <Typography variant="body2" sx={{ display: 'inline' }}>
+                <Typography variant="body2" sx={{ display: "inline" }}>
                   Robert Allen
                 </Typography>
-                <Typography variant="body2" sx={{ display: 'inline' }} color={`${theme.palette.grey[400]}`}>
+                <Typography
+                  variant="body2"
+                  sx={{ display: "inline" }}
+                  color={`${theme.palette.grey[400]}`}
+                >
                   SuperAdmin
                 </Typography>
               </Stack>
               <IconButton onClick={handleMenuClick} sx={{ p: 0 }}>
-                {isMenuOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                {isMenuOpen ? (
+                  <KeyboardArrowUpIcon />
+                ) : (
+                  <KeyboardArrowDownIcon />
+                )}
               </IconButton>
               <Menu
                 anchorEl={anchorEl}
                 open={isMenuOpen}
                 onClose={handleMenuClose}
                 anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
+                  vertical: "bottom",
+                  horizontal: "right",
                 }}
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
               >
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
@@ -173,24 +194,29 @@ const SuperAdminSidebar = () => {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          '& .MuiDrawer-paper': {
+          "& .MuiDrawer-paper": {
             width: drawerWidth,
-            boxSizing: 'border-box',
+            boxSizing: "border-box",
           },
         }}
       >
         <DrawerHeader>
-          <Stack direction="row" alignItems="center" marginX="auto" marginTop="2rem">
+          <Stack
+            direction="row"
+            alignItems="center"
+            marginX="auto"
+            marginTop="2rem"
+          >
             <img
               src="/Logo/logo-79.png"
               alt="Logo padepokan 79"
               width="170px"
-              onClick={() => router.push('/')}
-              style={{ cursor: 'pointer' }}
+              onClick={() => router.push("/")}
+              style={{ cursor: "pointer" }}
             />
           </Stack>
         </DrawerHeader>
-        <List sx={{ padding: '1rem' }}>
+        <List sx={{ padding: "1rem" }}>
           {listMenu.map((item, index) => (
             <NavItem
               key={index}
