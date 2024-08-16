@@ -19,7 +19,7 @@ import { Email, Business, Edit } from "@mui/icons-material";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import theme from "../../styles/theme";
 import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
 import ModalChangePhotoAdmin from "../../components/Modal/ModalChangePhotoAdmin";
