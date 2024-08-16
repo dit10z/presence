@@ -148,7 +148,7 @@ import {
   Typography,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomButton from "../../components/CustomButton";
 import CustomDataGrid from "../../components/CustomDataGrid";
 import theme from "../../styles/theme";
@@ -159,9 +159,10 @@ const CompaniesList = () => {
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
   const [date, setDate] = useState(null); // Single date state
+  const [data, setdata] = useState([]);
 
-  // Simulate total rows (In real-world, this would come from an API response)
   const totalRowCount = 100;
+  const [rows, setRows] = useState([]);
 
   const columns = [
     { field: "companyName", headerName: "Company Name", flex: 1 },
@@ -189,168 +190,45 @@ const CompaniesList = () => {
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      companyName: "ArutalaLab",
-      email: "darlene@gmail.com",
-      totalAdmin: "2",
-      phone: "08123456723",
-      createdDay: "June 03, 2024",
-    },
-    {
-      id: 2,
-      companyName: "TechVision",
-      email: "james@techvision.com",
-      totalAdmin: "3",
-      phone: "08123456724",
-      createdDay: "June 05, 2024",
-    },
-    {
-      id: 3,
-      companyName: "InnoSpace",
-      email: "susan@innospace.co",
-      totalAdmin: "4",
-      phone: "08123456725",
-      createdDay: "June 07, 2024",
-    },
-    {
-      id: 4,
-      companyName: "NextGen Solutions",
-      email: "michael@nextgensolutions.net",
-      totalAdmin: "5",
-      phone: "08123456726",
-      createdDay: "June 09, 2024",
-    },
-    {
-      id: 5,
-      companyName: "Digital Horizon",
-      email: "emma@digitalhorizon.io",
-      totalAdmin: "2",
-      phone: "08123456727",
-      createdDay: "June 11, 2024",
-    },
-    {
-      id: 6,
-      companyName: "CloudBase",
-      email: "david@cloudbase.com",
-      totalAdmin: "3",
-      phone: "08123456728",
-      createdDay: "June 13, 2024",
-    },
-    {
-      id: 7,
-      companyName: "SkyHigh Technologies",
-      email: "olivia@skyhightech.com",
-      totalAdmin: "4",
-      phone: "08123456729",
-      createdDay: "June 15, 2024",
-    },
-    {
-      id: 8,
-      companyName: "Innovate IT",
-      email: "noah@innovateit.org",
-      totalAdmin: "2",
-      phone: "08123456730",
-      createdDay: "June 17, 2024",
-    },
-    {
-      id: 9,
-      companyName: "GreenTech",
-      email: "ava@greentech.biz",
-      totalAdmin: "3",
-      phone: "08123456731",
-      createdDay: "June 19, 2024",
-    },
-    {
-      id: 10,
-      companyName: "BlueOcean Corp",
-      email: "liam@blueocean.co",
-      totalAdmin: "5",
-      phone: "08123456732",
-      createdDay: "June 21, 2024",
-    },
-    {
-      id: 11,
-      companyName: "BrightFuture",
-      email: "sophia@brightfuture.com",
-      totalAdmin: "2",
-      phone: "08123456733",
-      createdDay: "June 23, 2024",
-    },
-    {
-      id: 12,
-      companyName: "Alpha Innovations",
-      email: "isabella@alphainnovations.co",
-      totalAdmin: "3",
-      phone: "08123456734",
-      createdDay: "June 25, 2024",
-    },
-    {
-      id: 13,
-      companyName: "TechWave",
-      email: "william@techwave.net",
-      totalAdmin: "4",
-      phone: "08123456735",
-      createdDay: "June 27, 2024",
-    },
-    {
-      id: 14,
-      companyName: "NextEra Solutions",
-      email: "elizabeth@nexterasolutions.io",
-      totalAdmin: "5",
-      phone: "08123456736",
-      createdDay: "June 29, 2024",
-    },
-    {
-      id: 15,
-      companyName: "FutureSight",
-      email: "alex@futuresight.com",
-      totalAdmin: "2",
-      phone: "08123456737",
-      createdDay: "July 01, 2024",
-    },
-    {
-      id: 16,
-      companyName: "QuantumLeap",
-      email: "daniel@quantumleap.biz",
-      totalAdmin: "3",
-      phone: "08123456738",
-      createdDay: "July 03, 2024",
-    },
-    {
-      id: 17,
-      companyName: "EchoBase",
-      email: "charlotte@echobase.io",
-      totalAdmin: "4",
-      phone: "08123456739",
-      createdDay: "July 05, 2024",
-    },
-    {
-      id: 18,
-      companyName: "Visionary Tech",
-      email: "matthew@visionarytech.co",
-      totalAdmin: "5",
-      phone: "08123456740",
-      createdDay: "July 07, 2024",
-    },
-    {
-      id: 19,
-      companyName: "TechPulse",
-      email: "amelia@techpulse.com",
-      totalAdmin: "2",
-      phone: "08123456741",
-      createdDay: "July 09, 2024",
-    },
-    {
-      id: 20,
-      companyName: "Innovative Minds",
-      email: "harper@innovativeminds.org",
-      totalAdmin: "3",
-      phone: "08123456742",
-      createdDay: "July 11, 2024",
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = `eyJhbGciOiJIUzI1NiJ9.eyJpZF9zdXBlcmFkbWluIjoyLCJpZF9hY2NvdW50IjoiNjBjYzYzNTAtYzZiZS00OTMxLTlkYjUtZjg4NWJjMjI0ZDgwIiwic3ViIjoibXVyaTEyMzQiLCJpYXQiOjE3MjM3OTUxMjUsImV4cCI6MTcyMzg4MTUyNX0.WQv_c4aMafcsBnIvau_dKqiv8gtPiSQ2dEBTIp21new`;
+        const response = await fetch(
+          "http://localhost:8080/company-management/companies",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+
+        // Transform API data to match DataGrid structure
+        const transformedData = data.data.map((company) => ({
+          id: company.id_company,
+          companyName: company.company_name,
+          email: company.email,
+          totalAdmin: company.total_admin,
+          phone: company.phone,
+          createdDay: company.created_date || "N/A", // Handle null dates
+        }));
+
+        setRows(transformedData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const [newCompanyModal, setNewCompanyModal] = useState(false);
 
@@ -401,7 +279,7 @@ const CompaniesList = () => {
               startIcon={<Add />}
               onClick={handleOpen}
             >
-              Add New Administrator
+              Add New Company
             </CustomButton>
           </Stack>
         </Box>
