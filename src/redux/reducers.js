@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchCompanies, addAdmin } from './actions';
+import { fetchCompanies, addAdmin, changeAdminPhoto } from './actions';
 
 //start punya tasyia utk add admin
 const adminSlice = createSlice({
@@ -41,7 +41,22 @@ const adminSlice = createSlice({
         } else {
           state.error = action.payload?.message || 'Failed to add admin';
         }
-      });
+      })
+      .addCase(changeAdminPhoto.pending, (state) =>{
+        state.status = 'loading';
+      })
+      .addCase(changeAdminPhoto.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        // Update foto admin di state admins
+        const updatedAdmin = state.admins.find(admin => admin.id == action.payload.id_admin);
+        if(updatedAdmin) {
+            updatedAdmin.profile_picture = action.payload.profile_picture;
+        }
+      })
+      .addCase(changeAdminPhoto.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload?.message || 'Failed to change admin photo';
+      })
   },
 });
 //end

@@ -37,3 +37,28 @@ export const addAdmin = createAsyncThunk(
   );
   //end
   
+  //start tasyia utk change admin photo
+  //Thunk untuk ubah foto admin
+  export const changeAdminPhoto = createAsyncThunk(
+    'admin/changeAdminPhoto',
+    async ({id_admin, photo} , { rejectWithValue }) => {
+        try {
+            const response = await fetch('http://localhost:8080/adminsphoto/${id_admin}', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ profile_picture: photo }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                return rejectWithValue(errorData);
+            }
+
+            return await response.json();
+        } catch (error) {
+            return rejectWithValue({message: error.message});
+        }
+    }
+  )
