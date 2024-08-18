@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -9,7 +9,9 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { styled } from "@mui/system";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../redux/slices/authSlice";
 import Hero from "../../assets/hero-signin.png";
 import Logo from "../../assets/logo.png";
 
@@ -47,7 +49,7 @@ const StyledTextField = styled(TextField)({
   width: "100%",
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
-      borderColor: "#ced4da", // Use default border color
+      borderColor: "#ced4da",
     },
     "&:hover fieldset": {
       borderColor: "#80bdff",
@@ -74,10 +76,30 @@ const ImageSection = styled(Box)({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  backgroundColor: "#F4F7FE", // Removed the blue background color
+  backgroundColor: "#F4F7FE",
 });
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { isAuthenticated, loading, error } = useSelector(
+    (state) => state.auth
+  );
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    dispatch(login({ username, password }));
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/"); // Redirect on successful login
+    }
+  }, [isAuthenticated, navigate]);
+
   return (
     <SignInContainer>
       <SignInCard>
@@ -96,27 +118,28 @@ const Login = () => {
             Presensi 79
           </Typography>
           <Typography variant="body1" gutterBottom style={{ color: "#6c757d" }}>
-            {" "}
-            {/* Changed to gray */}
             Please login here
           </Typography>
-          <form>
+          <form onSubmit={handleSubmit}>
             <StyledTextField
               label="Username"
               variant="outlined"
               fullWidth
-              defaultValue="robertallen"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
             <StyledTextField
               label="Password"
               variant="outlined"
               type="password"
               fullWidth
-              defaultValue="********"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               InputProps={{
                 endAdornment: <VisibilityIcon />,
               }}
             />
+            {error && <Typography color="error">{error}</Typography>}
             <Box
               display="flex"
               justifyContent="space-between"
@@ -131,8 +154,13 @@ const Login = () => {
                 Forgot Password?
               </Link>
             </Box>
-            <StyledButton variant="contained" size="large">
-              Login
+            <StyledButton
+              variant="contained"
+              size="large"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "Login"}
             </StyledButton>
           </form>
         </FormSection>
