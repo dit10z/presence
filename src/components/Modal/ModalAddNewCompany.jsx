@@ -12,6 +12,10 @@ import {
 import { styled } from "@mui/system";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
+import axios from "axios";
+import Swal from "sweetalert2";
+import success from "../../assets/icons/success.png";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -44,7 +48,7 @@ const ModalAddNewCompany = ({ open, onClose }) => {
     state: "",
     city: "",
     zipCode: "",
-    joiningDate: null,
+    joiningDate: dayjs(),
   });
 
   const handleChange = (e) => {
@@ -62,8 +66,41 @@ const ModalAddNewCompany = ({ open, onClose }) => {
   };
 
   const handleAdd = () => {
-    console.log(companyDetails); // Replace with actual submission logic
-    onClose();
+    const token = `eyJhbGciOiJIUzI1NiJ9.eyJpZF9zdXBlcmFkbWluIjoyLCJpZF9hY2NvdW50IjoiNjBjYzYzNTAtYzZiZS00OTMxLTlkYjUtZjg4NWJjMjI0ZDgwIiwic3ViIjoibXVyaTEyMzQiLCJpYXQiOjE3MjM3OTUxMjUsImV4cCI6MTcyMzg4MTUyNX0.WQv_c4aMafcsBnIvau_dKqiv8gtPiSQ2dEBTIp21new`;
+    try {
+      const data = {
+        company_name: companyDetails.companyName,
+        email: companyDetails.email,
+        phone: companyDetails.phone,
+        address: companyDetails.address,
+        state: companyDetails.state,
+        city: companyDetails.city,
+        zip_code: companyDetails.zipCode,
+        joining_date: companyDetails.joiningDate.toISOString().split("T")[0],
+      };
+      console.log(data);
+      const response = axios.post(
+        "http://localhost:8080/company-management/companies",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      Swal.fire({
+        title: "Success",
+        text: "Add New Company Success",
+        imageUrl: success,
+        imageAlt: "success",
+      });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      onClose();
+    }
   };
 
   return (
@@ -142,7 +179,7 @@ const ModalAddNewCompany = ({ open, onClose }) => {
               variant="outlined"
               name="joiningDate"
               value={companyDetails.joiningDate}
-              onChange={handleChange}
+              onChange={handleDateChange}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
