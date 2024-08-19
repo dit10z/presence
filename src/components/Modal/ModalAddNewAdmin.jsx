@@ -12,6 +12,9 @@ import CustomButton from "../CustomButton";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCompanies } from "../../redux/actions";
 import { selectCompanies } from "../../redux/selectors";
+import axios from "axios";
+import Swal from "sweetalert2";
+import success from "../../assets/icons/success.png";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -137,29 +140,31 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
 
     console.log("Posting data: ", payload);
 
+    const token = `eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXNpaSIsImlhdCI6MTcxOTgwMzM3OCwiZXhwIjoxNzE5ODg5Nzc4fQ.0TlpfJfrvZAaoT6o-ouvUJ4BoVWLRyLVwuSLH-x2pcY`;
+
     try {
-      const response = await fetch(
+      const response = await axios.post(
         "http://localhost:8080/admin-management/admins",
+        payload,
         {
-          method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(payload),
         }
       );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.errors) {
-          setValidationErrors(errorData.errors);
-        } else {
-          alert("Failed to add admin. Please try again.");
-        }
-        return;
-      }
+      console.log(response);
 
-      // Jika sukses, reset form dan tutup modal
+      // Tampilkan Swal jika sukses
+      Swal.fire({
+        title: "Success",
+        text: "Add New Admin Success",
+        imageUrl: success,
+        imageAlt: "success",
+      });
+
+      // Reset form dan tutup modal
       setFormData({
         first_name: "",
         last_name: "",
@@ -173,7 +178,12 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
       onClose();
     } catch (error) {
       console.error("Failed to add admin:", error);
-      alert("Failed to add admin. Please try again.");
+
+      if (error.response && error.response.data && error.response.data.errors) {
+        setValidationErrors(error.response.data.errors);
+      } else {
+        alert("Failed to add admin. Please try again.");
+      }
     }
   };
 
@@ -265,24 +275,24 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
             />
           </Grid>
           <Grid item xs={12}>
-          <FormField
-            select
-            label="Company Origin"
-            variant="outlined"
-            name="id_company"
-            value={formData.id_company}
-            onChange={handleChange}
-            error={!!validationErrors.id_company}
-            helperText={
-              validationErrors.id_company ? validationErrors.id_company : ""
-            }
-          >
-            {companies?.map((company) => (
-              <MenuItem key={company.id_company} value={company.id_company}>
-                {company.company_name}
-              </MenuItem>
-            ))}
-          </FormField>
+            <FormField
+              select
+              label="Company Origin"
+              variant="outlined"
+              name="id_company"
+              value={formData.id_company}
+              onChange={handleChange}
+              error={!!validationErrors.id_company}
+              helperText={
+                validationErrors.id_company ? validationErrors.id_company : ""
+              }
+            >
+              {companies?.map((company) => (
+                <MenuItem key={company.id_company} value={company.id_company}>
+                  {company.company_name}
+                </MenuItem>
+              ))}
+            </FormField>
           </Grid>
         </Grid>
         <Box mt={6} display="flex" justifyContent="flex-end">
