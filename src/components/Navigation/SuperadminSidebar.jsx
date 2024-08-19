@@ -20,6 +20,9 @@ import React, { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
 
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/slices/authSlice";
+
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useRouter } from "../../hooks/use-router";
@@ -50,6 +53,7 @@ const SuperAdminSidebar = () => {
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = true;
+  const dispatch = useDispatch();
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -60,7 +64,7 @@ const SuperAdminSidebar = () => {
   };
 
   const handleLogout = () => {
-    // Logic for logout
+    dispatch(logout());
     router.push("/login");
   };
 

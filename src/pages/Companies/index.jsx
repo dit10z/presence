@@ -153,13 +153,14 @@ import CustomButton from "../../components/CustomButton";
 import CustomDataGrid from "../../components/CustomDataGrid";
 import theme from "../../styles/theme";
 import ModalAddNewCompany from "../../components/Modal/ModalAddNewCompany";
+import axios from "axios";
 
 const CompaniesList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
-  const [date, setDate] = useState(null); // Single date state
-  const [data, setdata] = useState([]);
+  const [date, setDate] = useState(null);
+  const [totalCount, setTotalCount] = useState(0);
 
   const totalRowCount = 100;
   const [rows, setRows] = useState([]);
@@ -190,45 +191,43 @@ const CompaniesList = () => {
     },
   ];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = `eyJhbGciOiJIUzI1NiJ9.eyJpZF9zdXBlcmFkbWluIjoyLCJpZF9hY2NvdW50IjoiNjBjYzYzNTAtYzZiZS00OTMxLTlkYjUtZjg4NWJjMjI0ZDgwIiwic3ViIjoibXVyaTEyMzQiLCJpYXQiOjE3MjM3OTUxMjUsImV4cCI6MTcyMzg4MTUyNX0.WQv_c4aMafcsBnIvau_dKqiv8gtPiSQ2dEBTIp21new`;
-        const response = await fetch(
-          "http://localhost:8080/company-management/companies",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+  const fetchData = async (pageSize, pageNumber) => {
+    try {
+      const token = `eyJhbGciOiJIUzI1NiJ9.eyJpZF9zdXBlcmFkbWluIjoyLCJpZF9hY2NvdW50IjoiNjBjYzYzNTAtYzZiZS00OTMxLTlkYjUtZjg4NWJjMjI0ZDgwIiwic3ViIjoibXVyaTEyMzQiLCJpYXQiOjE3MjM3OTUxMjUsImV4cCI6MTcyMzg4MTUyNX0.WQv_c4aMafcsBnIvau_dKqiv8gtPiSQ2dEBTIp21new`;
 
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+      const response = await axios.get(
+        `http://localhost:8080/company-management/companies?filter&sortBy=company_name,ASC&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
+      );
+      console.log(response);
+      const data = response.data;
+      console.log(data.message);
+      setTotalCount(data.data.length);
 
-        const data = await response.json();
+      // Transform API data to match DataGrid structure
+      const transformedData = data.data.map((company) => ({
+        id: company.id_company,
+        companyName: company.company_name,
+        email: company.email,
+        totalAdmin: company.total_admin,
+        phone: company.phone,
+        createdDay: company.created_date || "N/A", // Handle null dates
+      }));
 
-        // Transform API data to match DataGrid structure
-        const transformedData = data.data.map((company) => ({
-          id: company.id_company,
-          companyName: company.company_name,
-          email: company.email,
-          totalAdmin: company.total_admin,
-          phone: company.phone,
-          createdDay: company.created_date || "N/A", // Handle null dates
-        }));
+      setRows(transformedData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-        setRows(transformedData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  useEffect(() => {
+    fetchData(pageSize, page);
+  }, [pageSize, page]);
 
   const [newCompanyModal, setNewCompanyModal] = useState(false);
 
@@ -317,7 +316,7 @@ const CompaniesList = () => {
           </TextField>
 
           <Pagination
-            count={Math.ceil(totalRowCount / pageSize)}
+            count={Math.ceil(totalCount / pageSize)}
             page={page}
             onChange={(e, value) => setPage(value)}
           />

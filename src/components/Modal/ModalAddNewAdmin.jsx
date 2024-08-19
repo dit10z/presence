@@ -70,22 +70,31 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
     // Validasi first name
     if (!formData.first_name || formData.first_name.trim() === "") {
       errors.first_name = "First name must not be empty";
-    } else if (formData.first_name.length < 1 || formData.first_name.length > 255) {
-      errors.first_name = "Invalid first name. (Min. 1 characters & Max. 255 characters)";
+    } else if (
+      formData.first_name.length < 1 ||
+      formData.first_name.length > 255
+    ) {
+      errors.first_name =
+        "Invalid first name. (Min. 1 characters & Max. 255 characters)";
     }
 
     // Validasi last name
     if (!formData.last_name || formData.last_name.trim() === "") {
       errors.last_name = "Last name must not be empty";
-    } else if (formData.last_name.length < 1 || formData.last_name.length > 255) {
-      errors.last_name = "Invalid last name. (Min. 1 characters & Max. 255 characters)";
+    } else if (
+      formData.last_name.length < 1 ||
+      formData.last_name.length > 255
+    ) {
+      errors.last_name =
+        "Invalid last name. (Min. 1 characters & Max. 255 characters)";
     }
 
     // Validasi username
     if (!formData.username || formData.username.trim() === "") {
       errors.username = "Username must not be empty";
     } else if (formData.username.length < 7 || formData.username.length > 20) {
-      errors.username = "Invalid username. (Min. 7 characters & Max. 20 characters)";
+      errors.username =
+        "Invalid username. (Min. 7 characters & Max. 20 characters)";
     }
 
     // Validasi email
@@ -101,7 +110,8 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
     if (!formData.password || formData.password.trim() === "") {
       errors.password = "Password must not be empty";
     } else if (formData.password.length < 7 || formData.password.length > 20) {
-      errors.password = "Invalid password. (Min. 7 characters & Max 20 characters)";
+      errors.password =
+        "Invalid password. (Min. 7 characters & Max 20 characters)";
     }
 
     // Validasi confirm password
@@ -128,13 +138,16 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
     console.log("Posting data: ", payload);
 
     try {
-      const response = await fetch('http://localhost:8080/admin-management/admins', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "http://localhost:8080/admin-management/admins",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -158,7 +171,6 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
       });
       setValidationErrors({});
       onClose();
-
     } catch (error) {
       console.error("Failed to add admin:", error);
       alert("Failed to add admin. Please try again.");
@@ -219,9 +231,7 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
               value={formData.email}
               onChange={handleChange}
               error={!!validationErrors.email}
-              helperText={
-                validationErrors.email ? validationErrors.email : ""
-              }
+              helperText={validationErrors.email ? validationErrors.email : ""}
             />
           </Grid>
           <Grid item xs={6}>
@@ -248,7 +258,9 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
               onChange={handleChange}
               error={formData.password !== formData.confirmPassword}
               helperText={
-                formData.password !== formData.confirmPassword ? "Passwords do not match" : ""
+                formData.password !== formData.confirmPassword
+                  ? "Passwords do not match"
+                  : ""
               }
             />
           </Grid>
