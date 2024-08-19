@@ -20,6 +20,7 @@ export const fetchCompanies = createAsyncThunk(
       throw new Error("Failed to fetch companies");
     }
     const data = await response.json();
+    console.log(data.data);
     return data.data; // Mengambil data perusahaan dari respons
   }
 );
