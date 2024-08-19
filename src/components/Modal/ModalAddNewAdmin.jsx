@@ -156,7 +156,6 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
 
       console.log(response);
 
-      // Tampilkan Swal jika sukses
       Swal.fire({
         title: "Success",
         text: "Add New Admin Success",

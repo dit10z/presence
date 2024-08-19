@@ -51,7 +51,8 @@ const SelectedFileBox = styled(Box)({
   marginTop: "16px",
 });
 
-const ModalChangePhotoAdmin = ({ open, onClose }) => {
+const ModalChangePhotoAdmin = ({ open, onClose, idAdmin }) => {
+  console.log("Received idAdmin in ModalChangePhotoAdmin:", idAdmin);
   const [activeTab, setActiveTab] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);
   const [validationError, setValidationError] = useState("");
@@ -77,14 +78,14 @@ const ModalChangePhotoAdmin = ({ open, onClose }) => {
   const handleSubmit = () => {
     let errorMessage = "";
 
-     // Validasi jika blm ada file yg dipilih
-     if (!selectedFile) {
-        errorMessage = "Field must not be empty";
-      } else if (selectedFile.size > 2 * 1024 * 1024) { // Validasi ukuran file (maks 2MB)
-        errorMessage = "Max photo's size is 2MB";
-      } else if (!["image/jpeg", "image/png"].includes(selectedFile.type)) { // Validasi format file
-        errorMessage = "Format must be .jpg/.jpeg/.png";
-      }
+    // Validasi jika belum ada file yang dipilih
+    if (!selectedFile) {
+      errorMessage = "Field must not be empty";
+    } else if (selectedFile.size > 2 * 1024 * 1024) { // Validasi ukuran file (maks 2MB)
+      errorMessage = "Max photo's size is 2MB";
+    } else if (!["image/jpeg", "image/png"].includes(selectedFile.type)) { // Validasi format file
+      errorMessage = "Format must be .jpg/.jpeg/.png";
+    }
 
     // Jika ada error, set pesan error dan tampilkan
     if (errorMessage) {
@@ -93,16 +94,18 @@ const ModalChangePhotoAdmin = ({ open, onClose }) => {
     }
 
     if (selectedFile) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
-      dispatch(changeAdminPhoto({ id_admin, photo: base64String }));
-    };
-    reader.readAsDataURL(selectedFile);
-  }
-  setValidationError("") // reset error kl gaada error
-  onCloseModal();
-};
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+        console.log("idAdmin before dispatch:", idAdmin); // Pastikan idAdmin sudah benar
+        dispatch(changeAdminPhoto({ idAdmin, photo: base64String }));
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+
+    setValidationError(""); // reset error jika tidak ada error
+    onCloseModal();
+  };
 
   const onCloseModal = () => {
     setSelectedFile(null); // file yg dipilih terhapus
