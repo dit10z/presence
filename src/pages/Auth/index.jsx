@@ -4,6 +4,8 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
+  IconButton,
+  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
@@ -14,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/slices/authSlice";
 import Hero from "../../assets/hero-signin.png";
 import Logo from "../../assets/logo.png";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const SignInContainer = styled(Box)({
   display: "flex",
@@ -72,7 +75,7 @@ const StyledButton = styled(Button)({
 
 const ImageSection = styled(Box)({
   width: "60%",
-  padding: "50px",
+  padding: "50px 50px 50px 0",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -84,6 +87,11 @@ const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const { isAuthenticated, loading, error } = useSelector(
     (state) => state.auth
@@ -131,15 +139,30 @@ const Login = () => {
             <StyledTextField
               label="Password"
               variant="outlined"
-              type="password"
+              type={showPassword ? "text" : "password"}
               fullWidth
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               InputProps={{
-                endAdornment: <VisibilityIcon />,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle new password visibility"
+                      onClick={handleTogglePasswordVisibility}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
               }}
             />
-            {error && <Typography color="error">{error}</Typography>}
+            {error && typeof error === "string" && (
+              <Typography color="error">{error}</Typography>
+            )}
+            {error && typeof error === "object" && error.message && (
+              <Typography color="error">{error.message}</Typography>
+            )}
             <Box
               display="flex"
               justifyContent="space-between"
