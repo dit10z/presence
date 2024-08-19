@@ -253,24 +253,24 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
             />
           </Grid>
           <Grid item xs={12}>
-            <FormField
-              select
-              label="Company Origin"
-              variant="outlined"
-              name="id_company"
-              value={formData.id_company}
-              onChange={handleChange}
-              error={!!validationErrors.id_company}
-              helperText={
-                validationErrors.id_company ? validationErrors.id_company : ""
-              }
-            >
-              {companies.map((company) => (
-                <MenuItem key={company.id_company} value={company.id_company}>
-                  {company.company_name}
-                </MenuItem>
-              ))}
-            </FormField>
+          <FormField
+            select
+            label="Company Origin"
+            variant="outlined"
+            name="id_company"
+            value={formData.id_company}
+            onChange={handleChange}
+            error={!!validationErrors.id_company}
+            helperText={
+              validationErrors.id_company ? validationErrors.id_company : ""
+            }
+          >
+            {companies?.map((company) => (
+              <MenuItem key={company.id_company} value={company.id_company}>
+                {company.company_name}
+              </MenuItem>
+            ))}
+          </FormField>
           </Grid>
         </Grid>
         <Box mt={6} display="flex" justifyContent="flex-end">
