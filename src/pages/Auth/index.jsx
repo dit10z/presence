@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
   Checkbox,
   FormControlLabel,
+  IconButton,
+  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { styled } from "@mui/system";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../redux/slices/authSlice";
 import Hero from "../../assets/hero-signin.png";
 import Logo from "../../assets/logo.png";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const SignInContainer = styled(Box)({
   display: "flex",
@@ -47,7 +52,7 @@ const StyledTextField = styled(TextField)({
   width: "100%",
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
-      borderColor: "#ced4da", // Use default border color
+      borderColor: "#ced4da",
     },
     "&:hover fieldset": {
       borderColor: "#80bdff",
@@ -70,14 +75,39 @@ const StyledButton = styled(Button)({
 
 const ImageSection = styled(Box)({
   width: "60%",
-  padding: "50px",
+  padding: "50px 50px 50px 0",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  backgroundColor: "#F4F7FE", // Removed the blue background color
+  backgroundColor: "#F4F7FE",
 });
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const { isAuthenticated, loading, error } = useSelector(
+    (state) => state.auth
+  );
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    dispatch(login({ username, password }));
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/"); // Redirect on successful login
+    }
+  }, [isAuthenticated, navigate]);
+
   return (
     <SignInContainer>
       <SignInCard>
@@ -96,27 +126,43 @@ const Login = () => {
             Presensi 79
           </Typography>
           <Typography variant="body1" gutterBottom style={{ color: "#6c757d" }}>
-            {" "}
-            {/* Changed to gray */}
             Please login here
           </Typography>
-          <form>
+          <form onSubmit={handleSubmit}>
             <StyledTextField
               label="Username"
               variant="outlined"
               fullWidth
-              defaultValue="robertallen"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
             <StyledTextField
               label="Password"
               variant="outlined"
-              type="password"
+              type={showPassword ? "text" : "password"}
               fullWidth
-              defaultValue="********"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               InputProps={{
-                endAdornment: <VisibilityIcon />,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle new password visibility"
+                      onClick={handleTogglePasswordVisibility}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
               }}
             />
+            {error && typeof error === "string" && (
+              <Typography color="error">{error}</Typography>
+            )}
+            {error && typeof error === "object" && error.message && (
+              <Typography color="error">{error.message}</Typography>
+            )}
             <Box
               display="flex"
               justifyContent="space-between"
@@ -131,8 +177,13 @@ const Login = () => {
                 Forgot Password?
               </Link>
             </Box>
-            <StyledButton variant="contained" size="large">
-              Login
+            <StyledButton
+              variant="contained"
+              size="large"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "Login"}
             </StyledButton>
           </form>
         </FormSection>

@@ -1,16 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import Pages from "./pages";
-import { Provider } from "react-redux"; // Import Provider from react-redux
-import store from "./redux/store"; // Import store from your redux store file
+import { Provider, useDispatch } from "react-redux";
+import store from "./redux/store";
+import { setCredentials } from "./redux/slices/authSlice"; // Import setCredentials
+
+function AppInitializer() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userRole = localStorage.getItem("userRole");
+
+    if (token && userRole) {
+      dispatch(setCredentials({ token, role: userRole }));
+    }
+  }, [dispatch]);
+
+  return <Pages />;
+}
 
 export default function App() {
   return (
     <Provider store={store}>
       <Router>
-        <Pages /> {/* Ini akan mengatur semua routing dan halaman */}
-        {/* <ProTip /> */}
-        {/* <Copyright /> */}
+        <AppInitializer />
       </Router>
     </Provider>
   );

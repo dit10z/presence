@@ -12,6 +12,8 @@ import { styled } from "@mui/system";
 import CustomButton from "../CustomButton";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Description } from "@mui/icons-material";
+import { changeAdminPhoto } from "../../redux/actions";
+import { useDispatch } from "react-redux";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -52,6 +54,8 @@ const SelectedFileBox = styled(Box)({
 const ModalChangePhotoAdmin = ({ open, onClose }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [validationError, setValidationError] = useState("");
+  const dispatch = useDispatch();
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -70,8 +74,44 @@ const ModalChangePhotoAdmin = ({ open, onClose }) => {
     event.preventDefault();
   };
 
+  const handleSubmit = () => {
+    let errorMessage = "";
+
+     // Validasi jika blm ada file yg dipilih
+     if (!selectedFile) {
+        errorMessage = "Field must not be empty";
+      } else if (selectedFile.size > 2 * 1024 * 1024) { // Validasi ukuran file (maks 2MB)
+        errorMessage = "Max photo's size is 2MB";
+      } else if (!["image/jpeg", "image/png"].includes(selectedFile.type)) { // Validasi format file
+        errorMessage = "Format must be .jpg/.jpeg/.png";
+      }
+
+    // Jika ada error, set pesan error dan tampilkan
+    if (errorMessage) {
+      setValidationError(errorMessage);
+      return;
+    }
+
+    if (selectedFile) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+      dispatch(changeAdminPhoto({ id_admin, photo: base64String }));
+    };
+    reader.readAsDataURL(selectedFile);
+  }
+  setValidationError("") // reset error kl gaada error
+  onCloseModal();
+};
+
+  const onCloseModal = () => {
+    setSelectedFile(null); // file yg dipilih terhapus
+    setValidationError(""); // reset pesan error
+    onClose(); // dialog ditutup
+  }
+
   return (
-    <StyledModal open={open} onClose={onClose}>
+    <StyledModal open={open} onClose={onCloseModal}>
       <ModalContent>
         <Typography variant="h6" mb={3}>
           Change Admin Photo
@@ -130,19 +170,29 @@ const ModalChangePhotoAdmin = ({ open, onClose }) => {
                   </SelectedFileBox>
                 )}
               </FileUploadBox>
+              {validationError && (
+                <Typography variant="body2" color="error" mt={1}>
+                  {validationError}
+                </Typography>
+              )}
             </Grid>
           </Grid>
         )}
         <Box mt={10} display="flex" justifyContent="flex-end">
           <CustomButton
-            onClick={onClose}
+            onClick={onCloseModal}
             variant="outlined"
             sx={{ marginRight: 1 }}
             color="button"
           >
             Cancel
           </CustomButton>
-          <CustomButton variant="contained" color="button" text="white">
+          <CustomButton 
+            variant="contained" 
+            color="button" 
+            text="white"
+            onClick={handleSubmit}
+          >
             Save
           </CustomButton>
         </Box>
