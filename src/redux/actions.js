@@ -5,13 +5,11 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 export const fetchCompanies = createAsyncThunk(
   "admin/fetchCompanies",
   async () => {
-    const token = `eyJhbGciOiJIUzI1NiJ9.eyJpZF9zdXBlcmFkbWluIjoyLCJpZF9hY2NvdW50IjoiNjBjYzYzNTAtYzZiZS00OTMxLTlkYjUtZjg4NWJjMjI0ZDgwIiwic3ViIjoibXVyaTEyMzQiLCJpYXQiOjE3MjM3OTUxMjUsImV4cCI6MTcyMzg4MTUyNX0.WQv_c4aMafcsBnIvau_dKqiv8gtPiSQ2dEBTIp21new`;
     const response = await fetch(
       "http://localhost:8080/company-management/companies",
       {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`, // Menyertakan JWT dalam header
           "Content-Type": "application/json",
         },
       }
@@ -52,3 +50,28 @@ export const addAdmin = createAsyncThunk(
     }
   }
 );
+  //start tasyia utk change admin photo
+  //Thunk untuk ubah foto admin
+  export const changeAdminPhoto = createAsyncThunk(
+    'admin/changeAdminPhoto',
+    async ({id_admin, photo} , { rejectWithValue }) => {
+        try {
+                const response = await fetch(`http://localhost:8080/adminsphoto/${id_admin}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ profile_picture: photo }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                return rejectWithValue(errorData);
+            }
+
+            return await response.json();
+        } catch (error) {
+            return rejectWithValue({message: error.message});
+        }
+    }
+  )

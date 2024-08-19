@@ -1,15 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { fetchCompanies, addAdmin } from "./actions";
+import { createSlice } from '@reduxjs/toolkit';
+import { fetchCompanies, addAdmin, changeAdminPhoto } from './actions';
 
 //start punya tasyia utk add admin
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
     admins: [],
-    companies: [],
+    companies: [],  // Pastikan ini array kosong
     status: "idle",
     error: null,
-    validationErrors: {}, // Menyimpan error validasi per field
+    validationErrors: {},
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -20,7 +20,7 @@ const adminSlice = createSlice({
       .addCase(fetchCompanies.fulfilled, (state, action) => {
         console.log(action.payload.data);
         state.status = "succeeded";
-        state.companies = action.payload.data; // Menyimpan daftar companies ke dalam state
+        state.companies = action.payload; // Menyimpan daftar companies ke dalam state
       })
       .addCase(fetchCompanies.rejected, (state, action) => {
         state.status = "failed";
@@ -42,7 +42,22 @@ const adminSlice = createSlice({
         } else {
           state.error = action.payload?.message || "Failed to add admin";
         }
-      });
+      })
+      .addCase(changeAdminPhoto.pending, (state) =>{
+        state.status = 'loading';
+      })
+      .addCase(changeAdminPhoto.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        // Update foto admin di state admins
+        const updatedAdmin = state.admins.find(admin => admin.id === action.payload.id_admin);
+        if(updatedAdmin) {
+            updatedAdmin.profile_picture = action.payload.profile_picture;
+        }
+    })
+      .addCase(changeAdminPhoto.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload?.message || 'Failed to change admin photo';
+      })
   },
 });
 //end
