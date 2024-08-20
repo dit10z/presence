@@ -16,8 +16,6 @@ import dayjs from "dayjs";
 import axios from "axios";
 import Swal from "sweetalert2";
 import success from "../../assets/icons/success.png";
-import { useSelector } from "react-redux";
-import { addNewCompany } from "../../redux/slices/companySlice";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -41,8 +39,7 @@ const FormFieldDate = styled(DatePicker)({
   width: "100%",
 });
 
-const ModalAddNewCompany = ({ open, onClose }) => {
-  const { status, error } = useSelector((state) => state.companies);
+const ModalEditCompany = ({ open, onClose }) => {
   const [companyDetails, setCompanyDetails] = useState({
     companyName: "",
     email: "",
@@ -95,7 +92,7 @@ const ModalAddNewCompany = ({ open, onClose }) => {
       console.log(response);
       Swal.fire({
         title: "Success",
-        text: "Add New Company Success",
+        text: "Edit Company Data Success",
         imageUrl: success,
         imageAlt: "success",
       });
@@ -110,7 +107,7 @@ const ModalAddNewCompany = ({ open, onClose }) => {
     <StyledModal open={open} onClose={onClose}>
       <ModalContent>
         <Typography variant="h6" mb={8}>
-          Add New Company
+          Edit Company
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -213,4 +210,4 @@ const ModalAddNewCompany = ({ open, onClose }) => {
   );
 };
 
-export default ModalAddNewCompany;
+export default ModalEditCompany;
