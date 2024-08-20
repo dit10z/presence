@@ -14,6 +14,7 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Description } from "@mui/icons-material";
 import { changeAdminPhoto } from "../../redux/actions";
 import { useDispatch } from "react-redux";
+// import { changeAdminPhoto } from "../../api/baseAPI";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -25,7 +26,7 @@ const ModalContent = styled(Box)({
   backgroundColor: "#fff",
   borderRadius: "10px",
   padding: "20px",
-  width: "750px", // Increase width from 500px to 600px
+  width: "750px", 
   boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
 });
 
@@ -45,14 +46,13 @@ const FileUploadBox = styled(Box)({
 const SelectedFileBox = styled(Box)({
   display: "flex",
   alignItems: "center",
-  backgroundColor: "#f0f0f0", // Muted background color
+  backgroundColor: "#f0f0f0",
   padding: "8px 12px",
   borderRadius: "20px",
   marginTop: "16px",
 });
 
-const ModalChangePhotoAdmin = ({ open, onClose, idAdmin }) => {
-  console.log("Received idAdmin in ModalChangePhotoAdmin:", idAdmin);
+const ModalChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);
   const [validationError, setValidationError] = useState("");
@@ -75,7 +75,7 @@ const ModalChangePhotoAdmin = ({ open, onClose, idAdmin }) => {
     event.preventDefault();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let errorMessage = "";
 
     // Validasi jika belum ada file yang dipilih
@@ -117,7 +117,7 @@ const ModalChangePhotoAdmin = ({ open, onClose, idAdmin }) => {
     <StyledModal open={open} onClose={onCloseModal}>
       <ModalContent>
         <Typography variant="h6" mb={3}>
-          Change Admin Photo
+          {title} 
         </Typography>
         <Tabs
           value={activeTab}

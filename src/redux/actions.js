@@ -76,9 +76,10 @@ export const fetchAdminDetail = createAsyncThunk(
 
 // Thunk untuk ubah foto admin
 export const changeAdminPhoto = createAsyncThunk(
-  'admin/changeAdminPhoto',
+  "admin/changeAdminPhoto",
   async ({ idAdmin, photo } , { rejectWithValue }) => {
-    const token = `eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXNpaSIsImlhdCI6MTcxOTgwMzM3OCwiZXhwIjoxNzE5ODg5Nzc4fQ.0TlpfJfrvZAaoT6o-ouvUJ4BoVWLRyLVwuSLH-x2pcY`;
+    const token = localStorage.getItem("token")
+    console.log(token);
     try {
       const response = await axios.patch(
         `http://localhost:8080/admin-management/admins/photo/${idAdmin}`, 
@@ -86,7 +87,7 @@ export const changeAdminPhoto = createAsyncThunk(
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
@@ -96,4 +97,34 @@ export const changeAdminPhoto = createAsyncThunk(
     }
   }
 );
+
+// export const changeAdminPhoto = createAsyncThunk(
+//   'admin/changeAdminPhoto',
+//   async ({ idAdmin, photo } , { rejectWithValue }) => {
+//     const token = `eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXNpaSIsImlhdCI6MTcxOTgwMzM3OCwiZXhwIjoxNzE5ODg5Nzc4fQ.0TlpfJfrvZAaoT6o-ouvUJ4BoVWLRyLVwuSLH-x2pcY`;
+//     try {
+//       const response = await fetch(
+//         `http://localhost:8080/admin-management/admins/photo/${idAdmin}`, 
+//         { profile_picture: photo },
+//         {
+//           method: "PATCH",
+//           headers: {
+//             'Content-Type': 'application/json',
+//           },
+//           bidy: JSON.stringify({profile_picture: photo})
+//         }
+//       );
+
+//       if(!response.ok) {
+//         throw new error(`HTTP error!status: ${response.status}`)
+//       }
+
+//       const data = await response.json();
+//       return data.data;
+
+//     } catch (error) {
+//       return rejectWithValue(error.response?.data || error.message);
+//     }
+//   }
+// );
 

@@ -198,7 +198,7 @@ const AdminDetail = () => {
         open={modalChangePhotoAdmin}
         onClose={handleModalChangePhotoAdminClose}
         idAdmin={adminDetail.id_admin}
-        title="Change Photo"
+        title="Change Admin Photo"
       />
     </Grid>
   );

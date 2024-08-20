@@ -15,6 +15,7 @@ import { selectCompanies } from "../../redux/selectors";
 import axios from "axios";
 import Swal from "sweetalert2";
 import success from "../../assets/icons/success.png";
+import addNewAdmin from "../../api/baseAPI";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -140,22 +141,8 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
 
     console.log("Posting data: ", payload);
 
-    const token = `eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXNpaSIsImlhdCI6MTcxOTgwMzM3OCwiZXhwIjoxNzE5ODg5Nzc4fQ.0TlpfJfrvZAaoT6o-ouvUJ4BoVWLRyLVwuSLH-x2pcY`;
-
     try {
-      const response = await axios.post(
-        "http://localhost:8080/admin-management/admins",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log(response);
-
+      addNewAdmin({payload});
       Swal.fire({
         title: "Success",
         text: "Add New Admin Success",
