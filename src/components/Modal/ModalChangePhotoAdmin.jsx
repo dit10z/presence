@@ -12,8 +12,9 @@ import { styled } from "@mui/system";
 import CustomButton from "../CustomButton";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Description } from "@mui/icons-material";
-import { changeAdminPhoto } from "../../redux/actions";
+// import { changeAdminPhoto } from "../../redux/actions";
 import { useDispatch } from "react-redux";
+import { changeAdminPhoto } from "../../redux/slices/adminsSlice";
 // import { changeAdminPhoto } from "../../api/baseAPI";
 
 const StyledModal = styled(Modal)({

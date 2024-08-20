@@ -25,8 +25,7 @@ import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
 import ModalChangePhotoAdmin from "../../components/Modal/ModalChangePhotoAdmin";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { fetchAdminDetail } from "../../redux/actions";
-import { selectAdminDetail } from "../../redux/selectors";
+import { fetchAdminDetail } from "../../redux/slices/adminsSlice";
 
 const AdminDetail = () => {
   const [modalEditAdmin, setModalEditAdmin] = useState(false);
@@ -34,7 +33,7 @@ const AdminDetail = () => {
   const dispatch = useDispatch();
   const {idAdmin} = useParams();
   console.log("idAdmin from useParams:", idAdmin);
-  const adminDetail = useSelector(selectAdminDetail);
+  const adminDetail = useSelector((state) => state.admin.adminDetail);
 
   useEffect(() => {
     dispatch(fetchAdminDetail(idAdmin));
@@ -54,7 +53,7 @@ const AdminDetail = () => {
   };
 
   if(!adminDetail) {
-    return <div>Loading...</div>
+    return <div>No Data...</div>
   }
 
   return (
