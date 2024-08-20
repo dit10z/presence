@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers";
 import CustomButton from "../../components/CustomButton";
@@ -7,6 +7,8 @@ import { Add, Delete, Edit, Search, Visibility } from "@mui/icons-material";
 import Grid from "@mui/material/Grid";
 import theme from "../../styles/theme";
 import ModalAddNewAdministrator from "../../components/Modal/ModalAddNewAdmin";
+import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
+import { getAllAdmins } from "../../services/apis";
 import {
   Avatar,
   Paper,
@@ -19,130 +21,25 @@ import {
   Typography,
   InputAdornment,
 } from "@mui/material";
-const rows = [
-  {
-    id: 1,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 2,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 3,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 4,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 5,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 6,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 7,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 8,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 9,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 10,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 11,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 12,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 13,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 14,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 15,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 16,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  // Add more rows as needed
-];
 
-const AdminTabel = () => {
+const AdminTabel = ({ searchQuery }) => {
+  const [openModaledit, setOpenModaledit] = useState(false);
   const navigate = useNavigate();
   const [pageSize, setPageSize] = useState(10);
-  const [page, setPage] = useState(0);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [filter, setFilter] = useState("");
+  const [sortBy, setSortBy] = useState("");
+  const [page, setPage] = useState(1);
+  // const [searchQuery, setSearchQuery] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [row, setRow] = useState([]);
   const totalRowCount = 100;
 
+  const handleOpenModaledit = () => {
+    setOpenModaledit(true);
+  };
+  const handleModalEditClose = () => {
+    setOpenModaledit(false);
+  };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -152,10 +49,64 @@ const AdminTabel = () => {
     setPage(0);
   };
 
+  function extractDate(createdDate) {
+    const date = new Date(createdDate);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+  const fetchDataAdmin = async (searchQuery, sortBy, pageSize, page) => {
+    try {
+      const response = await getAllAdmins(searchQuery, sortBy, pageSize, page);
+      console.log(response.data.data);
+      const transformedData = response.data.data.map((admin) => ({
+        id: admin.id_admin,
+        company_name: admin.company.company_name,
+        fullname: `${admin.first_name} ${admin.last_name}`,
+        email: admin.email,
+        profile_picture: admin.profile_picture,
+        created_date: extractDate(admin.created_day),
+      }));
+      setRow(transformedData);
+      console.log(transformedData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataAdmin(searchQuery, sortBy, pageSize, page);
+  }, [searchQuery, sortBy, pageSize, page]);
+
+  // const data = {
+  //   company: {
+  //     id_company: 3,
+  //     company_name: "PT. Padepokan Tujuh Sembilan",
+  //   },
+  //   id_admin: 1,
+  //   profile_picture: "profile_picture.png",
+  //   first_name: "John",
+  //   last_name: "Doe",
+  //   email: "example@example.com",
+  //   created_date: "2022-01-01",
+  // };
+
+  // const newrows = [
+  //   {
+  //     id: data.id_admin,
+  //     company_name: data.company.company_name,
+  //     fullname: `${data.first_name} ${data.last_name}`,
+  //     email: data.email,
+  //     profile_picture: data.profile_picture,
+  //     created_date: data.created_date,
+  //   },
+  // ];
   const columns = [
-    { field: "company", headerName: "Company Name", flex: 1 },
+    { field: "company_name", headerName: "Company Name", flex: 1 },
     {
-      field: "name",
+      field: "fullname",
       headerName: "Administrator Name",
       flex: 1,
       renderCell: (params) => (
@@ -166,7 +117,7 @@ const AdminTabel = () => {
       ),
     },
     { field: "email", headerName: "Email", flex: 1 },
-    { field: "date", headerName: "Joining Date", flex: 1 },
+    { field: "created_date", headerName: "Joining Date", flex: 1 },
     {
       field: "actions",
       headerName: "Action",
@@ -175,16 +126,21 @@ const AdminTabel = () => {
         <Box sx={{ display: "flex", justifyContent: "stretch" }}>
           <IconButton
             aria-label="view"
-            onClick={() => navigate("/admin-detail")}
+            onClick={() => navigate("/admin-detail/")}
           >
             <Visibility />
           </IconButton>
-          <IconButton aria-label="edit">
+          <IconButton aria-label="edit" onClick={handleOpenModaledit}>
             <Edit />
           </IconButton>
           <IconButton aria-label="delete">
             <Delete />
           </IconButton>
+          <ModalEditAdmin
+            open={openModaledit}
+            onClose={handleModalEditClose}
+            title="edit"
+          />
         </Box>
       ),
     },
@@ -194,7 +150,7 @@ const AdminTabel = () => {
     <>
       <CustomDataGrid
         columns={columns}
-        rows={rows}
+        rows={row}
         pageSize={pageSize}
         page={page}
         onPageChange={(newPage) => setPage(newPage)}
@@ -231,7 +187,7 @@ const AdminTabel = () => {
     </>
   );
 };
-const AdminButton = () => {
+const AdminButton = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [date, setDate] = useState(null);
   const [newAdministratorModal, setNewAdministratorModal] = useState(false);
@@ -240,6 +196,11 @@ const AdminButton = () => {
   };
   const handleClose = () => {
     setNewAdministratorModal(false);
+  };
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    onSearch(e.target.value);
+    console.log(e.target.value);
   };
   return (
     <Box>
@@ -257,7 +218,7 @@ const AdminButton = () => {
           <TextField
             placeholder="Search"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => handleSearch(e)}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -293,6 +254,7 @@ const AdminButton = () => {
   );
 };
 const Administrators = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   return (
     <Grid
       border={`1px solid ${theme.palette.grey[300]}`}
@@ -300,8 +262,8 @@ const Administrators = () => {
       padding={2.5}
     >
       <Box sx={{ p: 3 }}>
-        <AdminButton />
-        <AdminTabel />
+        <AdminButton onSearch={setSearchQuery} />
+        <AdminTabel searchQuery={searchQuery} />
       </Box>
     </Grid>
   );

@@ -40,6 +40,37 @@ const ModalEditAdmin = ({ open, onClose }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    username: "",
+    idcompany: "",
+  });
+
+  const fetchData = async (pageSize, pageNumber) => {
+    try {
+      const token = `eyJhbGciOiJIUzI1NiJ9.eyJpZF9zdXBlcmFkbWluIjoyLCJpZF9hY2NvdW50IjoiNjBjYzYzNTAtYzZiZS00OTMxLTlkYjUtZjg4NWJjMjI0ZDgwIiwic3ViIjoibXVyaTEyMzQiLCJpYXQiOjE3MjM3OTUxMjUsImV4cCI6MTcyMzg4MTUyNX0.WQv_c4aMafcsBnIvau_dKqiv8gtPiSQ2dEBTIp21new`;
+
+      const response = await axios.get(
+        `http://localhost:8080/company-management/companies?filter&sortBy=company_name,ASC&pageSize=${pageSize}&pageNumber=${pageNumber}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      const data = response.data;
+      console.log(data.message);
+      setTotalCount(data.data.length);
+
+      // Transform API data to match DataGrid structure
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -51,6 +82,31 @@ const ModalEditAdmin = ({ open, onClose }) => {
 
   const handleToggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setPayload({
+      ...payload,
+      [name]: value,
+    });
+  };
+
+  const handleSubmitEditAdmin = () => {
+    // Handle form submission
+    const payload = {
+      first_name: formData.firstname,
+      last_name: formData.lastname,
+      username: formData.username,
+      email: formData.email,
+      id_company: formData.idcompany,
+    };
+  };
+
+  const handleSubmitChangePassword = () => {
+    // try{
+    //   const response = await
+    // }
   };
 
   return (
@@ -79,16 +135,32 @@ const ModalEditAdmin = ({ open, onClose }) => {
         {activeTab === 0 && (
           <Grid container spacing={3} mt={3}>
             <Grid item xs={6}>
-              <FormField label="First Name" variant="outlined" />
+              <FormField
+                label="First Name"
+                variant="outlined"
+                value={formData.firstname}
+              />
             </Grid>
             <Grid item xs={6}>
-              <FormField label="Last Name" variant="outlined" />
+              <FormField
+                label="Last Name"
+                variant="outlined"
+                value={formData.lastname}
+              />
             </Grid>
             <Grid item xs={6}>
-              <FormField label="Username" variant="outlined" />
+              <FormField
+                label="Username"
+                variant="outlined"
+                value={formData.username}
+              />
             </Grid>
             <Grid item xs={6}>
-              <FormField label="Email Address" variant="outlined" />
+              <FormField
+                label="Email Address"
+                variant="outlined"
+                value={formData.email}
+              />
             </Grid>
             <Grid item xs={12}>
               <FormField
@@ -161,7 +233,16 @@ const ModalEditAdmin = ({ open, onClose }) => {
           >
             Cancel
           </CustomButton>
-          <CustomButton variant="contained" color="button" text="white">
+          <CustomButton
+            variant="contained"
+            color="button"
+            text="white"
+            onClick={
+              activeTab === 0
+                ? handleSubmitEditAdmin
+                : handleSubmitChangePassword
+            }
+          >
             Save
           </CustomButton>
         </Box>

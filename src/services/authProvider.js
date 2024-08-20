@@ -10,12 +10,12 @@ export default function useToken() {
     return localStorage.getItem("token");
   };
 
-  const getUserId = () => {
-    return localStorage.getItem("userId");
-  };
+  // const getUserId = () => {
+  //   return localStorage.getItem("userId");
+  // };
 
   const [token, setToken] = useState(getToken());
-  const [userId, setUserId] = useState(getUserId());
+  // const [userId, setUserId] = useState(getUserId());
   const [isExpired, setIsExpired] = useState(false);
 
   const saveToken = (token) => {
@@ -54,7 +54,7 @@ export default function useToken() {
 
   useEffect(() => {
     if (!token && location.pathname !== "/") {
-      navigate("/");
+      navigate("/login");
     } else if (
       token &&
       (location.pathname === "/" || location.pathname === "/signup")
