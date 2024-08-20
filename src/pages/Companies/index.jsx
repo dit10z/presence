@@ -153,17 +153,18 @@ import CustomButton from "../../components/CustomButton";
 import CustomDataGrid from "../../components/CustomDataGrid";
 import theme from "../../styles/theme";
 import ModalAddNewCompany from "../../components/Modal/ModalAddNewCompany";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDataCompanies } from "../../redux/slices/companySlice";
 
 const CompaniesList = () => {
+  const dispatch = useDispatch();
+  const { data, status, error } = useSelector((state) => state.companies);
   const [searchQuery, setSearchQuery] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
   const [date, setDate] = useState(null);
-  const [totalCount, setTotalCount] = useState(0);
-
-  const totalRowCount = 100;
-  const [rows, setRows] = useState([]);
+  const [sortBy, setSortBy] = useState("");
+  const totalCount = data && data?.length;
 
   const columns = [
     { field: "companyName", headerName: "Company Name", flex: 1 },
@@ -191,48 +192,33 @@ const CompaniesList = () => {
     },
   ];
 
-  const fetchData = async (pageSize, pageNumber) => {
-    try {
-      const token = `eyJhbGciOiJIUzI1NiJ9.eyJpZF9zdXBlcmFkbWluIjoyLCJpZF9hY2NvdW50IjoiNjBjYzYzNTAtYzZiZS00OTMxLTlkYjUtZjg4NWJjMjI0ZDgwIiwic3ViIjoibXVyaTEyMzQiLCJpYXQiOjE3MjM3OTUxMjUsImV4cCI6MTcyMzg4MTUyNX0.WQv_c4aMafcsBnIvau_dKqiv8gtPiSQ2dEBTIp21new`;
-
-      const response = await axios.get(
-        `http://localhost:8080/company-management/companies?filter&sortBy=company_name,ASC&pageSize=${pageSize}&pageNumber=${pageNumber}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response);
-      const data = response.data;
-      console.log(data.message);
-      setTotalCount(data.data.length);
-
-      // Transform API data to match DataGrid structure
-      const transformedData = data.data.map((company) => ({
-        id: company.id_company,
-        companyName: company.company_name,
-        email: company.email,
-        totalAdmin: company.total_admin,
-        phone: company.phone,
-        createdDay: company.created_date || "N/A", // Handle null dates
-      }));
-
-      setRows(transformedData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchData(pageSize, page);
-  }, [pageSize, page]);
+    const params = {
+      sortBy: sortBy,
+      pageSize: pageSize,
+      pageNumber: page,
+    };
+    dispatch(fetchDataCompanies(params));
+  }, [dispatch, sortBy, pageSize, page]);
+
+  const transformedData =
+    data?.map((company) => ({
+      id: company.id_company,
+      companyName: company.company_name,
+      email: company.email,
+      totalAdmin: company.total_admin,
+      phone: company.phone,
+      createdDay: company.created_date || "N/A", // Handle null dates
+    })) || [];
 
   const [newCompanyModal, setNewCompanyModal] = useState(false);
 
   const handleOpen = () => setNewCompanyModal(true);
   const handleClose = () => setNewCompanyModal(false);
+
+  if (status) {
+    return <Typography>Loading...</Typography>;
+  }
 
   return (
     <Grid
@@ -286,13 +272,13 @@ const CompaniesList = () => {
         {/* Custom Data Grid */}
         <CustomDataGrid
           columns={columns}
-          rows={rows}
+          rows={transformedData} // Using the data from Redux
           pageSize={pageSize}
           page={page}
           onPageChange={(newPage) => setPage(newPage)}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           searchQuery={searchQuery}
-          totalRowCount={totalRowCount}
+          totalRowCount={totalCount}
           hidePagination={true}
         />
         {/* Entries adn Pagination Controls */}
