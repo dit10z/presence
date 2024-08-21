@@ -155,7 +155,9 @@ import theme from "../../styles/theme";
 import ModalAddNewCompany from "../../components/Modal/ModalAddNewCompany";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDataCompanies } from "../../redux/slices/companySlice";
-import { useNavigate } from "react-router-dom";
+import DateRangeIcon from "@mui/icons-material/DateRange";
+import ModalEditCompany from "../../components/Modal/ModalEditCompany";
+import dayjs from "dayjs";
 
 const CompaniesList = () => {
   const dispatch = useDispatch();
@@ -165,6 +167,16 @@ const CompaniesList = () => {
   const [page, setPage] = useState(1);
   const [date, setDate] = useState(null);
   const [sortBy, setSortBy] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const [editCompanyModal, setEditCompanyModal] = useState(false);
+  const [selectedCompanyId, setSelectedCompanyId] = useState(null);
+  const handleEditOpen = (id) => {
+    setSelectedCompanyId(id);
+    setEditCompanyModal(true);
+  };
+  const handleEditClose = () => setEditCompanyModal(false);
+
   const totalCount = data && data?.length;
 
   const navigate = useNavigate();
@@ -191,7 +203,10 @@ const CompaniesList = () => {
           >
             <Visibility />
           </IconButton>
-          <IconButton aria-label="edit">
+          <IconButton
+            aria-label="edit"
+            onClick={() => handleEditOpen(params.row.id)}
+          >
             <Edit />
           </IconButton>
           <IconButton aria-label="delete">
@@ -218,7 +233,9 @@ const CompaniesList = () => {
       email: company.email,
       totalAdmin: company.total_admin,
       phone: company.phone,
-      createdDay: company.created_date || "N/A", // Handle null dates
+      createdDay: company.created_date
+        ? dayjs(company.created_date).format("YYYY-MM-DD")
+        : "N/A", // Handle null or undefined dates
     })) || [];
 
   const [newCompanyModal, setNewCompanyModal] = useState(false);
@@ -261,12 +278,13 @@ const CompaniesList = () => {
             />
           </Box>
           <Stack direction="row" spacing={2}>
-            <DatePicker
-              label="Date Filter"
-              value={date}
-              onChange={(newValue) => setDate(newValue)}
-              renderInput={(params) => <TextField {...params} />}
-            />
+            <CustomButton
+              startIcon={<DateRangeIcon />}
+              color="white"
+              onClick={() => setOpen(true)}
+            >
+              Date Filter
+            </CustomButton>
 
             <CustomButton
               variant="contained"
@@ -322,7 +340,12 @@ const CompaniesList = () => {
         open={newCompanyModal}
         onClose={handleClose}
         title="Add"
-      ></ModalAddNewCompany>
+      />
+      <ModalEditCompany
+        open={editCompanyModal}
+        onClose={handleEditClose}
+        companyId={selectedCompanyId}
+      />
     </Grid>
   );
 };
