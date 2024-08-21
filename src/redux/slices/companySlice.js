@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import instance from "../../services/axiosInstance";
 
 const initialState = {
+  companies: [],
   data: [],
   detail: {},
   status: false,
@@ -66,7 +67,7 @@ export const changeCompanyLogo = createAsyncThunk(
   async ({ idCompany, formData }, { rejectWithValue }) => {
     try {
       const response = await instance.patch(
-        `http://localhost:8080/company-management/companys/logo/${idCompany}`,
+        `http://localhost:8080/company-management/companies/logo/${idCompany}`,
         formData, 
         {
           headers: {
@@ -78,6 +79,22 @@ export const changeCompanyLogo = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
+  }
+);
+
+// Thunk untuk mengambil master perusahaan
+export const fetchCompanies = createAsyncThunk(
+  "admin/fetchCompanies",
+  async () => {
+    const response = await instance.get(
+      "http://localhost:8080/admin-management/master-company",
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data.data; // Mengambil data perusahaan dari respons
   }
 );
 
@@ -138,7 +155,21 @@ const companySlice = createSlice({
       .addCase(changeCompanyLogo.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload?.message || "Failed to change company logo";
-      });
+      })
+
+      //fetch master companies
+    .addCase(fetchCompanies.pending, (state) => {
+      state.status = "loading";
+    })
+    .addCase(fetchCompanies.fulfilled, (state, action) => {
+      console.log(action.payload.data);
+      state.status = "succeeded";
+      state.companies = action.payload; // Menyimpan daftar companies ke dalam state
+    })
+    .addCase(fetchCompanies.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.error.message;
+    })
   },
 });
 
