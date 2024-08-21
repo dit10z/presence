@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import { detailCompany } from "../../redux/slices/companySlice";
+import ModalChangeCompanyLogo from "../../components/Modal/ModalChangeLogoCompany";
 
 const TypographyHead = styled(Typography)(({ theme }) => ({
   fontWeight: 300,
@@ -26,6 +27,8 @@ const TypographyBody = styled(Typography)(({ theme }) => ({
 }));
 
 const CompanyDetail = () => {
+  const [modalChangeCompanyLogo, setModalChangeCompanyLogo] = useState(false);
+
   const { id_company } = useParams();
   const dispatch = useDispatch();
 
@@ -37,6 +40,13 @@ const CompanyDetail = () => {
       dispatch(detailCompany(id_company));
     }
   }, [id_company, dispatch]);
+
+  const handleModalChangeCompanyLogoOpen = () => {
+    setModalChangeCompanyLogo(!modalChangeCompanyLogo);
+  }
+  const handleModalChangeCompanyLogoClose = () => {
+    setModalChangeCompanyLogo(false);
+  };
 
   if (
     status === true ||
@@ -62,12 +72,8 @@ const CompanyDetail = () => {
                   alt="Company Logo"
                   style={{ width: "300px", borderRadius: "8px" }}
                 />
-                <IconButton
-                  aria-label="change photo"
-                  color="primary"
-                  sx={{ marginLeft: 2 }}
-                >
-                  <img src="/mock/image-edit.svg" alt="edit icon" />
+                <IconButton onClick={handleModalChangeCompanyLogoOpen}>
+                    <img src="/mock/image-edit.svg" alt="edit icon" />
                 </IconButton>
               </Box>
               <Divider sx={{ marginY: 2 }} />
@@ -167,6 +173,13 @@ const CompanyDetail = () => {
           </Grid>
         </Card>
       </Box>
+
+      <ModalChangeCompanyLogo
+        open={modalChangeCompanyLogo}
+        onClose={handleModalChangeCompanyLogoClose}
+        idCompany={companyDetail.id_company}
+        title="Change Company Photo"
+      />
     </Box>
   );
 };

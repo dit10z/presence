@@ -56,7 +56,7 @@ const Pages = () => {
           }
         />
         <Route
-          path="/admin-detail"
+          path="/admin-detail/:idAdmin"
           element={
             <PrivateRoute isAuthenticated={isAuthenticated}>
               <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
