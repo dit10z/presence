@@ -46,12 +46,14 @@ export const addNewCompany = createAsyncThunk(
 
 export const detailCompany = createAsyncThunk(
   "company/detailCompany",
-  async (id, { rejectWithValue }) => {
+  async (id_company, { rejectWithValue }) => {
     try {
-      const response = instance.get(
-        `http://localhost:8080/company-management/companies/${id}`
+      const response = await instance.get(
+        `http://localhost:8080/company-management/companies/${id_company}`
       );
-      return response;
+      const { data, status, statusText } = response;
+      console.log("Status:", data.data);
+      return { data: data.data, status, statusText };
     } catch (err) {
       return rejectWithValue(err.response.data);
     }

@@ -1,37 +1,56 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import {
   Box,
   Grid,
   Typography,
   Card,
-  CardContent,
   Button,
   Divider,
   IconButton,
   styled,
 } from "@mui/material";
 import { Edit } from "@mui/icons-material";
-import Logo from "../../assets/logo.png";
+import { detailCompany } from "../../redux/slices/companySlice";
 
 const TypographyHead = styled(Typography)(({ theme }) => ({
-  fontWeight: 300, // Light weight
-  fontFamily: "Inter, sans-serif", // Inter font family
-  color: "#A2A1A8", // Custom color
+  fontWeight: 300,
+  fontFamily: "Inter, sans-serif",
+  color: "#A2A1A8",
 }));
 
 const TypographyBody = styled(Typography)(({ theme }) => ({
-  fontWeight: 300, // Light weight
+  fontWeight: 300,
   fontFamily: "Inter, sans-serif",
 }));
 
 const CompanyDetail = () => {
+  const { id_company } = useParams();
+  const dispatch = useDispatch();
+
+  const companyDetail = useSelector((state) => state.companies.detail);
+  const status = useSelector((state) => state.companies.status);
+
+  useEffect(() => {
+    if (id_company) {
+      dispatch(detailCompany(id_company));
+    }
+  }, [id_company, dispatch]);
+
+  if (
+    status === true ||
+    !companyDetail ||
+    Object.keys(companyDetail).length === 0
+  ) {
+    return <Typography>Loading...</Typography>;
+  }
+
   return (
     <Box display="flex" flexDirection="row" minHeight="100vh">
-      {/* Main Content */}
       <Box flex={1} padding={4}>
         <Card sx={{ marginTop: 3, padding: 3 }}>
           <Grid container spacing={3}>
-            {/* Logo and Change Photo Button */}
             <Grid item xs={12} textAlign="start">
               <Box
                 display="inline-flex"
@@ -39,7 +58,7 @@ const CompanyDetail = () => {
                 position="relative"
               >
                 <img
-                  src={Logo}
+                  src={companyDetail.company_logo}
                   alt="Company Logo"
                   style={{ width: "300px", borderRadius: "8px" }}
                 />
@@ -60,87 +79,86 @@ const CompanyDetail = () => {
                 <Grid item xs={12} sm={6}>
                   <TypographyHead variant="body2">Company Name</TypographyHead>
                   <TypographyBody variant="body1">
-                    PT. Padepokan Tujuh Sembilan
+                    {companyDetail.company_name || "N/A"}
                   </TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <TypographyHead variant="body2" fontWeight="bold">
-                    Founder
-                  </TypographyHead>
-                  <TypographyBody variant="body1">?</TypographyBody>
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <TypographyHead variant="body2" fontWeight="bold">
-                    Founded at
-                  </TypographyHead>
-                  <TypographyBody variant="body1">2010</TypographyBody>
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <TypographyHead variant="body2" fontWeight="bold">
-                    Phone
-                  </TypographyHead>
+                  <TypographyHead variant="body2">Founder</TypographyHead>
                   <TypographyBody variant="body1">
-                    (022) 20505455
+                    {companyDetail.founder || "N/A"}
                   </TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <TypographyHead variant="body2" fontWeight="bold">
-                    Email Address
-                  </TypographyHead>
+                  <TypographyHead variant="body2">Founded at</TypographyHead>
                   <TypographyBody variant="body1">
-                    hcpadepokan79@gmail.com
+                    {companyDetail.founded_at
+                      ? new Date(companyDetail.founded_at).toLocaleDateString()
+                      : "N/A"}
                   </TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <TypographyHead variant="body2" fontWeight="bold">
-                    Address
-                  </TypographyHead>
+                  <TypographyHead variant="body2">Phone</TypographyHead>
                   <TypographyBody variant="body1">
-                    Gg. Terasana No.6A, Pasir Kaliki, Kec. Cicendo
+                    {companyDetail.phone || "N/A"}
                   </TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <TypographyHead variant="body2" fontWeight="bold">
-                    Province
-                  </TypographyHead>
-                  <TypographyBody variant="body1">Jawa Barat</TypographyBody>
+                  <TypographyHead variant="body2">Email Address</TypographyHead>
+                  <TypographyBody variant="body1">
+                    {companyDetail.email || "N/A"}
+                  </TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <TypographyHead variant="body2" fontWeight="bold">
-                    City
-                  </TypographyHead>
-                  <TypographyBody variant="body1">Bandung</TypographyBody>
+                  <TypographyHead variant="body2">Address</TypographyHead>
+                  <TypographyBody variant="body1">
+                    {companyDetail.address || "N/A"}
+                  </TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <TypographyHead variant="body2" fontWeight="bold">
-                    Zip Code
-                  </TypographyHead>
-                  <TypographyBody variant="body1">40171</TypographyBody>
+                  <TypographyHead variant="body2">State</TypographyHead>
+                  <TypographyBody variant="body1">
+                    {companyDetail.state || "N/A"}
+                  </TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <TypographyHead variant="body2" fontWeight="bold">
-                    Joining Date
-                  </TypographyHead>
-                  <TypographyBody variant="body1">June 20, 2024</TypographyBody>
+                  <TypographyHead variant="body2">City</TypographyHead>
+                  <TypographyBody variant="body1">
+                    {companyDetail.city || "N/A"}
+                  </TypographyBody>
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <TypographyHead variant="body2">Zip Code</TypographyHead>
+                  <TypographyBody variant="body1">
+                    {companyDetail.zip_code || "N/A"}
+                  </TypographyBody>
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <TypographyHead variant="body2">Joining Date</TypographyHead>
+                  <TypographyBody variant="body1">
+                    {companyDetail.joining_date
+                      ? new Date(
+                          companyDetail.joining_date
+                        ).toLocaleDateString()
+                      : "N/A"}
+                  </TypographyBody>
                 </Grid>
               </Grid>
             </Grid>
 
-            {/* Edit Information Button */}
             <Grid item xs={12} sx={{ marginX: 6 }}>
               <Button
                 variant="contained"
                 color="primary"
-                startIcon={<img src="/mock/edit-icon.svg" alt="edit icon" />}
+                startIcon={<Edit />}
                 size="medium"
               >
                 Edit Information
