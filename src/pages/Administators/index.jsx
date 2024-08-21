@@ -243,7 +243,7 @@ const Administrators = () => {
           </TextField>
 
           <Pagination
-            count={Math.ceil(totalRowCount / pageSize)}
+            count={Math.ceil(total / pageSize)}
             page={page}
             onChange={handleChangePage}
           />

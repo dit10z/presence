@@ -10,11 +10,8 @@ import { Box } from "@mui/material";
 import { SuperadminSidebar } from "../components/Navigation";
 import CompaniesList from "./Companies";
 import PrivateRoute from "./PrivateRoute"; // Import PrivateRoute
-<<<<<<< HEAD
-=======
 import { useSelector } from "react-redux";
 import CompanyDetail from "./Companies/CompanyDetail";
->>>>>>> a446774ba0ed6af1ec1a9203009988784ab92cb7
 
 const Pages = () => {
   const isAuthenticated = true; // Change to `false` to simulate a user not logged in
