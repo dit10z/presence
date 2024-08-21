@@ -13,7 +13,7 @@ import CustomButton from "../CustomButton";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Description } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
-import { changeAdminPhoto } from "../../redux/slices/adminsSlice";
+import { changeCompanyLogo } from "../../redux/slices/companySlice";
 import Swal from "sweetalert2";
 import success from "../../assets/icons/success.png";
 
@@ -53,7 +53,7 @@ const SelectedFileBox = styled(Box)({
   marginTop: "16px",
 });
 
-const ModalChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
+const ModalChangeCompanyLogo = ({ open, onClose, idCompany, title }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);
   const [validationError, setValidationError] = useState("");
@@ -96,13 +96,13 @@ const ModalChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
 
     if (selectedFile) {
       const formData = new FormData();
-      formData.append("profile_picture", selectedFile);
+      formData.append("company_logo", selectedFile);
 
-      console.log("idAdmin before dispatch:", idAdmin);
+      console.log("idCompany before dispatch:", idCompany);
       console.log("Selected file:", selectedFile);
 
       try {
-        await dispatch(changeAdminPhoto({ idAdmin, formData})).unwrap();
+        await dispatch(changeCompanyLogo({ idCompany, formData})).unwrap();
         Swal.fire({
           title: "Success",
           text: "Change Admin Photo Success",
@@ -133,7 +133,7 @@ const ModalChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
     <StyledModal open={open} onClose={onCloseModal}>
       <ModalContent>
         <Typography variant="h6" mb={3}>
-          {title} 
+          {title}
         </Typography>
         <Tabs
           value={activeTab}
@@ -220,4 +220,4 @@ const ModalChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
   );
 };
 
-export default ModalChangePhotoAdmin;
+export default ModalChangeCompanyLogo;
