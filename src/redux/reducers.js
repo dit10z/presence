@@ -1,18 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchCompanies, addAdmin, changeAdminPhoto } from './actions';
+import { fetchCompanies, addAdmin, changeAdminPhoto, fetchAdminDetail } from './actions';
 
 //start punya tasyia utk add admin
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
     admins: [],
-    companies: [],  // Pastikan ini array kosong
+    companies: [],  
+    adminDetail: null,
     status: "idle",
     error: null,
     validationErrors: {},
   },
   reducers: {},
   extraReducers: (builder) => {
+    //fetch companies
     builder
       .addCase(fetchCompanies.pending, (state) => {
         state.status = "loading";
@@ -26,6 +28,7 @@ const adminSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      //add admin
       .addCase(addAdmin.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -43,20 +46,32 @@ const adminSlice = createSlice({
           state.error = action.payload?.message || "Failed to add admin";
         }
       })
+      //fetch admin detail
+      .addCase(fetchAdminDetail.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAdminDetail.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.adminDetail = action.payload;
+      })
+      .addCase(fetchAdminDetail.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload?.message || "Failed to fetch admin detail"
+      })
+      //change photo
       .addCase(changeAdminPhoto.pending, (state) =>{
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(changeAdminPhoto.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        // Update foto admin di state admins
-        const updatedAdmin = state.admins.find(admin => admin.id === action.payload.id_admin);
+        state.status = "succeeded";
+        const updatedAdmin = state.admins.find(admin => admin.id === action.payload.idAdmin);
         if(updatedAdmin) {
             updatedAdmin.profile_picture = action.payload.profile_picture;
         }
     })
       .addCase(changeAdminPhoto.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload?.message || 'Failed to change admin photo';
+        state.status = "failed";
+        state.error = action.payload?.message || "Failed to change admin photo";
       })
   },
 });

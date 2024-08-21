@@ -4,6 +4,7 @@ const instance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
+<<<<<<< HEAD
 // Add a request interceptor
 instance.interceptors.request.use((config) => {
   const accessToken = localStorage.getItem("token");
@@ -11,6 +12,21 @@ instance.interceptors.request.use((config) => {
   // You can also add more headers here
   return config;
 });
+=======
+instance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    console.log("Token used for request:", token);
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+>>>>>>> a446774ba0ed6af1ec1a9203009988784ab92cb7
 
 // Add a response interceptor
 instance.interceptors.response.use(

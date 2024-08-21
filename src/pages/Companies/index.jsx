@@ -155,6 +155,7 @@ import theme from "../../styles/theme";
 import ModalAddNewCompany from "../../components/Modal/ModalAddNewCompany";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDataCompanies } from "../../redux/slices/companySlice";
+import { useNavigate } from "react-router-dom";
 
 const CompaniesList = () => {
   const dispatch = useDispatch();
@@ -166,6 +167,12 @@ const CompaniesList = () => {
   const [sortBy, setSortBy] = useState("");
   const totalCount = data && data?.length;
 
+  const navigate = useNavigate();
+
+  const handleViewClick = (id_company) => {
+    navigate(`/company-detail/${id_company}`);
+  };
+
   const columns = [
     { field: "companyName", headerName: "Company Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
@@ -176,9 +183,12 @@ const CompaniesList = () => {
       field: "actions",
       headerName: "Action",
       flex: 1,
-      renderCell: () => (
+      renderCell: (params) => (
         <Box sx={{ display: "flex", justifyContent: "stretch" }}>
-          <IconButton aria-label="view">
+          <IconButton
+            aria-label="view"
+            onClick={() => handleViewClick(params.row.id)}
+          >
             <Visibility />
           </IconButton>
           <IconButton aria-label="edit">
