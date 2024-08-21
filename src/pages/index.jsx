@@ -76,7 +76,7 @@ const Pages = () => {
           }
         />
         <Route
-          path="/company-detail"
+          path="/company-detail/:id_company"
           element={
             <PrivateRoute isAuthenticated={isAuthenticated}>
               <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
