@@ -34,6 +34,8 @@ const AdminDetail = () => {
   const {idAdmin} = useParams();
   console.log("idAdmin from useParams:", idAdmin);
   const adminDetail = useSelector((state) => state.admin.adminDetail);
+  console.log("adminDetail:", adminDetail);
+
 
   useEffect(() => {
     dispatch(fetchAdminDetail(idAdmin));
