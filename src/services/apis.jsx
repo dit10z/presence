@@ -27,6 +27,19 @@ export const editDataAdmin = (id, payload) => {
     });
 };
 
+export const detailAdmin = (id) => {
+  const apiUrl = `${baseUrl}/admin-management/admins/${id}`;
+  return instance
+    .get(apiUrl)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error(error);
+      throw error;
+    });
+};
+
 export const editPassword = (id, password) => {
   const apiUrl = `${baseUrl}/account/superadmin/change-password-admin/${id}`;
   return instance
@@ -40,9 +53,36 @@ export const editPassword = (id, password) => {
     });
 };
 
-export const getAllAdmins = (search, sortBy, pageSize, pageNumber) => {
+export const getAllAdmins = (
+  search,
+  sortBy,
+  pageSize,
+  pageNumber,
+  startDateJoined,
+  endDateJoined
+) => {
   const url = `${baseUrl}/admin-management/admins`;
-  const apiUrl = buildUrl(url, { search, sortBy, pageSize, pageNumber });
+  const apiUrl = buildUrl(url, {
+    search,
+    sortBy,
+    pageSize,
+    pageNumber,
+    startDateJoined,
+    endDateJoined,
+  });
+  return instance
+    .get(apiUrl)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error(error);
+      throw error;
+    });
+};
+
+export const getAllCompaniesMaster = () => {
+  const apiUrl = `${baseUrl}/company-management/companies`;
   return instance
     .get(apiUrl)
     .then((response) => {

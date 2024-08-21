@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Box,
@@ -17,6 +17,12 @@ import CustomButton from "../CustomButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  getAllCompaniesMaster,
+  editPassword,
+  editDataAdmin,
+  detailAdmin,
+} from "../../services/apis";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -36,37 +42,48 @@ const FormField = styled(TextField)({
   width: "100%",
 });
 
-const ModalEditAdmin = ({ open, onClose }) => {
+const ModalEditAdmin = ({ open, onClose, adminId }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [dataAdmin, setDataAdmin] = useState([]);
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
     email: "",
     username: "",
     idcompany: "",
+    password: " ",
   });
 
-  const fetchData = async (pageSize, pageNumber) => {
+  // #melakukan fetch data admin
+  const fetchDataAdmin = async (adminId) => {
     try {
-      const token = `eyJhbGciOiJIUzI1NiJ9.eyJpZF9zdXBlcmFkbWluIjoyLCJpZF9hY2NvdW50IjoiNjBjYzYzNTAtYzZiZS00OTMxLTlkYjUtZjg4NWJjMjI0ZDgwIiwic3ViIjoibXVyaTEyMzQiLCJpYXQiOjE3MjM3OTUxMjUsImV4cCI6MTcyMzg4MTUyNX0.WQv_c4aMafcsBnIvau_dKqiv8gtPiSQ2dEBTIp21new`;
-
-      const response = await axios.get(
-        `http://localhost:8080/company-management/companies?filter&sortBy=company_name,ASC&pageSize=${pageSize}&pageNumber=${pageNumber}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await detailAdmin(adminId);
       console.log(response);
-      const data = response.data;
-      console.log(data.message);
-      setTotalCount(data.data.length);
+      setDataAdmin(response.data.data);
 
-      // Transform API data to match DataGrid structure
+      setFormData({
+        firstname: dataAdmin.firstname || "",
+        lastname: dataAdmin.lastname || "",
+        email: dataAdmin.email || "",
+        username: dataAdmin.username || "",
+        idcompany: dataAdmin.idcompany || "",
+        password: dataAdmin.password || "",
+      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataAdmin(adminId);
+  }, [adminId]);
+
+  const masterAlcompany = async () => {
+    try {
+      const response = await getAllCompaniesMaster();
+      console.log(response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -92,21 +109,32 @@ const ModalEditAdmin = ({ open, onClose }) => {
     });
   };
 
-  const handleSubmitEditAdmin = () => {
+  const handleSubmitEditAdmin = async (adminId) => {
     // Handle form submission
-    const payload = {
-      first_name: formData.firstname,
-      last_name: formData.lastname,
-      username: formData.username,
-      email: formData.email,
-      id_company: formData.idcompany,
-    };
+    try {
+      const payload = {
+        first_name: formData.firstname,
+        last_name: formData.lastname,
+        username: formData.username,
+        email: formData.email,
+        id_company: formData.idcompany,
+      };
+      console.log(payload);
+      // const response = await editDataAdmin(adminId, payload);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleSubmitChangePassword = () => {
-    // try{
-    //   const response = await
-    // }
+  const handleSubmitChangePassword = async () => {
+    try {
+      // const response = await editPassword(adminId, formData.password);
+      console.log(formData.password);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -136,30 +164,34 @@ const ModalEditAdmin = ({ open, onClose }) => {
           <Grid container spacing={3} mt={3}>
             <Grid item xs={6}>
               <FormField
-                label="First Name"
+                label={formData.firstname}
                 variant="outlined"
                 value={formData.firstname}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={6}>
               <FormField
-                label="Last Name"
+                label={formData.lastname}
                 variant="outlined"
                 value={formData.lastname}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={6}>
               <FormField
-                label="Username"
+                label={formData.username}
                 variant="outlined"
                 value={formData.username}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={6}>
               <FormField
-                label="Email Address"
+                label={formData.email}
                 variant="outlined"
                 value={formData.email}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -169,9 +201,7 @@ const ModalEditAdmin = ({ open, onClose }) => {
                 variant="outlined"
                 defaultValue=""
               >
-                <MenuItem value="company1">Company 1</MenuItem>
-                <MenuItem value="company2">Company 2</MenuItem>
-                <MenuItem value="company3">Company 3</MenuItem>
+                {<MenuItem value="company1">Company 1</MenuItem>}
               </FormField>
             </Grid>
           </Grid>
@@ -237,11 +267,11 @@ const ModalEditAdmin = ({ open, onClose }) => {
             variant="contained"
             color="button"
             text="white"
-            onClick={
+            onClick={() => {
               activeTab === 0
-                ? handleSubmitEditAdmin
-                : handleSubmitChangePassword
-            }
+                ? handleSubmitEditAdmin(adminId)
+                : handleSubmitChangePassword;
+            }}
           >
             Save
           </CustomButton>
