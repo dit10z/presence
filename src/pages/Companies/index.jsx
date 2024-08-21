@@ -158,6 +158,7 @@ import { fetchDataCompanies } from "../../redux/slices/companySlice";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import ModalEditCompany from "../../components/Modal/ModalEditCompany";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 const CompaniesList = () => {
   const dispatch = useDispatch();

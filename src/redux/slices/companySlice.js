@@ -161,19 +161,6 @@ const companySlice = createSlice({
         state.error = action.error.message;
       })
 
-      // action edit
-      .addCase(editCompany.pending, (state) => {
-        state.status = true;
-      })
-      .addCase(editCompany.fulfilled, (state, action) => {
-        state.status = false;
-        state.message = action.payload.message;
-      })
-      .addCase(editCompany.rejected, (state, action) => {
-        state.status = false;
-        state.error = action.error.message;
-      })
-
       // Change Company Logo
       .addCase(changeCompanyLogo.pending, (state) => {
         state.status = "loading";
