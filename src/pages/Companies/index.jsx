@@ -179,6 +179,12 @@ const CompaniesList = () => {
 
   const totalCount = data && data?.length;
 
+  const navigate = useNavigate();
+
+  const handleViewClick = (id_company) => {
+    navigate(`/company-detail/${id_company}`);
+  };
+
   const columns = [
     { field: "companyName", headerName: "Company Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
@@ -191,7 +197,10 @@ const CompaniesList = () => {
       flex: 1,
       renderCell: (params) => (
         <Box sx={{ display: "flex", justifyContent: "stretch" }}>
-          <IconButton aria-label="view">
+          <IconButton
+            aria-label="view"
+            onClick={() => handleViewClick(params.row.id)}
+          >
             <Visibility />
           </IconButton>
           <IconButton

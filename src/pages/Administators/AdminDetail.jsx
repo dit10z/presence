@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -23,9 +23,23 @@ import Grid from "@mui/material/Grid";
 import theme from "../../styles/theme";
 import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
 import ModalChangePhotoAdmin from "../../components/Modal/ModalChangePhotoAdmin";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { fetchAdminDetail } from "../../redux/slices/adminsSlice";
+
 const AdminDetail = () => {
   const [modalEditAdmin, setModalEditAdmin] = useState(false);
   const [modalChangePhotoAdmin, setModalChangePhotoAdmin] = useState(false);
+  const dispatch = useDispatch();
+  const {idAdmin} = useParams();
+  console.log("idAdmin from useParams:", idAdmin);
+  const adminDetail = useSelector((state) => state.admin.adminDetail);
+  console.log("adminDetail:", adminDetail);
+
+
+  useEffect(() => {
+    dispatch(fetchAdminDetail(idAdmin));
+  }, [dispatch, idAdmin]);
 
   const handleModalEditAdminOpen = () => {
     setModalEditAdmin(!modalEditAdmin);
@@ -39,6 +53,11 @@ const AdminDetail = () => {
   const handleModalChangePhotoAdminClose = () => {
     setModalChangePhotoAdmin(false);
   };
+
+  if(!adminDetail) {
+    return <div>No Data...</div>
+  }
+
   return (
     <Grid
       border={`1px solid ${theme.palette.grey[300]}`}
@@ -67,7 +86,7 @@ const AdminDetail = () => {
               <CardMedia
                 component="img"
                 alt="foto profil"
-                image="https://via.placeholder.com/100" // Replace with your image URL
+                image={adminDetail.profile_picture || "https://via.placeholder.com/100"}
                 sx={{
                   width: 100,
                   height: 100,
@@ -82,7 +101,7 @@ const AdminDetail = () => {
                   justifyContent="space-between"
                 >
                   <Typography component="div" variant="h6">
-                    Darlene Robertson
+                    {`${adminDetail.first_name} ${adminDetail.last_name}`}
                     <IconButton onClick={handleModalChangePhotoAdminOpen}>
                       <img src="/mock/image-edit.svg" alt="edit icon" />
                     </IconButton>
@@ -90,11 +109,11 @@ const AdminDetail = () => {
                 </Box>
                 <Box display="flex" alignItems="center" mt={1} gap={1}>
                   <Business />
-                  <Typography variant="body2">Padepokan 79</Typography>
+                  <Typography variant="body2">{adminDetail.company?.company_name}</Typography>
                 </Box>
                 <Box display="flex" alignItems="center" mt={1} gap={1}>
                   <Email />
-                  <Typography variant="body2">darlene@gmail.com</Typography>
+                  <Typography variant="body2">{adminDetail.email}</Typography>
                 </Box>
               </CardContent>
               <CardActions style={{ marginRight: "10px" }}>
@@ -125,7 +144,7 @@ const AdminDetail = () => {
                     fullWidth
                     label="First Name"
                     variant="standard"
-                    defaultValue="Darlene"
+                    value={adminDetail.first_name}
                     InputProps={{ readOnly: true }}
                   />
                 </Grid>
@@ -134,7 +153,7 @@ const AdminDetail = () => {
                     fullWidth
                     label="Last Name"
                     variant="standard"
-                    defaultValue="Robertson"
+                    value={adminDetail.last_name}
                     InputProps={{ readOnly: true }}
                   />
                 </Grid>
@@ -143,7 +162,7 @@ const AdminDetail = () => {
                     fullWidth
                     label="Username"
                     variant="standard"
-                    defaultValue="darlenekrobertson79"
+                    value={adminDetail.username}
                     InputProps={{ readOnly: true }}
                   />
                 </Grid>
@@ -152,7 +171,7 @@ const AdminDetail = () => {
                     fullWidth
                     label="Email Address"
                     variant="standard"
-                    defaultValue="darlene@gmail.com"
+                    value={adminDetail.email} 
                     InputProps={{ readOnly: true }}
                   />
                 </Grid>
@@ -161,7 +180,7 @@ const AdminDetail = () => {
                     fullWidth
                     label="Company Origin"
                     variant="standard"
-                    defaultValue="Padepokan79"
+                    value={adminDetail.company?.company_name}
                     InputProps={{ readOnly: true }}
                   />
                 </Grid>
@@ -179,7 +198,8 @@ const AdminDetail = () => {
       <ModalChangePhotoAdmin
         open={modalChangePhotoAdmin}
         onClose={handleModalChangePhotoAdminClose}
-        title="Change Photo"
+        idAdmin={adminDetail.id_admin}
+        title="Change Admin Photo"
       />
     </Grid>
   );

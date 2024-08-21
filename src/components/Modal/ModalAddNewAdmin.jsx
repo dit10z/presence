@@ -10,11 +10,10 @@ import {
 import { styled } from "@mui/system";
 import CustomButton from "../CustomButton";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCompanies } from "../../redux/actions";
-import { selectCompanies } from "../../redux/selectors";
-import axios from "axios";
 import Swal from "sweetalert2";
 import success from "../../assets/icons/success.png";
+import { addAdmin } from "../../redux/slices/adminsSlice";
+import { fetchCompanies } from "../../redux/slices/companySlice";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -47,7 +46,8 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
 
   const [validationErrors, setValidationErrors] = useState({});
   const dispatch = useDispatch();
-  const companies = useSelector(selectCompanies);
+  const companies = useSelector((state) => state.companies.companies);
+  console.log("company yg ada:", companies)
 
   useEffect(() => {
     if (open) {
@@ -122,6 +122,10 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
       errors.confirmPassword = "Passwords do not match";
     }
 
+    // Validasi company origin
+    if (!formData.id_company) {
+      errors.id_company = "Field must not be empty"
+    }
     // Jika ada error, set validationErrors dan hentikan submit
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors);
@@ -140,23 +144,8 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
 
     console.log("Posting data: ", payload);
 
-    const token = `eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXNpaSIsImlhdCI6MTcxOTgwMzM3OCwiZXhwIjoxNzE5ODg5Nzc4fQ.0TlpfJfrvZAaoT6o-ouvUJ4BoVWLRyLVwuSLH-x2pcY`;
-
     try {
-      const response = await axios.post(
-        "http://localhost:8080/admin-management/admins",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log(response);
-
-      // Tampilkan Swal jika sukses
+      await dispatch(addAdmin(payload)).unwrap();
       Swal.fire({
         title: "Success",
         text: "Add New Admin Success",
@@ -176,16 +165,24 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
       });
       setValidationErrors({});
       onClose();
+
+      
     } catch (error) {
       console.error("Failed to add admin:", error);
 
-      if (error.response && error.response.data && error.response.data.errors) {
-        setValidationErrors(error.response.data.errors);
-      } else {
-        alert("Failed to add admin. Please try again.");
-      }
+        // alert("Failed to add admin. Please try again.");
+        Swal.fire({
+          title: "Error",
+          text: error.response?.data?.message || "Username already exist. Please try again.",
+          icon: "error",
+        });
+      
+
+    if (error.response && error.response.data && error.response.data.errors) {
+      setValidationErrors(error.response.data.errors);
     }
-  };
+  }
+};
 
   return (
     <StyledModal open={open} onClose={onClose}>
