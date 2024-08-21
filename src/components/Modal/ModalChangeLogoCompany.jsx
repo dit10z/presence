@@ -14,6 +14,8 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Description } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { changeCompanyLogo } from "../../redux/slices/companySlice";
+import Swal from "sweetalert2";
+import success from "../../assets/icons/success.png";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -51,7 +53,7 @@ const SelectedFileBox = styled(Box)({
   marginTop: "16px",
 });
 
-const ModalChangeCompanyLogo = ({ open, onClose, idCompany }) => {
+const ModalChangeCompanyLogo = ({ open, onClose, idCompany, title }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);
   const [validationError, setValidationError] = useState("");
@@ -99,7 +101,22 @@ const ModalChangeCompanyLogo = ({ open, onClose, idCompany }) => {
       console.log("idCompany before dispatch:", idCompany);
       console.log("Selected file:", selectedFile);
 
-      dispatch(changeCompanyLogo({ idCompany, formData}))
+      try {
+        await dispatch(changeCompanyLogo({ idCompany, formData})).unwrap();
+        Swal.fire({
+          title: "Success",
+          text: "Change Admin Photo Success",
+          imageUrl: success,
+          imageAlt: "success",
+        });
+        onCloseModal();
+      } catch (error) {
+        Swal.fire({
+          title: "Error",
+          text: "Failed to change photo. Please try again.",
+          icon: "error",
+        });
+      }
     }
 
     setValidationError(""); // reset error jika tidak ada error
@@ -116,7 +133,7 @@ const ModalChangeCompanyLogo = ({ open, onClose, idCompany }) => {
     <StyledModal open={open} onClose={onCloseModal}>
       <ModalContent>
         <Typography variant="h6" mb={3}>
-          Change Company Logo
+          {title}
         </Typography>
         <Tabs
           value={activeTab}

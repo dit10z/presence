@@ -14,6 +14,8 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Description } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { changeAdminPhoto } from "../../redux/slices/adminsSlice";
+import Swal from "sweetalert2";
+import success from "../../assets/icons/success.png";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -99,7 +101,22 @@ const ModalChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
       console.log("idAdmin before dispatch:", idAdmin);
       console.log("Selected file:", selectedFile);
 
-      dispatch(changeAdminPhoto({ idAdmin, formData}))
+      try {
+        await dispatch(changeAdminPhoto({ idAdmin, formData})).unwrap();
+        Swal.fire({
+          title: "Success",
+          text: "Change Admin Photo Success",
+          imageUrl: success,
+          imageAlt: "success",
+        });
+        onCloseModal();
+      } catch (error) {
+        Swal.fire({
+          title: "Error",
+          text: "Failed to change photo. Please try again.",
+          icon: "error",
+        });
+      }
     }
 
     setValidationError(""); // reset error jika tidak ada error

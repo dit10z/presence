@@ -122,6 +122,10 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
       errors.confirmPassword = "Passwords do not match";
     }
 
+    // Validasi company origin
+    if (!formData.id_company) {
+      errors.id_company = "Field must not be empty"
+    }
     // Jika ada error, set validationErrors dan hentikan submit
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors);
@@ -169,10 +173,19 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
       if (error.response && error.response.data && error.response.data.errors) {
         setValidationErrors(error.response.data.errors);
       } else {
-        alert("Failed to add admin. Please try again.");
+        // alert("Failed to add admin. Please try again.");
+        Swal.fire({
+          title: "Error",
+          text: error.response?.data?.message || "Username already exist. Please try again.",
+          icon: "error",
+        });
       }
+
+    if (error.response && error.response.data && error.response.data.errors) {
+      setValidationErrors(error.response.data.errors);
     }
-  };
+  }
+};
 
   return (
     <StyledModal open={open} onClose={onClose}>
