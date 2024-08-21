@@ -8,135 +8,139 @@ import {
   Button,
   Divider,
   IconButton,
+  styled,
 } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import Logo from "../../assets/logo.png";
+
+const TypographyHead = styled(Typography)(({ theme }) => ({
+  fontWeight: 300, // Light weight
+  fontFamily: "Inter, sans-serif", // Inter font family
+  color: "#A2A1A8", // Custom color
+}));
+
+const TypographyBody = styled(Typography)(({ theme }) => ({
+  fontWeight: 300, // Light weight
+  fontFamily: "Inter, sans-serif",
+}));
 
 const CompanyDetail = () => {
   return (
     <Box display="flex" flexDirection="row" minHeight="100vh">
       {/* Main Content */}
       <Box flex={1} padding={4}>
-        {/* Navbar section */}
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          marginBottom={2}
-        >
-          <Typography variant="h5" fontWeight="bold">
-            Company Profile
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            All Companies &gt; PT. Padepokan Tujuh Sembilan
-          </Typography>
-        </Box>
-
         <Card sx={{ marginTop: 3, padding: 3 }}>
           <Grid container spacing={3}>
             {/* Logo and Change Photo Button */}
-            <Grid item xs={12} textAlign="center" position="relative">
-              <img
-                src={Logo}
-                alt="Company Logo"
-                style={{ width: "120px", borderRadius: "8px" }}
-              />
-              <IconButton
-                aria-label="change photo"
-                color="primary"
-                style={{ position: "absolute", top: 0, right: 0 }}
+            <Grid item xs={12} textAlign="start">
+              <Box
+                display="inline-flex"
+                alignItems="center"
+                position="relative"
               >
-                <Edit />
-              </IconButton>
+                <img
+                  src={Logo}
+                  alt="Company Logo"
+                  style={{ width: "300px", borderRadius: "8px" }}
+                />
+                <IconButton
+                  aria-label="change photo"
+                  color="primary"
+                  sx={{ marginLeft: 2 }}
+                >
+                  <img src="/mock/image-edit.svg" alt="edit icon" />
+                </IconButton>
+              </Box>
+              <Divider sx={{ marginY: 2 }} />
             </Grid>
 
             {/* Company Details */}
-            <Grid item xs={12}>
-              <Grid container spacing={2}>
+            <Grid item xs={12} sx={{ marginY: 2 }}>
+              <Grid container spacing={4} sx={{ marginX: 3 }}>
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="body1" fontWeight="bold">
-                    Company Name
-                  </Typography>
-                  <Typography variant="body2">
+                  <TypographyHead variant="body2">Company Name</TypographyHead>
+                  <TypographyBody variant="body1">
                     PT. Padepokan Tujuh Sembilan
-                  </Typography>
+                  </TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="body1" fontWeight="bold">
+                  <TypographyHead variant="body2" fontWeight="bold">
                     Founder
-                  </Typography>
-                  <Typography variant="body2">?</Typography>
+                  </TypographyHead>
+                  <TypographyBody variant="body1">?</TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="body1" fontWeight="bold">
+                  <TypographyHead variant="body2" fontWeight="bold">
                     Founded at
-                  </Typography>
-                  <Typography variant="body2">2010</Typography>
+                  </TypographyHead>
+                  <TypographyBody variant="body1">2010</TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="body1" fontWeight="bold">
+                  <TypographyHead variant="body2" fontWeight="bold">
                     Phone
-                  </Typography>
-                  <Typography variant="body2">(022) 20505455</Typography>
+                  </TypographyHead>
+                  <TypographyBody variant="body1">
+                    (022) 20505455
+                  </TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="body1" fontWeight="bold">
+                  <TypographyHead variant="body2" fontWeight="bold">
                     Email Address
-                  </Typography>
-                  <Typography variant="body2">
+                  </TypographyHead>
+                  <TypographyBody variant="body1">
                     hcpadepokan79@gmail.com
-                  </Typography>
+                  </TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="body1" fontWeight="bold">
+                  <TypographyHead variant="body2" fontWeight="bold">
                     Address
-                  </Typography>
-                  <Typography variant="body2">
+                  </TypographyHead>
+                  <TypographyBody variant="body1">
                     Gg. Terasana No.6A, Pasir Kaliki, Kec. Cicendo
-                  </Typography>
+                  </TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="body1" fontWeight="bold">
+                  <TypographyHead variant="body2" fontWeight="bold">
                     Province
-                  </Typography>
-                  <Typography variant="body2">Jawa Barat</Typography>
+                  </TypographyHead>
+                  <TypographyBody variant="body1">Jawa Barat</TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="body1" fontWeight="bold">
+                  <TypographyHead variant="body2" fontWeight="bold">
                     City
-                  </Typography>
-                  <Typography variant="body2">Bandung</Typography>
+                  </TypographyHead>
+                  <TypographyBody variant="body1">Bandung</TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="body1" fontWeight="bold">
+                  <TypographyHead variant="body2" fontWeight="bold">
                     Zip Code
-                  </Typography>
-                  <Typography variant="body2">40171</Typography>
+                  </TypographyHead>
+                  <TypographyBody variant="body1">40171</TypographyBody>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="body1" fontWeight="bold">
+                  <TypographyHead variant="body2" fontWeight="bold">
                     Joining Date
-                  </Typography>
-                  <Typography variant="body2">June 20, 2024</Typography>
+                  </TypographyHead>
+                  <TypographyBody variant="body1">June 20, 2024</TypographyBody>
                 </Grid>
               </Grid>
             </Grid>
 
             {/* Edit Information Button */}
-            <Grid item xs={12} textAlign="right">
+            <Grid item xs={12} sx={{ marginX: 6 }}>
               <Button
                 variant="contained"
                 color="primary"
-                startIcon={<Edit />}
+                startIcon={<img src="/mock/edit-icon.svg" alt="edit icon" />}
                 size="medium"
               >
                 Edit Information
