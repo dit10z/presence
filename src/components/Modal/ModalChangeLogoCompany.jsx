@@ -105,7 +105,7 @@ const ModalChangeCompanyLogo = ({ open, onClose, idCompany, title }) => {
         await dispatch(changeCompanyLogo({ idCompany, formData})).unwrap();
         Swal.fire({
           title: "Success",
-          text: "Change Admin Photo Success",
+          text: "Change Company Logo Success",
           imageUrl: success,
           imageAlt: "success",
         });

@@ -10,11 +10,10 @@ import {
 import { styled } from "@mui/system";
 import CustomButton from "../CustomButton";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCompanies } from "../../redux/actions";
-import { selectCompanies } from "../../redux/selectors";
 import Swal from "sweetalert2";
 import success from "../../assets/icons/success.png";
 import { addAdmin } from "../../redux/slices/adminsSlice";
+import { fetchCompanies } from "../../redux/slices/companySlice";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -47,7 +46,8 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
 
   const [validationErrors, setValidationErrors] = useState({});
   const dispatch = useDispatch();
-  const companies = useSelector(selectCompanies);
+  const companies = useSelector((state) => state.companies.companies);
+  console.log("company yg ada:", companies)
 
   useEffect(() => {
     if (open) {
@@ -170,16 +170,13 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
     } catch (error) {
       console.error("Failed to add admin:", error);
 
-      if (error.response && error.response.data && error.response.data.errors) {
-        setValidationErrors(error.response.data.errors);
-      } else {
         // alert("Failed to add admin. Please try again.");
         Swal.fire({
           title: "Error",
           text: error.response?.data?.message || "Username already exist. Please try again.",
           icon: "error",
         });
-      }
+      
 
     if (error.response && error.response.data && error.response.data.errors) {
       setValidationErrors(error.response.data.errors);
