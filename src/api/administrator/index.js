@@ -14,10 +14,14 @@ export const buildUrl = (base, params) => {
   return url;
 };
 
-export const editDataAdmin = (id, payload) => {
+export const editDataAdmin = (id, data) => {
   const apiUrl = `${baseUrl}/admin-management/admins/${id}`;
   return instance
-    .put(apiUrl, payload)
+    .patch(apiUrl, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
     .then((response) => {
       return response;
     })

@@ -42,7 +42,7 @@ const DateFilterModal = ({
         <Typography variant="h6" mb={2}>
           Date Filter
         </Typography>
-        <Grid container spacing={2} alignItems="center">
+        <Grid container spacing={3} alignItems="center">
           <Grid item xs={5}>
             <DatePicker
               label="Start date"

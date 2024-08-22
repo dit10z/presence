@@ -16,7 +16,7 @@ import theme from "../../styles/theme";
 import ModalAddNewAdministrator from "../../components/Modal/ModalAddNewAdmin";
 import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
 import ModalDateFilter from "../../components/Modal/ModalDateFilter";
-import { getAllAdmins } from "../../services/apis";
+import { getAllAdmins } from "../../api/administrator/index";
 import {
   Avatar,
   Paper,
@@ -107,6 +107,7 @@ const Administrators = () => {
         created_date: extractDate(admin.created_day),
       }));
       setRow(transformedData);
+      setTotal(response.data.meta.total);
       console.log("total", response.data.meta.total);
     } catch (error) {
       console.log(error);
