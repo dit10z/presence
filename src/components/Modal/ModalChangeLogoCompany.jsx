@@ -27,7 +27,7 @@ const ModalContent = styled(Box)({
   backgroundColor: "#fff",
   borderRadius: "10px",
   padding: "20px",
-  width: "750px", 
+  width: "750px",
   boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
 });
 
@@ -82,9 +82,11 @@ const ModalChangeCompanyLogo = ({ open, onClose, idCompany, title }) => {
     // Validasi jika belum ada file yang dipilih
     if (!selectedFile) {
       errorMessage = "Field must not be empty";
-    } else if (selectedFile.size > 2 * 1024 * 1024) { // Validasi ukuran file (maks 2MB)
+    } else if (selectedFile.size > 2 * 1024 * 1024) {
+      // Validasi ukuran file (maks 2MB)
       errorMessage = "Max photo's size is 2MB";
-    } else if (!["image/jpeg", "image/png"].includes(selectedFile.type)) { // Validasi format file
+    } else if (!["image/jpeg", "image/png"].includes(selectedFile.type)) {
+      // Validasi format file
       errorMessage = "Format must be .jpg/.jpeg/.png";
     }
 
@@ -102,7 +104,7 @@ const ModalChangeCompanyLogo = ({ open, onClose, idCompany, title }) => {
       console.log("Selected file:", selectedFile);
 
       try {
-        await dispatch(changeCompanyLogo({ idCompany, formData})).unwrap();
+        await dispatch(changeCompanyLogo({ idCompany, formData })).unwrap();
         Swal.fire({
           title: "Success",
           text: "Change Company Logo Success",
@@ -128,7 +130,7 @@ const ModalChangeCompanyLogo = ({ open, onClose, idCompany, title }) => {
     setSelectedFile(null); // file yg dipilih terhapus
     setValidationError(""); // reset pesan error
     onClose(); // dialog ditutup
-  }
+  };
 
   return (
     <StyledModal open={open} onClose={onCloseModal}>
@@ -207,9 +209,9 @@ const ModalChangeCompanyLogo = ({ open, onClose, idCompany, title }) => {
           >
             Cancel
           </CustomButton>
-          <CustomButton 
-            variant="contained" 
-            color="button" 
+          <CustomButton
+            variant="contained"
+            color="primary"
             text="white"
             onClick={handleSubmit}
           >
