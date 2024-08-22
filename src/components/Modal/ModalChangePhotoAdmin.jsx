@@ -210,7 +210,7 @@ const ModalChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
           </CustomButton>
           <CustomButton
             variant="contained"
-            color="button"
+            color="primary"
             text="white"
             onClick={handleSubmit}
           >

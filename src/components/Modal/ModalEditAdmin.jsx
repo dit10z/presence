@@ -161,7 +161,7 @@ const ModalEditAdmin = ({ open, onClose }) => {
           >
             Cancel
           </CustomButton>
-          <CustomButton variant="contained" color="button" text="white">
+          <CustomButton variant="contained" color="primary" text="white">
             Save
           </CustomButton>
         </Box>

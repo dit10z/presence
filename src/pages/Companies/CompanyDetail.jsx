@@ -10,6 +10,7 @@ import {
   Divider,
   IconButton,
   styled,
+  CardMedia,
 } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import { detailCompany } from "../../redux/slices/companySlice";
@@ -43,7 +44,7 @@ const CompanyDetail = () => {
 
   const handleModalChangeCompanyLogoOpen = () => {
     setModalChangeCompanyLogo(!modalChangeCompanyLogo);
-  }
+  };
   const handleModalChangeCompanyLogoClose = () => {
     setModalChangeCompanyLogo(false);
   };
@@ -67,13 +68,22 @@ const CompanyDetail = () => {
                 alignItems="center"
                 position="relative"
               >
-                <img
-                  src={companyDetail.company_logo}
+                <CardMedia
+                  component="img"
                   alt="Company Logo"
-                  style={{ width: "300px", borderRadius: "8px" }}
+                  image={
+                    companyDetail.company_logo ||
+                    "https://via.placeholder.com/300"
+                  }
+                  sx={{
+                    width: 300,
+                    height: 150,
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                  }}
                 />
                 <IconButton onClick={handleModalChangeCompanyLogoOpen}>
-                    <img src="/mock/image-edit.svg" alt="edit icon" />
+                  <img src="/mock/image-edit.svg" alt="edit icon" />
                 </IconButton>
               </Box>
               <Divider sx={{ marginY: 2 }} />
@@ -178,7 +188,7 @@ const CompanyDetail = () => {
         open={modalChangeCompanyLogo}
         onClose={handleModalChangeCompanyLogoClose}
         idCompany={companyDetail.id_company}
-        title="Change Company Photo"
+        title="Change Company Logo"
       />
     </Box>
   );
