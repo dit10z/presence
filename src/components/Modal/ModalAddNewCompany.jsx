@@ -16,8 +16,10 @@ import dayjs from "dayjs";
 import axios from "axios";
 import Swal from "sweetalert2";
 import success from "../../assets/icons/success.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addNewCompany } from "../../redux/slices/companySlice";
+import { useFormik } from "formik";
+import validationSchema from "../../validation/companyValidation";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -42,7 +44,7 @@ const FormFieldDate = styled(DatePicker)({
 });
 
 const ModalAddNewCompany = ({ open, onClose }) => {
-  const { status, error } = useSelector((state) => state.companies);
+  const dispatch = useDispatch();
   const [companyDetails, setCompanyDetails] = useState({
     companyName: "",
     email: "",
@@ -54,57 +56,54 @@ const ModalAddNewCompany = ({ open, onClose }) => {
     joiningDate: dayjs(),
   });
 
-  const handleChange = (e) => {
-    setCompanyDetails({
-      ...companyDetails,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const formik = useFormik({
+    initialValues: {
+      companyName: companyDetails.companyName,
+      email: companyDetails.email,
+      phone: companyDetails.phone,
+      address: companyDetails.address,
+      state: companyDetails.state,
+      city: companyDetails.city,
+      zipCode: companyDetails.zipCode,
+      joiningDate: companyDetails.joiningDate,
+    },
 
-  const handleDateChange = (newValue) => {
-    setCompanyDetails({
-      ...companyDetails,
-      joiningDate: newValue,
-    });
-  };
+    validationSchema: validationSchema,
 
-  const handleAdd = () => {
-    const token = `eyJhbGciOiJIUzI1NiJ9.eyJpZF9zdXBlcmFkbWluIjoyLCJpZF9hY2NvdW50IjoiNjBjYzYzNTAtYzZiZS00OTMxLTlkYjUtZjg4NWJjMjI0ZDgwIiwic3ViIjoibXVyaTEyMzQiLCJpYXQiOjE3MjM3OTUxMjUsImV4cCI6MTcyMzg4MTUyNX0.WQv_c4aMafcsBnIvau_dKqiv8gtPiSQ2dEBTIp21new`;
-    try {
-      const data = {
-        company_name: companyDetails.companyName,
-        email: companyDetails.email,
-        phone: companyDetails.phone,
-        address: companyDetails.address,
-        state: companyDetails.state,
-        city: companyDetails.city,
-        zip_code: companyDetails.zipCode,
-        joining_date: companyDetails.joiningDate.toISOString().split("T")[0],
-      };
-      console.log(data);
-      const response = axios.post(
-        "http://localhost:8080/company-management/companies",
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+    onSubmit: async (values, { resetForm }) => {
+      console.log("Form submitted"); // Memastikan onSubmit terpicu
+      const formattedJoiningDate = dayjs(values.joiningDate).format(
+        "YYYY-MM-DD"
       );
-      console.log(response);
+      const requestData = {
+        company_name: values.companyName,
+        email: values.email,
+        phone: values.phone,
+        address: values.address,
+        state: values.state,
+        city: values.city,
+        zip_code: values.zipCode,
+        joining_date: formattedJoiningDate,
+      };
+      console.log("Request Data: ", requestData);
       Swal.fire({
         title: "Success",
         text: "Add New Company Success",
         imageUrl: success,
         imageAlt: "success",
       });
-    } catch (err) {
-      console.log(err);
-    } finally {
-      onClose();
-    }
-  };
+
+      try {
+        dispatch(addNewCompany(requestData));
+        console.log("Add New Company Success");
+      } catch (error) {
+        console.log("Error Adding New Company", error);
+      } finally {
+        resetForm();
+        onClose();
+      }
+    },
+  });
 
   return (
     <StyledModal open={open} onClose={onClose}>
@@ -112,102 +111,129 @@ const ModalAddNewCompany = ({ open, onClose }) => {
         <Typography variant="h6" mb={8}>
           Add New Company
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <FormField
-              label="Company Name"
-              variant="outlined"
-              name="companyName"
-              value={companyDetails.companyName}
-              onChange={handleChange}
-            />
+        <form onSubmit={formik.handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <FormField
+                label="Company Name"
+                variant="outlined"
+                name="companyName"
+                value={formik.values.companyName}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.companyName &&
+                  Boolean(formik.errors.companyName)
+                }
+                helperText={
+                  formik.touched.companyName && formik.errors.companyName
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormField
+                label="Email Address"
+                variant="outlined"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                error={formik.touched.email && Boolean(formik.errors.email)}
+                helperText={formik.touched.email && formik.errors.email}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormField
+                label="Phone"
+                variant="outlined"
+                name="phone"
+                value={formik.values.phone}
+                onChange={formik.handleChange}
+                error={formik.touched.phone && Boolean(formik.errors.phone)}
+                helperText={formik.touched.phone && formik.errors.phone}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormField
+                label="Address"
+                variant="outlined"
+                name="address"
+                value={formik.values.address}
+                onChange={formik.handleChange}
+                error={formik.touched.address && Boolean(formik.errors.address)}
+                helperText={formik.touched.address && formik.errors.address}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormField
+                label="State"
+                variant="outlined"
+                name="state"
+                value={formik.values.state}
+                onChange={formik.handleChange}
+                error={formik.touched.state && Boolean(formik.errors.state)}
+                helperText={formik.touched.state && formik.errors.state}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormField
+                label="City"
+                variant="outlined"
+                name="city"
+                value={formik.values.city}
+                onChange={formik.handleChange}
+                error={formik.touched.city && Boolean(formik.errors.city)}
+                helperText={formik.touched.city && formik.errors.city}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormField
+                label="Zip Code"
+                variant="outlined"
+                name="zipCode"
+                value={formik.values.zipCode}
+                onChange={formik.handleChange}
+                error={formik.touched.zipCode && Boolean(formik.errors.zipCode)}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormFieldDate
+                label="Joining Date"
+                name="joiningDate"
+                value={formik.values.joiningDate}
+                onChange={(value) => formik.setFieldValue("joiningDate", value)}
+                error={
+                  formik.touched.joiningDate &&
+                  Boolean(formik.errors.joiningDate)
+                }
+                helperText={
+                  formik.touched.joiningDate && formik.errors.joiningDate
+                }
+                renderInput={(params) => <TextField {...params} />}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton>
+                        <CalendarTodayIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <FormField
-              label="Email Address"
+          <Box mt={6} display="flex" justifyContent="flex-end">
+            <Button
+              onClick={onClose}
               variant="outlined"
-              name="email"
-              value={companyDetails.email}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <FormField
-              label="Phone"
-              variant="outlined"
-              name="phone"
-              value={companyDetails.phone}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormField
-              label="Address"
-              variant="outlined"
-              name="address"
-              value={companyDetails.address}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <FormField
-              label="State"
-              variant="outlined"
-              name="state"
-              value={companyDetails.state}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <FormField
-              label="City"
-              variant="outlined"
-              name="city"
-              value={companyDetails.city}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <FormField
-              label="Zip Code"
-              variant="outlined"
-              name="zipCode"
-              value={companyDetails.zipCode}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <FormFieldDate
-              label="Joining Date"
-              variant="outlined"
-              name="joiningDate"
-              value={companyDetails.joiningDate}
-              onChange={handleDateChange}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton>
-                      <CalendarTodayIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-        </Grid>
-        <Box mt={6} display="flex" justifyContent="flex-end">
-          <Button
-            onClick={onClose}
-            variant="outlined"
-            sx={{ marginRight: 1 }}
-            color="primary"
-          >
-            Cancel
-          </Button>
-          <Button variant="contained" color="primary" onClick={handleAdd}>
-            Add
-          </Button>
-        </Box>
+              sx={{ marginRight: 1 }}
+              color="primary"
+            >
+              Cancel
+            </Button>
+            <Button type="submit" variant="contained" color="primary">
+              Add
+            </Button>
+          </Box>
+        </form>
       </ModalContent>
     </StyledModal>
   );
