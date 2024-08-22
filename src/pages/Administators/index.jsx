@@ -47,9 +47,13 @@ const Administrators = () => {
   const [endDate, setEndDate] = useState("");
   const [row, setRow] = useState([]);
   const [total, setTotal] = useState(0);
+  const [selectedId, setSelectedId] = useState("");
   const totalRowCount = 100;
 
-  const handleOpenModalEdit = () => setOpenModalEdit(true);
+  const handleOpenModalEdit = (id) => {
+    setSelectedId(id);
+    setOpenModalEdit(true);
+  };
   const handleModalEditClose = () => setOpenModalEdit(false);
   const handleOpenDateFilter = () => setOpenDateFilter(true);
   const handleCloseDateFilter = () => setOpenDateFilter(false);
@@ -134,24 +138,22 @@ const Administrators = () => {
       flex: 1,
       renderCell: (params) => (
         <Box sx={{ display: "flex", justifyContent: "stretch" }}>
+          {console.log("log param", params.row.id)}
           <IconButton
             aria-label="view"
-            onClick={() => navigate(`/admin-detail/admins/${params.row.id}`)}
+            onClick={() => navigate(`/admin-detail/${params.row.id}`)}
           >
             <Visibility />
           </IconButton>
-          <IconButton aria-label="edit" onClick={() => handleOpenModalEdit()}>
+          <IconButton
+            aria-label="edit"
+            onClick={() => handleOpenModalEdit(params.row.id)}
+          >
             <Edit />
           </IconButton>
           <IconButton aria-label="delete">
             <Delete />
           </IconButton>
-          <ModalEditAdmin
-            open={openModalEdit}
-            onClose={handleModalEditClose}
-            title="edit"
-            adminId={params.row.id}
-          />
         </Box>
       ),
     },
@@ -265,6 +267,12 @@ const Administrators = () => {
           setStartDate={setStartDate}
           setEndDate={setEndDate}
           // handleApply={handleApplyDateFilter}
+        />
+        <ModalEditAdmin
+          open={openModalEdit}
+          onClose={handleModalEditClose}
+          title="edit"
+          adminId={selectedId}
         />
       </Box>
     </Grid>

@@ -46,7 +46,8 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [dataAdmin, setDataAdmin] = useState([]);
+  // const [dataAdmin, setDataAdmin] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState("");
   const [dataCompanyMaster, setDataCompanyMaster] = useState([]);
   const [formData, setFormData] = useState({
     firstname: "",
@@ -54,45 +55,49 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
     email: "",
     username: "",
     idcompany: "",
+    companyName: "",
     password: " ",
   });
   // #melakukan fetch data admin
   const fetchDataAdmin = async (adminId) => {
     try {
-      console.log(adminId);
+      console.log("adminId", adminId);
       const response = await detailAdmin(adminId);
-      console.log(response);
-      setDataAdmin(response.data.data);
-      console.log("dataAdmin", dataAdmin);
+      // console.log("response", response.data.data.company.id_company);
+      // setDataAdmin(response.data.data);
+      // console.log("dataAdmin", dataAdmin);
       setFormData({
-        firstname: dataAdmin.first_name || "",
-        lastname: dataAdmin.last_name || "",
-        email: dataAdmin.email || "",
-        username: dataAdmin.username || "",
-        idcompany: dataAdmin.id_company || "",
-        password: dataAdmin.password || "",
+        firstname: response.data.data.first_name || "",
+        lastname: response.data.data.last_name || "",
+        email: response.data.data.email || "",
+        username: response.data.data.username || "",
+        idcompany: response.data.data.company.id_company || "",
+        companyName: response.data.data.company.company_name || "",
+        password: response.data.data.password || "",
       });
 
-      // console.log(formData);
+      // console.log(formData.idcompany);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  // useEffect(() => {
-  //   fetchDataAdmin(adminId);
-  // }, []);
-
   const masterAlcompany = async () => {
     try {
       const response = await getAllCompaniesMaster();
-      -console.log(response);
+      console.log(response);
       setDataCompanyMaster(response.data.data);
       console.log("dataCompanyMaster", dataCompanyMaster);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+  useEffect(() => {
+    if (open) {
+      fetchDataAdmin(adminId);
+      masterAlcompany();
+    }
+  }, [open, adminId]);
 
   // useEffect(() => {
   //   masterAlcompany();
@@ -130,7 +135,7 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
       };
       console.log(payload);
       // const response = await editDataAdmin(adminId, payload);
-      console.log(response);
+      // console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -206,12 +211,13 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
             <Grid item xs={12}>
               <FormField
                 select
-                label="Company Origin"
+                label={formData.companyName}
                 variant="outlined"
                 defaultValue=""
+                value={formData.idcompany}
               >
                 {dataCompanyMaster.map((data, index) => (
-                  <MenuItem value={data.id_company}>
+                  <MenuItem value={data.id_company} key={index}>
                     {data.company_name}
                   </MenuItem>
                 ))}

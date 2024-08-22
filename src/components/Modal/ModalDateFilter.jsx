@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Box, Typography, Button, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 
 const DateFilterModal = ({
   open,
