@@ -132,11 +132,11 @@ const Administrators = () => {
       field: "actions",
       headerName: "Action",
       flex: 1,
-      renderCell: () => (
+      renderCell: (params) => (
         <Box sx={{ display: "flex", justifyContent: "stretch" }}>
           <IconButton
             aria-label="view"
-            onClick={() => navigate("/admin-detail/")}
+            onClick={() => navigate(`/admin-detail/admins/${params.row.id}`)}
           >
             <Visibility />
           </IconButton>
@@ -150,6 +150,7 @@ const Administrators = () => {
             open={openModalEdit}
             onClose={handleModalEditClose}
             title="edit"
+            adminId={params.row.id}
           />
         </Box>
       ),

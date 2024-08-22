@@ -47,6 +47,7 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [dataAdmin, setDataAdmin] = useState([]);
+  const [dataCompanyMaster, setDataCompanyMaster] = useState([]);
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -55,39 +56,47 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
     idcompany: "",
     password: " ",
   });
-
   // #melakukan fetch data admin
   const fetchDataAdmin = async (adminId) => {
     try {
+      console.log(adminId);
       const response = await detailAdmin(adminId);
       console.log(response);
       setDataAdmin(response.data.data);
-
+      console.log("dataAdmin", dataAdmin);
       setFormData({
-        firstname: dataAdmin.firstname || "",
-        lastname: dataAdmin.lastname || "",
+        firstname: dataAdmin.first_name || "",
+        lastname: dataAdmin.last_name || "",
         email: dataAdmin.email || "",
         username: dataAdmin.username || "",
-        idcompany: dataAdmin.idcompany || "",
+        idcompany: dataAdmin.id_company || "",
         password: dataAdmin.password || "",
       });
+
+      // console.log(formData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  useEffect(() => {
-    fetchDataAdmin(adminId);
-  }, [adminId]);
+  // useEffect(() => {
+  //   fetchDataAdmin(adminId);
+  // }, []);
 
   const masterAlcompany = async () => {
     try {
       const response = await getAllCompaniesMaster();
-      console.log(response);
+      -console.log(response);
+      setDataCompanyMaster(response.data.data);
+      console.log("dataCompanyMaster", dataCompanyMaster);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
+  // useEffect(() => {
+  //   masterAlcompany();
+  // }, []);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -164,7 +173,7 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
           <Grid container spacing={3} mt={3}>
             <Grid item xs={6}>
               <FormField
-                label={formData.firstname}
+                label="firstname"
                 variant="outlined"
                 value={formData.firstname}
                 onChange={handleChange}
@@ -172,7 +181,7 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
             </Grid>
             <Grid item xs={6}>
               <FormField
-                label={formData.lastname}
+                label="lastname"
                 variant="outlined"
                 value={formData.lastname}
                 onChange={handleChange}
@@ -180,7 +189,7 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
             </Grid>
             <Grid item xs={6}>
               <FormField
-                label={formData.username}
+                label="username"
                 variant="outlined"
                 value={formData.username}
                 onChange={handleChange}
@@ -188,7 +197,7 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
             </Grid>
             <Grid item xs={6}>
               <FormField
-                label={formData.email}
+                label="email"
                 variant="outlined"
                 value={formData.email}
                 onChange={handleChange}
@@ -201,7 +210,11 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
                 variant="outlined"
                 defaultValue=""
               >
-                {<MenuItem value="company1">Company 1</MenuItem>}
+                {dataCompanyMaster.map((data, index) => (
+                  <MenuItem value={data.id_company}>
+                    {data.company_name}
+                  </MenuItem>
+                ))}
               </FormField>
             </Grid>
           </Grid>
