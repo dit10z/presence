@@ -1,12 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { fetchCompanies, addAdmin, changeAdminPhoto, fetchAdminDetail } from './actions';
+import { createSlice } from "@reduxjs/toolkit";
+import {
+  fetchCompanies,
+  addAdmin,
+  changeAdminPhoto,
+  fetchAdminDetail,
+} from "./actions";
 
 //start punya tasyia utk add admin
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
     admins: [],
-    companies: [],  
+    companies: [],
     adminDetail: null,
     status: "idle",
     error: null,
@@ -56,23 +61,25 @@ const adminSlice = createSlice({
       })
       .addCase(fetchAdminDetail.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload?.message || "Failed to fetch admin detail"
+        state.error = action.payload?.message || "Failed to fetch admin detail";
       })
       //change photo
-      .addCase(changeAdminPhoto.pending, (state) =>{
+      .addCase(changeAdminPhoto.pending, (state) => {
         state.status = "loading";
       })
       .addCase(changeAdminPhoto.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const updatedAdmin = state.admins.find(admin => admin.id === action.payload.idAdmin);
-        if(updatedAdmin) {
-            updatedAdmin.profile_picture = action.payload.profile_picture;
+        const updatedAdmin = state.admins.find(
+          (admin) => admin.id === action.payload.idAdmin
+        );
+        if (updatedAdmin) {
+          updatedAdmin.profile_picture = action.payload.profile_picture;
         }
-    })
+      })
       .addCase(changeAdminPhoto.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload?.message || "Failed to change admin photo";
-      })
+      });
   },
 });
 //end
