@@ -38,7 +38,9 @@ const AdminDetail = () => {
 
 
   useEffect(() => {
-    dispatch(fetchAdminDetail(idAdmin));
+    if (idAdmin) {
+      dispatch(fetchAdminDetail(idAdmin));
+    }
   }, [dispatch, idAdmin]);
 
   const handleModalEditAdminOpen = () => {

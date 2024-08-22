@@ -13,7 +13,7 @@ import CustomButton from "../CustomButton";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Description } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
-import { changeAdminPhoto } from "../../redux/slices/adminsSlice";
+import { changeAdminPhoto, fetchAdminDetail } from "../../redux/slices/adminsSlice";
 import Swal from "sweetalert2";
 import success from "../../assets/icons/success.png";
 
@@ -111,6 +111,7 @@ const ModalChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
           imageUrl: success,
           imageAlt: "success",
         });
+        await dispatch(fetchAdminDetail(idAdmin))
         onCloseModal();
       } catch (error) {
         Swal.fire({

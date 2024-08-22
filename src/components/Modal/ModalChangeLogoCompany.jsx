@@ -13,7 +13,7 @@ import CustomButton from "../CustomButton";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Description } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
-import { changeCompanyLogo } from "../../redux/slices/companySlice";
+import { changeCompanyLogo, detailCompany } from "../../redux/slices/companySlice";
 import Swal from "sweetalert2";
 import success from "../../assets/icons/success.png";
 
@@ -111,6 +111,7 @@ const ModalChangeCompanyLogo = ({ open, onClose, idCompany, title }) => {
           imageUrl: success,
           imageAlt: "success",
         });
+        await dispatch(detailCompany(idCompany))
         onCloseModal();
       } catch (error) {
         Swal.fire({
