@@ -1,12 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers";
 import CustomButton from "../../components/CustomButton";
 import CustomDataGrid from "../../components/CustomDataGrid";
-import { Add, Delete, Edit, Search, Visibility } from "@mui/icons-material";
+import {
+  Add,
+  Delete,
+  Edit,
+  Search,
+  Visibility,
+  CalendarMonthOutlined,
+} from "@mui/icons-material";
 import Grid from "@mui/material/Grid";
 import theme from "../../styles/theme";
 import ModalAddNewAdministrator from "../../components/Modal/ModalAddNewAdmin";
+import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
+import ModalDateFilter from "../../components/Modal/ModalDateFilter";
+import { getAllAdmins } from "../../api/administrator/index";
 import {
   Avatar,
   Paper,
@@ -19,167 +29,127 @@ import {
   Typography,
   InputAdornment,
 } from "@mui/material";
-const rows = [
-  {
-    id: 1,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 2,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 3,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 4,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 5,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 6,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 7,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 8,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 9,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 10,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 11,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 12,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 13,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 14,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  {
-    id: 15,
-    company: "ArutalaLab",
-    name: "Darlene Robertson",
-    email: "darlene@gmail.com",
-    date: "June 28, 2024",
-  },
-  {
-    id: 16,
-    company: "ArutalaLab",
-    name: "Floyd Miles",
-    email: "floyd@gmail.com",
-    date: "June 03, 2024",
-  },
-  // Add more rows as needed
-];
 
-const AdminTabel = () => {
+const Administrators = () => {
   const navigate = useNavigate();
+
+  // State management
+  const [openModalEdit, setOpenModalEdit] = useState(false);
+  const [newAdministratorModal, setNewAdministratorModal] = useState(false);
+  const [openDateFilter, setOpenDateFilter] = useState(false);
+
   const [pageSize, setPageSize] = useState(10);
-  const [page, setPage] = useState(0);
+  const [filter, setFilter] = useState("");
+  const [sortBy, setSortBy] = useState("");
+  const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [row, setRow] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [selectedId, setSelectedId] = useState("");
   const totalRowCount = 100;
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleOpenModalEdit = (id) => {
+    setSelectedId(id);
+    setOpenModalEdit(true);
   };
+  const handleModalEditClose = () => setOpenModalEdit(false);
+  const handleOpenDateFilter = () => setOpenDateFilter(true);
+  const handleCloseDateFilter = () => setOpenDateFilter(false);
+  const handleOpen = () => setNewAdministratorModal(true);
+  const handleClose = () => setNewAdministratorModal(false);
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handleChangePage = (event, newPage) => setPage(newPage);
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+    setPageSize(+event.target.value);
+    setPage(1);
   };
 
+  function extractDate(createdDate) {
+    const date = new Date(createdDate);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
+  const fetchDataAdmin = async (
+    searchQuery,
+    sortBy,
+    pageSize,
+    page,
+    startDate,
+    endDate
+  ) => {
+    try {
+      const response = await getAllAdmins(
+        searchQuery,
+        sortBy,
+        pageSize,
+        page,
+        startDate,
+        endDate
+      );
+      const transformedData = response.data.data.map((admin) => ({
+        id: admin.id_admin,
+        company_name: admin.company.company_name,
+        fullname: `${admin.first_name} ${admin.last_name}`,
+        email: admin.email,
+        profile_picture: admin.profile_picture,
+        created_date: extractDate(admin.created_day),
+      }));
+      setRow(transformedData);
+      setTotal(response.data.meta.total);
+      console.log("total", response.data.meta.total);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  console.log("row", row);
+  useEffect(() => {
+    fetchDataAdmin(searchQuery, sortBy, pageSize, page, startDate, endDate);
+  }, [searchQuery, sortBy, pageSize, page, startDate, endDate]);
+
   const columns = [
-    { field: "company", headerName: "Company Name", flex: 1 },
+    { field: "company_name", headerName: "Company Name", flex: 1 },
     {
-      field: "name",
+      field: "fullname",
       headerName: "Administrator Name",
       flex: 1,
       renderCell: (params) => (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar sx={{ mr: 2 }} />
+        <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
+          <Avatar sx={{ mr: 2 }} src={params.row.profile_picture} />
           <Typography>{params.value}</Typography>
         </Box>
       ),
     },
     { field: "email", headerName: "Email", flex: 1 },
-    { field: "date", headerName: "Joining Date", flex: 1 },
+    { field: "created_date", headerName: "Joining Date", flex: 1 },
     {
       field: "actions",
       headerName: "Action",
       flex: 1,
-      renderCell: () => (
+      renderCell: (params) => (
         <Box sx={{ display: "flex", justifyContent: "stretch" }}>
+          {console.log("log param", params.row.id)}
           <IconButton
             aria-label="view"
-            onClick={() => navigate("/admin-detail")}
+            onClick={() => navigate(`/admin-detail/${params.row.id}`)}
           >
             <Visibility />
           </IconButton>
-          <IconButton aria-label="edit">
+          <IconButton
+            aria-label="edit"
+            onClick={() => handleOpenModalEdit(params.row.id)}
+          >
             <Edit />
           </IconButton>
           <IconButton aria-label="delete">
@@ -191,117 +161,120 @@ const AdminTabel = () => {
   ];
 
   return (
-    <>
-      <CustomDataGrid
-        columns={columns}
-        rows={rows}
-        pageSize={pageSize}
-        page={page}
-        onPageChange={(newPage) => setPage(newPage)}
-        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        searchQuery={searchQuery}
-        totalRowCount={totalRowCount}
-        hidePagination={true}
-      />
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mt: 3,
-        }}
-      >
-        <TextField
-          select
-          value={pageSize}
-          onChange={(e) => setPageSize(parseInt(e.target.value, 10))}
-          sx={{ width: 100 }}
-        >
-          <MenuItem value={10}>10</MenuItem>
-          <MenuItem value={20}>20</MenuItem>
-          <MenuItem value={30}>30</MenuItem>
-        </TextField>
-
-        <Pagination
-          count={Math.ceil(totalRowCount / pageSize)}
-          page={page}
-          onChange={(e, value) => setPage(value)}
-        />
-      </Box>
-    </>
-  );
-};
-const AdminButton = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [date, setDate] = useState(null);
-  const [newAdministratorModal, setNewAdministratorModal] = useState(false);
-  const handleOpen = () => {
-    setNewAdministratorModal(true);
-  };
-  const handleClose = () => {
-    setNewAdministratorModal(false);
-  };
-  return (
-    <Box>
-      <Box
-        direction="row"
-        gap={1}
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 3,
-        }}
-      >
-        <Box display="flex" alignItems="center" style={{ marginRight: "20px" }}>
-          <TextField
-            placeholder="Search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
-        <Stack direction="row" spacing={2}>
-          <DatePicker
-            label="Date Filter"
-            value={date}
-            onChange={(newValue) => setDate(newValue)}
-            renderInput={(params) => <TextField {...params} />}
-          />
-          <CustomButton
-            variant="contained"
-            color="primary"
-            startIcon={<Add />}
-            onClick={handleOpen}
-          >
-            Add New Administrator
-          </CustomButton>
-        </Stack>
-      </Box>
-      <ModalAddNewAdministrator
-        open={newAdministratorModal}
-        onClose={handleClose}
-        title="Add"
-      ></ModalAddNewAdministrator>
-    </Box>
-  );
-};
-const Administrators = () => {
-  return (
     <Grid
       border={`1px solid ${theme.palette.grey[300]}`}
       borderRadius={"10px"}
       padding={2.5}
     >
       <Box sx={{ p: 3 }}>
-        <AdminButton />
-        <AdminTabel />
+        <Box
+          direction="row"
+          gap={1}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
+          }}
+        >
+          <Box
+            display="flex"
+            alignItems="center"
+            style={{ marginRight: "20px" }}
+          >
+            <TextField
+              placeholder="Search"
+              value={searchQuery}
+              onChange={handleSearch}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+          <Stack direction="row" spacing={2}>
+            <CustomButton
+              variant="contained"
+              color="white"
+              startIcon={<CalendarMonthOutlined />}
+              onClick={handleOpenDateFilter}
+            >
+              Date Filter
+            </CustomButton>
+            <CustomButton
+              variant="contained"
+              color="primary"
+              startIcon={<Add />}
+              onClick={handleOpen}
+            >
+              Add New Administrator
+            </CustomButton>
+          </Stack>
+        </Box>
+
+        <CustomDataGrid
+          columns={columns}
+          rows={row}
+          pageSize={pageSize}
+          page={page}
+          onPageChange={(newPage) => setPage(newPage)}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          searchQuery={searchQuery}
+          totalRowCount={totalRowCount}
+          hidePagination={true}
+        />
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: 3,
+          }}
+        >
+          <TextField
+            select
+            value={pageSize}
+            onChange={handleChangeRowsPerPage}
+            sx={{ width: 100 }}
+          >
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+            <MenuItem value={30}>30</MenuItem>
+          </TextField>
+
+          <Pagination
+            count={Math.ceil(total / pageSize)}
+            page={page}
+            onChange={handleChangePage}
+          />
+        </Box>
+
+        <ModalAddNewAdministrator
+          open={newAdministratorModal}
+          onClose={handleClose}
+          title="Add"
+        />
+
+        <ModalDateFilter
+          open={openDateFilter}
+          onClose={handleCloseDateFilter}
+          title="Date Filter"
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          // handleApply={handleApplyDateFilter}
+        />
+        <ModalEditAdmin
+          open={openModalEdit}
+          onClose={handleModalEditClose}
+          title="edit"
+          adminId={selectedId}
+        />
       </Box>
     </Grid>
   );

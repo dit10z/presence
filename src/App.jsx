@@ -4,6 +4,7 @@ import Pages from "./pages";
 import { Provider, useDispatch } from "react-redux";
 import store from "./redux/store";
 import { setCredentials } from "./redux/slices/authSlice"; // Import setCredentials
+import { AuthProvider } from "./services/authProvider";
 
 function AppInitializer() {
   const dispatch = useDispatch();
@@ -23,9 +24,11 @@ function AppInitializer() {
 export default function App() {
   return (
     <Provider store={store}>
-      <Router>
-        <AppInitializer />
-      </Router>
+      <AuthProvider>
+        <Router>
+          <AppInitializer />
+        </Router>
+      </AuthProvider>
     </Provider>
   );
 }
