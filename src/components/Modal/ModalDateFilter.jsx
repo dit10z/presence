@@ -42,7 +42,7 @@ const DateFilterModal = ({
         <Typography variant="h6" mb={2}>
           Date Filter
         </Typography>
-        <Grid container spacing={3} alignItems="center">
+        <Grid container spacing={2} alignItems="center">
           <Grid item xs={5}>
             <DatePicker
               label="Start date"
@@ -54,7 +54,7 @@ const DateFilterModal = ({
           <Grid item xs={2} textAlign="center">
             <Typography align="center">—</Typography>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={5} sx={{ paddingRight: 10 }}>
             <DatePicker
               label="End date"
               // value={endDate}

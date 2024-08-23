@@ -17,11 +17,7 @@ export const buildUrl = (base, params) => {
 export const editDataAdmin = (id, data) => {
   const apiUrl = `${baseUrl}/admin-management/admins/${id}`;
   return instance
-    .patch(apiUrl, data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
+    .patch(apiUrl, data)
     .then((response) => {
       return response;
     })

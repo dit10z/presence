@@ -19,6 +19,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import * as Yup from "yup";
+import success from "../../assets/icons/success.png";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   getAllCompaniesMaster,
@@ -87,8 +88,14 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
 
   // Validasi menggunakan Yup
   const validationSchema = Yup.object({
-    firstname: Yup.string().required("First name is required"),
-    lastname: Yup.string().required("Last name is required"),
+    firstname: Yup.string()
+      .required("First name is required")
+      .min(2, "First name must be at least 2 characters")
+      .max(50, "First name must be at most 50 characters"),
+    lastname: Yup.string()
+      .required("Last name is required")
+      .min(2, "Last name must be at least 2 characters")
+      .max(50, "Last name must be at most 50 characters"),
     email: Yup.string()
       .email("Invalid email address")
       .required("Email is required"),
@@ -133,15 +140,21 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
           // Mengirim data untuk mengedit admin
           console.log("data : ", payload);
           await editDataAdmin(adminId, payload);
-          Swal.fire(
-            "Success",
-            "Admin information updated successfully",
-            "success"
-          );
+          Swal.fire({
+            title: "Success",
+            text: "Update Admin Success",
+            imageUrl: success,
+            imageAlt: "success",
+          });
         } else if (activeTab === 1) {
           // Mengubah password admin
           await editPassword(adminId, values.password);
-          Swal.fire("Success", "Password updated successfully", "success");
+          Swal.fire({
+            title: "Success",
+            text: "Update Password Success",
+            imageUrl: success,
+            imageAlt: "success",
+          });
         }
         onClose(); // Menutup modal setelah berhasil
       } catch (error) {
@@ -339,12 +352,7 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
             >
               Cancel
             </CustomButton>
-            <CustomButton
-              variant="contained"
-              color="button"
-              text="white"
-              type="submit"
-            >
+            <CustomButton variant="contained" color="primary" type="submit">
               Save
             </CustomButton>
           </Box>

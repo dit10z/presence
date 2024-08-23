@@ -113,7 +113,7 @@ const Administrators = () => {
       console.log(error);
     }
   };
-
+  console.log("row", row);
   useEffect(() => {
     fetchDataAdmin(searchQuery, sortBy, pageSize, page, startDate, endDate);
   }, [searchQuery, sortBy, pageSize, page, startDate, endDate]);
@@ -125,8 +125,8 @@ const Administrators = () => {
       headerName: "Administrator Name",
       flex: 1,
       renderCell: (params) => (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar sx={{ mr: 2 }} />
+        <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
+          <Avatar sx={{ mr: 2 }} src={params.row.profile_picture} />
           <Typography>{params.value}</Typography>
         </Box>
       ),
@@ -198,7 +198,7 @@ const Administrators = () => {
           <Stack direction="row" spacing={2}>
             <CustomButton
               variant="contained"
-              color="primary"
+              color="white"
               startIcon={<CalendarMonthOutlined />}
               onClick={handleOpenDateFilter}
             >
