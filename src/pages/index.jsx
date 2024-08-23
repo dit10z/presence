@@ -14,18 +14,13 @@ import { useSelector } from "react-redux";
 import CompanyDetail from "./Companies/CompanyDetail";
 
 const Pages = () => {
-  // Change to `false` to simulate a user not logged in
-  // const userRole = "superadmin"; // Possible values: 'admin', 'superadmin'
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const userRole = useSelector((state) => state.auth.userRole);
-
-  console.log(isAuthenticated);
-  console.log(userRole);
+  const isAuthenticated = true; // Change to `false` to simulate a user not logged in
+  const userRole = "superadmin"; // Possible values: 'admin', 'superadmin'
 
   return (
     <>
       {/* Conditional Sidebar Rendering */}
-      {isAuthenticated && userRole === "Superadmin" && (
+      {isAuthenticated && userRole === "superadmin" && (
         // <div>Superadmin Sidebar</div> // Replace with actual Sidebar component for Superadmin
         <SuperadminSidebar />
       )}

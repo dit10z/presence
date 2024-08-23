@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 instance.interceptors.request.use(
@@ -18,12 +18,15 @@ instance.interceptors.request.use(
   }
 );
 
+// Add a response interceptor
 instance.interceptors.response.use(
   (response) => {
+    // Do something with response data
     return response;
   },
   (error) => {
-    console.log("error getting response", error);
+    // Do something with response error
+    console.log("error getting token", error);
     return Promise.reject(error);
   }
 );
