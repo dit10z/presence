@@ -179,6 +179,7 @@ const CompaniesList = () => {
   const handleEditClose = () => setEditCompanyModal(false);
 
   const totalCount = data && data?.length;
+  console.log(totalCount);
 
   const navigate = useNavigate();
 

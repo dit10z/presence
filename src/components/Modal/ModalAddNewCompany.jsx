@@ -13,10 +13,9 @@ import { styled } from "@mui/system";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import axios from "axios";
 import Swal from "sweetalert2";
 import success from "../../assets/icons/success.png";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addNewCompany } from "../../redux/slices/companySlice";
 import { useFormik } from "formik";
 import validationSchema from "../../validation/companyValidation";
@@ -31,7 +30,7 @@ const ModalContent = styled(Box)({
   backgroundColor: "#fff",
   borderRadius: "10px",
   padding: "20px",
-  width: "750px", // Adjust the width according to your design
+  width: "750px",
   boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
 });
 
@@ -45,33 +44,22 @@ const FormFieldDate = styled(DatePicker)({
 
 const ModalAddNewCompany = ({ open, onClose }) => {
   const dispatch = useDispatch();
-  const [companyDetails, setCompanyDetails] = useState({
-    companyName: "",
-    email: "",
-    phone: "",
-    address: "",
-    state: "",
-    city: "",
-    zipCode: "",
-    joiningDate: dayjs(),
-  });
 
   const formik = useFormik({
     initialValues: {
-      companyName: companyDetails.companyName,
-      email: companyDetails.email,
-      phone: companyDetails.phone,
-      address: companyDetails.address,
-      state: companyDetails.state,
-      city: companyDetails.city,
-      zipCode: companyDetails.zipCode,
-      joiningDate: companyDetails.joiningDate,
+      companyName: "",
+      email: "",
+      phone: "",
+      address: "",
+      state: "",
+      city: "",
+      zipCode: "",
+      joiningDate: dayjs(),
     },
 
     validationSchema: validationSchema,
 
     onSubmit: async (values, { resetForm }) => {
-      console.log("Form submitted"); // Memastikan onSubmit terpicu
       const formattedJoiningDate = dayjs(values.joiningDate).format(
         "YYYY-MM-DD"
       );
@@ -85,17 +73,15 @@ const ModalAddNewCompany = ({ open, onClose }) => {
         zip_code: values.zipCode,
         joining_date: formattedJoiningDate,
       };
-      console.log("Request Data: ", requestData);
-      Swal.fire({
-        title: "Success",
-        text: "Add New Company Success",
-        imageUrl: success,
-        imageAlt: "success",
-      });
 
       try {
         dispatch(addNewCompany(requestData));
-        console.log("Add New Company Success");
+        Swal.fire({
+          title: "Success",
+          text: "Add New Company Success",
+          imageUrl: success,
+          imageAlt: "success",
+        });
       } catch (error) {
         console.log("Error Adding New Company", error);
       } finally {
@@ -192,6 +178,7 @@ const ModalAddNewCompany = ({ open, onClose }) => {
                 value={formik.values.zipCode}
                 onChange={formik.handleChange}
                 error={formik.touched.zipCode && Boolean(formik.errors.zipCode)}
+                helperText={formik.touched.zipCode && formik.errors.zipCode}
               />
             </Grid>
             <Grid item xs={6}>
@@ -207,7 +194,19 @@ const ModalAddNewCompany = ({ open, onClose }) => {
                 helperText={
                   formik.touched.joiningDate && formik.errors.joiningDate
                 }
-                renderInput={(params) => <TextField {...params} />}
+                slots={{
+                  textField: TextField, // Gunakan TextField sebagai komponen slot
+                }}
+                slotProps={{
+                  textField: {
+                    fullWidth: true, // Atur TextField untuk menggunakan lebar penuh
+                    error:
+                      formik.touched.joiningDate &&
+                      Boolean(formik.errors.joiningDate),
+                    helperText:
+                      formik.touched.joiningDate && formik.errors.joiningDate,
+                  },
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
