@@ -88,8 +88,14 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
 
   // Validasi menggunakan Yup
   const validationSchema = Yup.object({
-    firstname: Yup.string().required("First name is required"),
-    lastname: Yup.string().required("Last name is required"),
+    firstname: Yup.string()
+      .required("First name is required")
+      .min(2, "First name must be at least 2 characters")
+      .max(50, "First name must be at most 50 characters"),
+    lastname: Yup.string()
+      .required("Last name is required")
+      .min(2, "Last name must be at least 2 characters")
+      .max(50, "Last name must be at most 50 characters"),
     email: Yup.string()
       .email("Invalid email address")
       .required("Email is required"),
