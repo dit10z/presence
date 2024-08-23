@@ -14,8 +14,14 @@ import { useSelector } from "react-redux";
 import CompanyDetail from "./Companies/CompanyDetail";
 
 const Pages = () => {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); // Change to `false` to simulate a user not logged in
-  const userRole = useSelector((state) => state.auth.userRole); // Possible values: 'admin', 'superadmin'
+  // const isAuthenticated = true; // Change to `false` to simulate a user not logged in
+  // const userRole = "superadmin"; // Possible values: 'admin', 'superadmin'
+
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const userRole = useSelector((state) => state.auth.userRole);
+
+  console.log(isAuthenticated);
+  console.log(userRole);
 
   return (
     <>

@@ -15,6 +15,7 @@ import {
 import { Edit } from "@mui/icons-material";
 import { detailCompany } from "../../redux/slices/companySlice";
 import ModalChangeCompanyLogo from "../../components/Modal/ModalChangeLogoCompany";
+import ModalEditCompany from "../../components/Modal/ModalEditCompany";
 
 const TypographyHead = styled(Typography)(({ theme }) => ({
   fontWeight: 300,
@@ -29,6 +30,7 @@ const TypographyBody = styled(Typography)(({ theme }) => ({
 
 const CompanyDetail = () => {
   const [modalChangeCompanyLogo, setModalChangeCompanyLogo] = useState(false);
+  const [editCompanyModal, setEditCompanyModal] = useState(false);
 
   const { id_company } = useParams();
   const dispatch = useDispatch();
@@ -48,6 +50,12 @@ const CompanyDetail = () => {
   const handleModalChangeCompanyLogoClose = () => {
     setModalChangeCompanyLogo(false);
   };
+
+  const handleEditOpen = () => {
+    setEditCompanyModal(true);
+  };
+
+  const handleEditClose = () => setEditCompanyModal(false);
 
   if (
     status === true ||
@@ -176,6 +184,7 @@ const CompanyDetail = () => {
                 color="primary"
                 startIcon={<Edit />}
                 size="medium"
+                onClick={handleEditOpen}
               >
                 Edit Information
               </Button>
@@ -189,6 +198,12 @@ const CompanyDetail = () => {
         onClose={handleModalChangeCompanyLogoClose}
         idCompany={companyDetail.id_company}
         title="Change Company Logo"
+      />
+
+      <ModalEditCompany
+        open={editCompanyModal}
+        onClose={handleEditClose}
+        companyId={companyDetail.id_company}
       />
     </Box>
   );
