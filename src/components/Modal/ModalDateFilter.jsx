@@ -24,6 +24,13 @@ const DateFilterModal = ({
     onClose();
   };
 
+  const handleCancel = () => {
+    setTemporalStartDate(null);
+    setTemporalEndDate(null);
+    setStartDate("");
+    setEndDate("");
+    onClose();
+  };
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -64,7 +71,11 @@ const DateFilterModal = ({
           </Grid>
         </Grid>
         <Box mt={4} display="flex" justifyContent="flex-end">
-          <Button onClick={onClose} variant="outlined" sx={{ marginRight: 1 }}>
+          <Button
+            onClick={handleCancel}
+            variant="outlined"
+            sx={{ marginRight: 1 }}
+          >
             Cancel
           </Button>
           <Button variant="contained" color="primary" onClick={handleApply}>

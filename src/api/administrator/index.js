@@ -93,3 +93,16 @@ export const getAllCompaniesMaster = () => {
       throw error;
     });
 };
+
+export const deleteDataAdmin = (id) => {
+  const apiUrl = `${baseUrl}/admin-management/admins/${id}/delete`;
+  return instance
+    .patch(apiUrl, { is_delete: true })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error(error);
+      throw error;
+    });
+};
