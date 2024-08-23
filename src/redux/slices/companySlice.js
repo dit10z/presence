@@ -44,12 +44,8 @@ export const detailCompany = createAsyncThunk(
   "company/detailCompany",
   async (id_company, { rejectWithValue }) => {
     try {
-      const response = await instance.get(
-        `/company-management/companies/${id_company}`
-      );
-      const { data, status, statusText } = response;
-      console.log("Status:", data.data);
-      return { data: data.data, status, statusText };
+      const response = instance.get(`/company-management/companies/${id}`);
+      return response;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -70,7 +66,6 @@ export const changeCompanyLogo = createAsyncThunk(
           },
         }
       );
-      console.log(response.data);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -173,7 +168,6 @@ const companySlice = createSlice({
       .addCase(changeCompanyLogo.fulfilled, (state, action) => {
         state.status = "succeeded";
         if (state.companyDetail?.id_company === action.payload.id_company) {
-          // Pastikan nama properti konsisten
           state.companyDetail.profile_picture = action.payload.profile_picture;
         }
       })
