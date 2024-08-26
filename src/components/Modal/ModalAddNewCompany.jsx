@@ -54,7 +54,7 @@ const ModalAddNewCompany = ({ open, onClose }) => {
       state: "",
       city: "",
       zipCode: "",
-      joiningDate: dayjs(),
+      joiningDate: null,
     },
 
     validationSchema: validationSchema,
@@ -73,15 +73,15 @@ const ModalAddNewCompany = ({ open, onClose }) => {
         zip_code: values.zipCode,
         joining_date: formattedJoiningDate,
       };
+      Swal.fire({
+        title: "Success",
+        text: "Add New Company Success",
+        imageUrl: success,
+        imageAlt: "success",
+      });
 
       try {
         dispatch(addNewCompany(requestData));
-        Swal.fire({
-          title: "Success",
-          text: "Add New Company Success",
-          imageUrl: success,
-          imageAlt: "success",
-        });
       } catch (error) {
         console.log("Error Adding New Company", error);
       } finally {
