@@ -26,7 +26,7 @@ import {
   editPassword,
   editDataAdmin,
   detailAdmin,
-} from "../../api/administrator/index";
+} from "../../services/api/adminService";
 
 const StyledModal = styled(Modal)({
   display: "flex",

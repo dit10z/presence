@@ -16,8 +16,11 @@ import theme from "../../styles/theme";
 import ModalAddNewAdministrator from "../../components/Modal/ModalAddNewAdmin";
 import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
 import ModalDateFilter from "../../components/Modal/ModalDateFilter";
+import { useDispatch, useSelector } from "react-redux";
+import dayjs from "dayjs";
 import Swal from "sweetalert2";
-import { getAllAdmins, deleteDataAdmin } from "../../api/administrator/index";
+// import { getAllAdmins, deleteDataAdmin } from "../../services/api/adminService";
+import { fetchAllAdmins } from "../../redux/slices/adminsSlice";
 import {
   Avatar,
   Paper,
@@ -33,6 +36,9 @@ import {
 
 const Administrators = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { data, status, pagination } = useSelector((state) => state.admin);
 
   // State management
   const [openModalEdit, setOpenModalEdit] = useState(false);
@@ -66,8 +72,9 @@ const Administrators = () => {
   const handleClose = () => setNewAdministratorModal(false);
 
   const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-    console.log(e.target.value);
+    console.log("SEARCH QUERY", e);
+    setSearchQuery(e);
+    console.log(e);
   };
 
   const handleChangePage = (event, newPage) => setPage(newPage);
@@ -86,42 +93,60 @@ const Administrators = () => {
     });
   }
 
-  const fetchDataAdmin = async (
-    searchQuery,
-    sortBy,
-    pageSize,
-    page,
-    startDate,
-    endDate
-  ) => {
-    try {
-      const response = await getAllAdmins(
-        searchQuery,
-        sortBy,
-        pageSize,
-        page,
-        startDate,
-        endDate
-      );
-      const transformedData = response.data.data.map((admin) => ({
-        id: admin.id_admin,
-        company_name: admin.company.company_name,
-        fullname: `${admin.first_name} ${admin.last_name}`,
-        email: admin.email,
-        profile_picture: admin.profile_picture,
-        created_date: extractDate(admin.created_day),
-      }));
-      setRow(transformedData);
-      setTotal(response.data.meta.total);
-      console.log("total", response.data.meta.total);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  console.log("row", row);
+  // const fetchDataAdmin = async (
+  //   searchQuery,
+  //   sortBy,
+  //   pageSize,
+  //   page,
+  //   startDate,
+  //   endDate
+  // ) => {
+  //   try {
+  //     const response = await getAllAdmins(
+  //       searchQuery,
+  //       sortBy,
+  //       pageSize,
+  //       page,
+  //       startDate,
+  //       endDate
+  //     );
+  //     const transformedData = response.data.data.map((admin) => ({
+  //       id: admin.id_admin,
+  //       company_name: admin.company.company_name,
+  //       fullname: `${admin.first_name} ${admin.last_name}`,
+  //       email: admin.email,
+  //       profile_picture: admin.profile_picture,
+  //       created_date: extractDate(admin.created_day),
+  //     }));
+  //     setRow(transformedData);
+  //     setTotal(response.data.meta.total);
+  //     console.log("total", response.data.meta.total);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   useEffect(() => {
-    fetchDataAdmin(searchQuery, sortBy, pageSize, page, startDate, endDate);
-  }, [searchQuery, sortBy, pageSize, page, startDate, endDate]);
+    dispatch(
+      fetchAllAdmins(searchQuery, sortBy, pageSize, page, startDate, endDate)
+    );
+    console.log("data", data);
+  }, [dispatch, searchQuery, sortBy, pageSize, page, startDate, endDate]);
+
+  useEffect(() => {
+    setTotal(pagination.total);
+  }, [pagination]);
+
+  const transformedData =
+    data?.map((admin) => ({
+      id: admin.id_admin,
+      company_name: admin.company.company_name,
+      fullname: `${admin.first_name} ${admin.last_name}`,
+      email: admin.email,
+      profile_picture: admin.profile_picture,
+      created_date: admin.created_day
+        ? dayjs(admin.created_day).format("YYYY-MM-DD")
+        : "N/A",
+    })) || [];
 
   const handleDelete = async (id) => {
     console.log("id", id);
@@ -265,7 +290,7 @@ const Administrators = () => {
 
         <CustomDataGrid
           columns={columns}
-          rows={row}
+          rows={transformedData}
           pageSize={pageSize}
           page={page}
           onPageChange={(newPage) => setPage(newPage)}

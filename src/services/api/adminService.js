@@ -1,4 +1,4 @@
-import instance from "../../services/axiosInstance";
+import instance from "../axiosInstance";
 
 const baseUrl = import.meta.env.VITE_API_URL;
 
@@ -7,6 +7,7 @@ export const buildUrl = (base, params) => {
   for (const key in params) {
     if (params[key]) {
       url += `${key}=${params[key]}&`;
+      console.log("URL: ", url);
     }
   }
   // Remove the trailing '&'
@@ -70,6 +71,7 @@ export const getAllAdmins = (
     startDateJoined,
     endDateJoined,
   });
+  console.log("API URL: ", apiUrl);
   return instance
     .get(apiUrl)
     .then((response) => {

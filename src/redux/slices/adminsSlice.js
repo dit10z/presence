@@ -1,22 +1,45 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../../services/axiosInstance";
+import { getAllAdmins } from "../../services/api/adminService";
 import axios from "axios";
 
 const initialState = {
   admins: [],
-  companies: [],  
+  companies: [],
   adminDetail: null,
   status: "idle",
   error: null,
   validationErrors: {},
+  pagination: {},
 };
 
+// Thunk untuk mengambil semua admin
+export const fetchAllAdmins = createAsyncThunk(
+  "admin/fetchAllAdmins",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await getAllAdmins(
+        params.search,
+        params.sortBy,
+        params.pageSize,
+        params.pageNumber,
+        params.startDateJoined,
+        params.endDateJoined
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 // Thunk untuk mengambil daftar perusahaan (companies)
 export const fetchCompanies = createAsyncThunk(
   "admin/fetchCompanies",
   async () => {
     try {
-      const response = await instance.get("http://localhost:8080/company-management/companies");
+      const response = await instance.get(
+        "http://localhost:8080/company-management/companies"
+      );
       return response.data.data; // Mengambil data perusahaan dari respons
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -72,10 +95,10 @@ export const changeAdminPhoto = createAsyncThunk(
     try {
       const response = await instance.patch(
         `http://localhost:8080/admin-management/admins/photo/${idAdmin}`,
-        formData, 
+        formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data", 
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -85,7 +108,6 @@ export const changeAdminPhoto = createAsyncThunk(
     }
   }
 );
-
 
 const adminSlice = createSlice({
   name: "admin",
@@ -149,7 +171,19 @@ const adminSlice = createSlice({
         state.status = "failed";
         state.error = action.payload?.message || "Failed to change admin photo";
       })
-      
+      .addCase(fetchAllAdmins.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllAdmins.fulfilled, (state, action) => {
+        state.loading = false;
+        state.admins = action.payload.data;
+        state.pagination = action.payload.meta; // Mengisi state admins dengan data dari API
+      })
+      .addCase(fetchAllAdmins.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong"; // Menangani error
+      });
   },
 });
 
