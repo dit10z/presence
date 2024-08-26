@@ -159,19 +159,27 @@ import DateRangeIcon from "@mui/icons-material/DateRange";
 import ModalEditCompany from "../../components/Modal/ModalEditCompany";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import DateFilterModal from "../../components/Modal/ModalDateFilter";
 
 const CompaniesList = () => {
   const dispatch = useDispatch();
-  const { data, status, error } = useSelector((state) => state.companies);
+  const { data, status, pagination } = useSelector((state) => state.companies);
   const [searchQuery, setSearchQuery] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
   const [date, setDate] = useState(null);
   const [sortBy, setSortBy] = useState("");
   const [open, setOpen] = useState(false);
+  const [totalPage, setTotalPage] = useState(0);
 
   const [editCompanyModal, setEditCompanyModal] = useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = useState(null);
+  const [openDateFilter, setOpenDateFilter] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  console.log("start date : ", startDate);
+  console.log("end date : ", endDate);
+
   const handleEditOpen = (id) => {
     setSelectedCompanyId(id);
     setEditCompanyModal(true);
@@ -186,6 +194,12 @@ const CompaniesList = () => {
   const handleViewClick = (id_company) => {
     navigate(`/company-detail/${id_company}`);
   };
+
+  const handleOpenDateFilter = () => {
+    setOpenDateFilter(true);
+  };
+
+  const handleCloseDateFilter = () => setOpenDateFilter(false);
 
   const columns = [
     { field: "companyName", headerName: "Company Name", flex: 1 },
@@ -224,9 +238,15 @@ const CompaniesList = () => {
       sortBy: sortBy,
       pageSize: pageSize,
       pageNumber: page,
+      start_date_joined: startDate || undefined,
+      end_date_joined: endDate || undefined,
     };
     dispatch(fetchDataCompanies(params));
-  }, [dispatch, sortBy, pageSize, page]);
+  }, [dispatch, sortBy, pageSize, page, startDate, endDate]);
+
+  useEffect(() => {
+    setTotalPage(pagination.total);
+  }, [pagination]);
 
   const transformedData =
     data?.map((company) => ({
@@ -283,7 +303,7 @@ const CompaniesList = () => {
             <CustomButton
               startIcon={<DateRangeIcon />}
               color="white"
-              onClick={() => setOpen(true)}
+              onClick={handleOpenDateFilter}
             >
               Date Filter
             </CustomButton>
@@ -332,7 +352,7 @@ const CompaniesList = () => {
           </TextField>
 
           <Pagination
-            count={Math.ceil(totalCount / pageSize)}
+            count={Math.ceil(totalPage / pageSize)}
             page={page}
             onChange={(e, value) => setPage(value)}
           />
@@ -347,6 +367,20 @@ const CompaniesList = () => {
         open={editCompanyModal}
         onClose={handleEditClose}
         companyId={selectedCompanyId}
+      />
+
+      <DateFilterModal
+        open={openDateFilter}
+        onClose={handleCloseDateFilter}
+        title="Date Filter"
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={(date) =>
+          setStartDate(dayjs(date).startOf("day").format("YYYY-MM-DD"))
+        }
+        setEndDate={(date) =>
+          setEndDate(dayjs(date).endOf("day").format("YYYY-MM-DD"))
+        }
       />
     </Grid>
   );
