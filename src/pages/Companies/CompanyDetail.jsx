@@ -16,6 +16,7 @@ import { Edit } from "@mui/icons-material";
 import { detailCompany } from "../../redux/slices/companySlice";
 import ModalChangeCompanyLogo from "../../components/Modal/ModalChangeLogoCompany";
 import ModalEditCompany from "../../components/Modal/ModalEditCompany";
+import ChangeLogoCompany from "../../components/Forms/Company/ChangeLogoCompany";
 
 const TypographyHead = styled(Typography)(({ theme }) => ({
   fontWeight: 300,
@@ -193,7 +194,7 @@ const CompanyDetail = () => {
         </Card>
       </Box>
 
-      <ModalChangeCompanyLogo
+      <ChangeLogoCompany
         open={modalChangeCompanyLogo}
         onClose={handleModalChangeCompanyLogoClose}
         idCompany={companyDetail.id_company}
