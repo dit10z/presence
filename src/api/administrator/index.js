@@ -17,11 +17,7 @@ export const buildUrl = (base, params) => {
 export const editDataAdmin = (id, data) => {
   const apiUrl = `${baseUrl}/admin-management/admins/${id}`;
   return instance
-    .patch(apiUrl, data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
+    .patch(apiUrl, data)
     .then((response) => {
       return response;
     })
@@ -89,6 +85,19 @@ export const getAllCompaniesMaster = () => {
   const apiUrl = `${baseUrl}/company-management/companies`;
   return instance
     .get(apiUrl)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error(error);
+      throw error;
+    });
+};
+
+export const deleteDataAdmin = (id) => {
+  const apiUrl = `${baseUrl}/admin-management/admins/${id}/delete`;
+  return instance
+    .patch(apiUrl, { is_delete: true })
     .then((response) => {
       return response;
     })

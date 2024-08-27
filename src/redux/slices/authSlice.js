@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import instance from "../../services/axiosInstance";
 
 const initialState = {
   isAuthenticated: !!localStorage.getItem("token"),
@@ -13,27 +14,24 @@ export const login = createAsyncThunk(
   "auth/login",
   async ({ username, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:8080/superadmin/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
+      const response = await instance.post("/superadmin/login", {
+        username,
+        password,
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        return rejectWithValue(error);
-      }
+      const data = response.data;
 
-      const data = await response.json();
       localStorage.setItem("token", data.data.token);
       localStorage.setItem("userRole", data.data.role);
       console.log(data);
 
       return data.data;
     } catch (err) {
-      return rejectWithValue(err.message);
+      if (err.response && err.response.data) {
+        return rejectWithValue(err.response.data);
+      } else {
+        return rejectWithValue(err.message);
+      }
     }
   }
 );

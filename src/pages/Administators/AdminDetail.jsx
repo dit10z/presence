@@ -31,11 +31,10 @@ const AdminDetail = () => {
   const [modalEditAdmin, setModalEditAdmin] = useState(false);
   const [modalChangePhotoAdmin, setModalChangePhotoAdmin] = useState(false);
   const dispatch = useDispatch();
-  const {idAdmin} = useParams();
+  const { idAdmin } = useParams();
   console.log("idAdmin from useParams:", idAdmin);
   const adminDetail = useSelector((state) => state.admin.adminDetail);
   console.log("adminDetail:", adminDetail);
-
 
   useEffect(() => {
     if (idAdmin) {
@@ -56,8 +55,8 @@ const AdminDetail = () => {
     setModalChangePhotoAdmin(false);
   };
 
-  if(!adminDetail) {
-    return <div>No Data...</div>
+  if (!adminDetail) {
+    return <div>No Data...</div>;
   }
 
   return (
@@ -88,7 +87,10 @@ const AdminDetail = () => {
               <CardMedia
                 component="img"
                 alt="foto profil"
-                image={adminDetail.profile_picture || "https://via.placeholder.com/100"}
+                image={
+                  adminDetail.profile_picture ||
+                  "https://via.placeholder.com/100"
+                }
                 sx={{
                   width: 100,
                   height: 100,
@@ -111,7 +113,9 @@ const AdminDetail = () => {
                 </Box>
                 <Box display="flex" alignItems="center" mt={1} gap={1}>
                   <Business />
-                  <Typography variant="body2">{adminDetail.company?.company_name}</Typography>
+                  <Typography variant="body2">
+                    {adminDetail.company?.company_name}
+                  </Typography>
                 </Box>
                 <Box display="flex" alignItems="center" mt={1} gap={1}>
                   <Email />
@@ -173,7 +177,7 @@ const AdminDetail = () => {
                     fullWidth
                     label="Email Address"
                     variant="standard"
-                    value={adminDetail.email} 
+                    value={adminDetail.email}
                     InputProps={{ readOnly: true }}
                   />
                 </Grid>
@@ -196,6 +200,7 @@ const AdminDetail = () => {
         open={modalEditAdmin}
         onClose={handleModalEditAdminClose}
         title="Edit Profile"
+        adminId={adminDetail.id_admin}
       />
       <ModalChangePhotoAdmin
         open={modalChangePhotoAdmin}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { DatePicker } from "@mui/x-date-pickers";
+import success from "../../assets/icons/success.png";
 import CustomButton from "../../components/CustomButton";
 import CustomDataGrid from "../../components/CustomDataGrid";
 import {
@@ -16,7 +16,8 @@ import theme from "../../styles/theme";
 import ModalAddNewAdministrator from "../../components/Modal/ModalAddNewAdmin";
 import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
 import ModalDateFilter from "../../components/Modal/ModalDateFilter";
-import { getAllAdmins } from "../../api/administrator/index";
+import Swal from "sweetalert2";
+import { getAllAdmins, deleteDataAdmin } from "../../api/administrator/index";
 import {
   Avatar,
   Paper,
@@ -55,7 +56,11 @@ const Administrators = () => {
     setOpenModalEdit(true);
   };
   const handleModalEditClose = () => setOpenModalEdit(false);
-  const handleOpenDateFilter = () => setOpenDateFilter(true);
+  const handleOpenDateFilter = () => {
+    setStartDate({});
+    setEndDate({});
+    setOpenDateFilter(true);
+  };
   const handleCloseDateFilter = () => setOpenDateFilter(false);
   const handleOpen = () => setNewAdministratorModal(true);
   const handleClose = () => setNewAdministratorModal(false);
@@ -113,11 +118,51 @@ const Administrators = () => {
       console.log(error);
     }
   };
-
+  console.log("row", row);
   useEffect(() => {
     fetchDataAdmin(searchQuery, sortBy, pageSize, page, startDate, endDate);
   }, [searchQuery, sortBy, pageSize, page, startDate, endDate]);
 
+  const handleDelete = async (id) => {
+    console.log("id", id);
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteDataAdmin(id); // Memanggil API deleteAdmin dengan ID admin yang akan dihapus
+        Swal.fire({
+          title: "Deleted",
+          text: "Delete Admin Success",
+          imageUrl: success,
+          imageAlt: "success",
+        });
+        // Refresh data admin setelah berhasil menghapus
+        await fetchDataAdmin(
+          searchQuery,
+          sortBy,
+          pageSize,
+          page,
+          startDate,
+          endDate
+        );
+      } catch (error) {
+        console.error("Error deleting admin:", error);
+        Swal.fire(
+          "Error",
+          "There was an error deleting the administrator.",
+          "error"
+        );
+      }
+    }
+  };
   const columns = [
     { field: "company_name", headerName: "Company Name", flex: 1 },
     {
@@ -125,8 +170,8 @@ const Administrators = () => {
       headerName: "Administrator Name",
       flex: 1,
       renderCell: (params) => (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar sx={{ mr: 2 }} />
+        <Box sx={{ display: "flex", alignItems: "center", paddingTop: "5px" }}>
+          <Avatar sx={{ mr: 2 }} src={params.row.profile_picture} />
           <Typography>{params.value}</Typography>
         </Box>
       ),
@@ -139,7 +184,7 @@ const Administrators = () => {
       flex: 1,
       renderCell: (params) => (
         <Box sx={{ display: "flex", justifyContent: "stretch" }}>
-          {console.log("log param", params.row.id)}
+          {/* {console.log("log param", params.row.id)} */}
           <IconButton
             aria-label="view"
             onClick={() => navigate(`/admin-detail/${params.row.id}`)}
@@ -152,7 +197,10 @@ const Administrators = () => {
           >
             <Edit />
           </IconButton>
-          <IconButton aria-label="delete">
+          <IconButton
+            aria-label="delete"
+            onClick={() => handleDelete(params.row.id)}
+          >
             <Delete />
           </IconButton>
         </Box>
@@ -198,7 +246,7 @@ const Administrators = () => {
           <Stack direction="row" spacing={2}>
             <CustomButton
               variant="contained"
-              color="primary"
+              color="white"
               startIcon={<CalendarMonthOutlined />}
               onClick={handleOpenDateFilter}
             >

@@ -8,17 +8,23 @@ const initialState = {
   status: false,
   error: null,
   message: null,
+  pagination: {},
 };
 
 export const fetchDataCompanies = createAsyncThunk(
   "company/companies",
-  async ({ pageNumber, pageSize, sortBy }, { rejectWithValue }) => {
+  async (
+    { pageNumber, pageSize, sortBy, start_date_joined, end_date_joined },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await instance.get(`/company-management/companies`, {
         params: {
           sortBy: sortBy,
           pageSize: pageSize,
           pageNumber: pageNumber,
+          start_date_joined: start_date_joined,
+          end_date_joined: end_date_joined,
         },
       });
       return response.data;
@@ -121,6 +127,7 @@ const companySlice = createSlice({
       .addCase(fetchDataCompanies.fulfilled, (state, action) => {
         state.status = false;
         state.data = action.payload.data;
+        state.pagination = action.payload.meta;
       })
       .addCase(fetchDataCompanies.rejected, (state, action) => {
         state.status = false;
