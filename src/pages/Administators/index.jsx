@@ -38,7 +38,7 @@ const Administrators = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { data, status, pagination } = useSelector((state) => state.admin);
+  const { admins, status, pagination } = useSelector((state) => state.admin);
 
   // State management
   const [openModalEdit, setOpenModalEdit] = useState(false);
@@ -72,9 +72,9 @@ const Administrators = () => {
   const handleClose = () => setNewAdministratorModal(false);
 
   const handleSearch = (e) => {
-    console.log("SEARCH QUERY", e);
-    setSearchQuery(e);
-    console.log(e);
+    console.log(e.target.value);
+    setSearchQuery(e.target.value);
+    console.log(e.target.value);
   };
 
   const handleChangePage = (event, newPage) => setPage(newPage);
@@ -129,7 +129,7 @@ const Administrators = () => {
     dispatch(
       fetchAllAdmins(searchQuery, sortBy, pageSize, page, startDate, endDate)
     );
-    console.log("data", data);
+    console.log("data", admins);
   }, [dispatch, searchQuery, sortBy, pageSize, page, startDate, endDate]);
 
   useEffect(() => {
@@ -137,7 +137,7 @@ const Administrators = () => {
   }, [pagination]);
 
   const transformedData =
-    data?.map((admin) => ({
+    admins?.map((admin) => ({
       id: admin.id_admin,
       company_name: admin.company.company_name,
       fullname: `${admin.first_name} ${admin.last_name}`,

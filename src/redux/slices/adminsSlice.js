@@ -5,6 +5,7 @@ import axios from "axios";
 
 const initialState = {
   admins: [],
+  // data: [],
   companies: [],
   adminDetail: null,
   status: "idle",
@@ -19,13 +20,14 @@ export const fetchAllAdmins = createAsyncThunk(
   async (params, { rejectWithValue }) => {
     try {
       const response = await getAllAdmins(
-        params.search,
+        params,
         params.sortBy,
         params.pageSize,
         params.pageNumber,
         params.startDateJoined,
         params.endDateJoined
       );
+      console.log("response", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
