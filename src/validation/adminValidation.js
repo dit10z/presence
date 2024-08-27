@@ -2,29 +2,33 @@ import * as Yup from "yup";
 import messages from "../constants/messages";
 const validationSchema = Yup.object().shape({
   firstname: Yup.string()
-    .required("First name is required")
-    .min(2, "First name must be at least 2 characters")
-    .max(50, "First name must be at most 50 characters"),
+    .required(messages.firstname.required)
+    .min(2, messages.firstname.minLength)
+    .max(50, messages.firstname.maxLength),
   lastname: Yup.string()
-    .required("Last name is required")
-    .min(2, "Last name must be at least 2 characters")
-    .max(50, "Last name must be at most 50 characters"),
+    .required(messages.lastname.required)
+    .min(2, messages.lastname.minLength)
+    .max(50, messages.lastname.maxLength),
   email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
-  username: Yup.string().required("Username is required"),
-  idcompany: Yup.string().required("Company is required"),
+    .email(messages.email.invalid)
+    .required(messages.email.required),
+  username: Yup.string()
+    .required(messages.username.required)
+    .min(7, messages.username.minLength)
+    .max(20, messages.username.maxLength),
+  idcompany: Yup.string().required(messages.idcompany.required),
   password: Yup.string().when("activeTab", {
     is: 1,
     then: Yup.string()
-      .min(8, "Password must be at least 8 characters")
-      .required("Password is required"),
+      .min(8, messages.password.minLength)
+      .max(50, messages.password.maxLength)
+      .required(messages.password.required),
   }),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .oneOf([Yup.ref("password"), null], messages.confirmPassword.notMatch)
     .when("activeTab", {
       is: 1,
-      then: Yup.string().required("Confirm Password is required"),
+      then: Yup.string().required(messages.confirmPassword.required),
     }),
 });
 

@@ -1,13 +1,13 @@
 const messages = {
   firstname: {
     required: "First name is required",
-    min: "First name must be at least 2 characters",
-    max: "First name must be at most 50 characters",
+    minLength: "First name must be at least 2 characters",
+    maxLength: "First name must be at most 50 characters",
   },
   lastname: {
     required: "Last name is required",
-    min: "Last name must be at least 2 characters",
-    max: "Last name must be at most 50 characters",
+    minLength: "Last name must be at least 2 characters",
+    maxLength: "Last name must be at most 50 characters",
   },
   email: {
     required: "Email is required",
@@ -15,13 +15,16 @@ const messages = {
   },
   username: {
     required: "Username is required",
+    minLength: "Username must be at least 7 characters",
+    maxLength: "Username must be at most 20 characters",
   },
   idcompany: {
     required: "Company is required",
   },
   password: {
     required: "Password is required",
-    min: "Password must be at least 8 characters",
+    minLength: "Password must be at least 8 characters",
+    maxLength: "Password must be at most 50 characters",
   },
   confirmPassword: {
     required: "Confirm Password is required",
