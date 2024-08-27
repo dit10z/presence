@@ -1,22 +1,29 @@
-import React from 'react';
-import { Modal, Box, Typography, Button } from '@mui/material';
-import { styled } from '@mui/system';
+import React from "react";
+import { Modal, Box, Typography, Button } from "@mui/material";
+import { styled } from "@mui/system";
 
 const StyledModal = styled(Modal)({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 });
 
 const ModalContent = styled(Box)({
-  backgroundColor: '#fff',
-  borderRadius: '10px',
-  padding: '20px',
-  width: '750px',
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+  backgroundColor: "#fff",
+  borderRadius: "10px",
+  padding: "20px",
+  width: "750px",
+  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
 });
 
-const CustomModal = ({ open, onClose, title, children, onSubmit }) => {
+const CustomModal = ({
+  open,
+  onClose,
+  title,
+  titleButton,
+  children,
+  onSubmit,
+}) => {
   return (
     <StyledModal open={open} onClose={onClose}>
       <ModalContent>
@@ -35,7 +42,7 @@ const CustomModal = ({ open, onClose, title, children, onSubmit }) => {
               Cancel
             </Button>
             <Button type="submit" variant="contained" color="primary">
-              Save
+              {titleButton || "Save"}
             </Button>
           </Box>
         </form>
