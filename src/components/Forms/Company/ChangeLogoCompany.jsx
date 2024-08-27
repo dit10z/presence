@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import { Box, Typography, Grid, Tabs, Tab, IconButton } from "@mui/material";
 import { styled } from "@mui/system";
-import CustomButton from "../CustomButton";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Description } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
-import {
-  changeCompanyLogo,
-  detailCompany,
-} from "../../redux/slices/companySlice";
 import Swal from "sweetalert2";
-import success from "../../assets/icons/success.png";
-import CustomModal from "../CustomModal"; // Import the CustomModal
+import success from "../../../assets/icons/success.png";
+import CustomModal from "../../CustomModal"; // Import the CustomModal
+import { changeCompanyLogo, detailCompany } from "../../../redux/slices/companySlice";
+import { useFormik } from "formik";
+import validationSchema from "../../../validation/fileValidation";
 
 const FileUploadBox = styled(Box)({
   border: "2px dashed #0078D7",
@@ -37,50 +35,16 @@ const SelectedFileBox = styled(Box)({
 
 const ChangeLogoCompany = ({ open, onClose, idCompany, title }) => {
   const [activeTab, setActiveTab] = useState(0);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [validationError, setValidationError] = useState("");
   const dispatch = useDispatch();
 
-  const handleTabChange = (event, newValue) => {
-    setActiveTab(newValue);
-  };
-
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
-  const handleDrop = (event) => {
-    event.preventDefault();
-    setSelectedFile(event.dataTransfer.files[0]);
-  };
-
-  const handleDragOver = (event) => {
-    event.preventDefault();
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent default form submission
-
-    let errorMessage = "";
-
-    // Validation
-    if (!selectedFile) {
-      errorMessage = "Field must not be empty";
-    } else if (selectedFile.size > 2 * 1024 * 1024) {
-      errorMessage = "Max photo's size is 2MB";
-    } else if (!["image/jpeg", "image/png"].includes(selectedFile.type)) {
-      errorMessage = "Format must be .jpg/.jpeg/.png";
-    }
-
-    // Show error if validation fails
-    if (errorMessage) {
-      setValidationError(errorMessage);
-      return;
-    }
-
-    if (selectedFile) {
+  const formik = useFormik({
+    initialValues: {
+      file: null,
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
       const formData = new FormData();
-      formData.append("company_logo", selectedFile);
+      formData.append("company_logo", values.file);
 
       try {
         await dispatch(changeCompanyLogo({ idCompany, formData })).unwrap();
@@ -99,16 +63,29 @@ const ChangeLogoCompany = ({ open, onClose, idCompany, title }) => {
           icon: "error",
         });
       }
-    }
+    },
+  });
 
-    setValidationError(""); // Reset error message
-    onCloseModal();
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
+  };
+
+  const handleFileChange = (event) => {
+    formik.setFieldValue("file", event.target.files[0]);
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    formik.setFieldValue("file", event.dataTransfer.files[0]);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
   };
 
   const onCloseModal = () => {
-    setSelectedFile(null); // Reset selected file
-    setValidationError(""); // Reset validation error
-    onClose(); // Close modal
+    formik.resetForm(); // Reset form saat modal ditutup
+    onClose(); // dialog ditutup
   };
 
   return (
@@ -116,7 +93,7 @@ const ChangeLogoCompany = ({ open, onClose, idCompany, title }) => {
       open={open}
       onClose={onCloseModal}
       title={title}
-      onSubmit={handleSubmit} // Pass the handleSubmit function to the CustomModal
+      onSubmit={formik.handleSubmit} // Pass the handleSubmit function to the CustomModal
     >
       <Tabs
         value={activeTab}
@@ -133,7 +110,11 @@ const ChangeLogoCompany = ({ open, onClose, idCompany, title }) => {
       {activeTab === 0 && (
         <Grid container spacing={1} mt={1}>
           <Grid item xs={12}>
-            <FileUploadBox onDrop={handleDrop} onDragOver={handleDragOver}>
+            <FileUploadBox
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onClick={() => document.getElementById("file-upload").click()}
+            >
               <input
                 type="file"
                 style={{ display: "none" }}
@@ -152,29 +133,16 @@ const ChangeLogoCompany = ({ open, onClose, idCompany, title }) => {
               >
                 Drag 'n' drop .jpg or .png file here, or click to select file
               </Typography>
-              <label htmlFor="file-upload">
-                <IconButton
-                  component="span"
-                  size="large"
-                  sx={{
-                    width: 56,
-                    height: 56,
-                  }}
-                  color="primary"
-                >
-                  <UploadFileIcon sx={{ fontSize: 40 }} /> {/* Larger icon */}
-                </IconButton>
-              </label>
-              {selectedFile && (
+              {formik.values.file && (
                 <SelectedFileBox>
                   <Description sx={{ marginRight: "8px" }} />
-                  <Typography variant="body2">{selectedFile.name}</Typography>
+                  <Typography variant="body2">{formik.values.file.name}</Typography>
                 </SelectedFileBox>
               )}
             </FileUploadBox>
-            {validationError && (
+            {formik.touched.file && formik.errors.file && (
               <Typography variant="body2" color="error" mt={1}>
-                {validationError}
+                {formik.errors.file}
               </Typography>
             )}
           </Grid>

@@ -63,6 +63,12 @@ const messages = {
     required: "Joining Date is required",
     max: "Joining Date cannot be in the future",
   },
+  file: {
+    required: "Field must not be empty",
+    size: "Max photo's size is 2MB",
+    format: "Format must be .jpg/.jpeg/.png",
+  }
+  
 };
 
 export default messages;
