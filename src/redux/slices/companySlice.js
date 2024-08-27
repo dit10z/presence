@@ -14,7 +14,7 @@ const initialState = {
 export const fetchDataCompanies = createAsyncThunk(
   "company/companies",
   async (
-    { pageNumber, pageSize, sortBy, start_date_joined, end_date_joined },
+    { pageNumber, pageSize, sortBy, startDatejoined, endDateJoined },
     { rejectWithValue }
   ) => {
     try {
@@ -23,8 +23,8 @@ export const fetchDataCompanies = createAsyncThunk(
           sortBy: sortBy,
           pageSize: pageSize,
           pageNumber: pageNumber,
-          start_date_joined: start_date_joined,
-          end_date_joined: end_date_joined,
+          startDatejoined: startDatejoined,
+          endDateJoined: endDateJoined,
         },
       });
       return response.data;
@@ -68,7 +68,7 @@ export const changeCompanyLogo = createAsyncThunk(
   async ({ idCompany, formData }, { rejectWithValue }) => {
     try {
       const response = await instance.patch(
-        `http://localhost:8080/company-management/companies/logo/${idCompany}`,
+        `/company-management/companies/logo/${idCompany}`,
         formData,
         {
           headers: {
@@ -88,14 +88,11 @@ export const changeCompanyLogo = createAsyncThunk(
 export const fetchCompanies = createAsyncThunk(
   "admin/fetchCompanies",
   async () => {
-    const response = await instance.get(
-      "http://localhost:8080/admin-management/master-company",
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await instance.get(`/admin-management/master-company`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     return response.data.data; // Mengambil data perusahaan dari respons
   }
 );
@@ -111,6 +108,24 @@ export const editCompany = createAsyncThunk(
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const deleteCompany = createAsyncThunk(
+  "company/deleteCompany",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      console.log(data);
+      const response = await instance.put(
+        `/company-management/companies/delete/${id}`,
+        data
+      );
+      console.log(response);
+
+      return response.data.message;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -200,6 +215,19 @@ const companySlice = createSlice({
         state.companies = action.payload; // Menyimpan daftar companies ke dalam state
       })
       .addCase(fetchCompanies.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+
+      // Delete Company
+      .addCase(deleteCompany.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteCompany.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.message = action.payload.message;
+      })
+      .addCase(deleteCompany.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
