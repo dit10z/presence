@@ -1,36 +1,37 @@
 import * as Yup from "yup";
 import dayjs from "dayjs";
+import messages from "../constants/messages";
 
 const validationSchema = Yup.object().shape({
   companyName: Yup.string()
-    .required("Company Name is required")
-    .min(3, "Company Name must be at least 3 characters long"),
+    .required(messages.companyName.required)
+    .min(3, messages.companyName.minLength),
 
   email: Yup.string()
-    .email("Invalid email format")
-    .required("Email is required"),
+    .email(messages.email.invalid)
+    .required(messages.email.required),
 
   phone: Yup.string()
-    .matches(/^[0-9]+$/, "Phone number must be digits only")
-    .min(10, "Phone number must be at least 10 digits")
-    .max(15, "Phone number cannot exceed 15 digits")
-    .required("Phone is required"),
+    .matches(/^[0-9]+$/, messages.phone.digitsOnly)
+    .min(10, messages.phone.minLength)
+    .max(15, messages.phone.maxLength)
+    .required(messages.phone.required),
 
-  address: Yup.string().required("Address is required"),
+  address: Yup.string().required(messages.address.required),
 
-  state: Yup.string().required("Province is required"),
+  state: Yup.string().required(messages.state.required),
 
-  city: Yup.string().required("City is required"),
+  city: Yup.string().required(messages.city.required),
 
   zipCode: Yup.string()
-    .matches(/^[0-9]+$/, "Zip Code must be digits only")
-    .min(5, "Zip Code must be at least 5 digits")
-    .max(10, "Zip Code cannot exceed 10 digits")
-    .required("Zip Code is required"),
+    .matches(/^[0-9]+$/, messages.zipCode.digitsOnly)
+    .min(5, messages.zipCode.minLength)
+    .max(10, messages.zipCode.maxLength)
+    .required(messages.zipCode.required),
 
   joiningDate: Yup.date()
-    .required("Joining Date is required")
-    .max(dayjs(), "Joining Date cannot be in the future"),
+    .required(messages.joiningDate.required)
+    .max(dayjs(), messages.joiningDate.max),
 });
 
 export default validationSchema;
