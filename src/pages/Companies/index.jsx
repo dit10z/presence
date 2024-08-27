@@ -160,6 +160,8 @@ import ModalEditCompany from "../../components/Modal/ModalEditCompany";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import DateFilterModal from "../../components/Modal/ModalDateFilter";
+import ModalEditCompanyCopy from "../../components/Modal/ModalEditCompanyCopy";
+import EditCompanyForm from "../../components/Forms/Company/EditCompanyForm";
 
 const CompaniesList = () => {
   const dispatch = useDispatch();
@@ -363,7 +365,7 @@ const CompaniesList = () => {
         onClose={handleClose}
         title="Add"
       />
-      <ModalEditCompany
+      <EditCompanyForm
         open={editCompanyModal}
         onClose={handleEditClose}
         companyId={selectedCompanyId}
