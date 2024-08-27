@@ -33,6 +33,7 @@ import {
   Typography,
   InputAdornment,
 } from "@mui/material";
+import AddAdminForm from "../../components/Forms/Administrator/AddAdminForm";
 
 const Administrators = () => {
   const navigate = useNavigate();
@@ -326,7 +327,7 @@ const Administrators = () => {
           />
         </Box>
 
-        <ModalAddNewAdministrator
+        <AddAdminForm
           open={newAdministratorModal}
           onClose={handleClose}
           title="Add"
