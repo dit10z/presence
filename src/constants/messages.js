@@ -1,4 +1,32 @@
 const messages = {
+  firstname: {
+    required: "First name is required",
+    min: "First name must be at least 2 characters",
+    max: "First name must be at most 50 characters",
+  },
+  lastname: {
+    required: "Last name is required",
+    min: "Last name must be at least 2 characters",
+    max: "Last name must be at most 50 characters",
+  },
+  email: {
+    required: "Email is required",
+    invalid: "Invalid email address",
+  },
+  username: {
+    required: "Username is required",
+  },
+  idcompany: {
+    required: "Company is required",
+  },
+  password: {
+    required: "Password is required",
+    min: "Password must be at least 8 characters",
+  },
+  confirmPassword: {
+    required: "Confirm Password is required",
+    mismatch: "Passwords must match",
+  },
   companyName: {
     required: "Company Name is required",
     minLength: "Company Name must be at least 3 characters long",
