@@ -31,6 +31,7 @@ import ModalEditCompanyCopy from "../../components/Modal/ModalEditCompanyCopy";
 import EditCompanyForm from "../../components/Forms/Company/EditCompanyForm";
 import Swal from "sweetalert2";
 import success from "../../assets/icons/success.png";
+import AddCompanyForm from "../../components/Forms/Company/AddCompanyForm";
 
 const CompaniesList = () => {
   const dispatch = useDispatch();
@@ -90,11 +91,17 @@ const CompaniesList = () => {
       try {
         const data = { is_delete: true };
         await dispatch(deleteCompany({ id: id_company, data })); // Gunakan dispatch untuk memanggil deleteCompany
+
         Swal.fire({
           title: "Deleted",
           text: "Delete Company Success",
           imageUrl: success,
           imageAlt: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Refresh data setelah berhasil menghapus
+            window.location.reload();
+          }
         });
       } catch (error) {
         if (error) {
@@ -269,7 +276,7 @@ const CompaniesList = () => {
           />
         </Box>
       </Box>
-      <ModalAddNewCompany
+      <AddCompanyForm
         open={newCompanyModal}
         onClose={handleClose}
         title="Add"

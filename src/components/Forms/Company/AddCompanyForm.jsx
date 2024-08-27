@@ -1,61 +1,50 @@
-import React, { useEffect, useState } from "react";
-import { Grid, TextField, InputAdornment, IconButton } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
+import { styled } from "@mui/system";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { useFormik } from "formik";
-import validationSchema from "../../../validation/companyValidation";
-import { useDispatch } from "react-redux";
-import { editCompany } from "../../../redux/slices/companySlice";
-import instance from "../../../services/axiosInstance";
-import CustomModal from "../../CustomModal";
 import Swal from "sweetalert2";
 import success from "../../../assets/icons/success.png";
+import { useDispatch } from "react-redux";
+import { addNewCompany } from "../../../redux/slices/companySlice";
+import { useFormik } from "formik";
+import validationSchema from "../../../validation/companyValidation";
+import CustomModal from "../../CustomModal";
 
-const EditCompanyForm = ({ open, onClose, companyId }) => {
+const FormField = styled(TextField)({
+  width: "100%",
+});
+
+const FormFieldDate = styled(DatePicker)({
+  width: "100%",
+});
+const AddCompanyForm = ({ open, onClose }) => {
   const dispatch = useDispatch();
-  const [companyDetails, setCompanyDetails] = useState({
-    companyName: "",
-    email: "",
-    phone: "",
-    address: "",
-    state: "",
-    city: "",
-    zipCode: "",
-    joiningDate: dayjs(),
-  });
-
-  useEffect(() => {
-    if (companyId) {
-      const fetchCompanyDetails = async (id) => {
-        try {
-          const response = await instance.get(
-            `/company-management/companies/${id}`
-          );
-          const data = response.data.data;
-          setCompanyDetails({
-            companyName: data.company_name || "",
-            email: data.email || "",
-            phone: data.phone || "",
-            address: data.address || "",
-            state: data.state || "",
-            city: data.city || "",
-            zipCode: data.zip_code || "",
-            joiningDate: dayjs(data.joining_date) || dayjs(),
-          });
-        } catch (error) {
-          console.log(error);
-        }
-      };
-
-      fetchCompanyDetails(companyId);
-    }
-  }, [companyId]);
 
   const formik = useFormik({
-    initialValues: companyDetails,
-    enableReinitialize: true,
+    initialValues: {
+      companyName: "",
+      email: "",
+      phone: "",
+      address: "",
+      state: "",
+      city: "",
+      zipCode: "",
+      joiningDate: null,
+    },
+
     validationSchema: validationSchema,
+
     onSubmit: async (values, { resetForm }) => {
       const formattedJoiningDate = dayjs(values.joiningDate).format(
         "YYYY-MM-DD"
@@ -70,23 +59,22 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
         zip_code: values.zipCode,
         joining_date: formattedJoiningDate,
       };
-      console.log(requestData);
       Swal.fire({
         title: "Success",
-        text: "Update Company Data Success",
+        text: "Add New Company Success",
         imageUrl: success,
         imageAlt: "success",
       }).then((result) => {
         if (result.isConfirmed) {
-          // Refresh data setelah berhasil edit data company
+          // Refresh data setelah berhasil menambah company baru
           window.location.reload();
         }
       });
+
       try {
-        await dispatch(editCompany({ id: companyId, data: requestData }));
-        console.log("Company Data Update Success");
+        dispatch(addNewCompany(requestData));
       } catch (error) {
-        console.log("Error Updating Company Data", error);
+        console.log("Error Adding New Company", error);
       } finally {
         resetForm();
         onClose();
@@ -98,12 +86,13 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
     <CustomModal
       open={open}
       onClose={onClose}
-      title="Edit Company"
+      title="Add New Company"
       onSubmit={formik.handleSubmit}
+      titleButton="Add"
     >
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TextField
+          <FormField
             label="Company Name"
             variant="outlined"
             name="companyName"
@@ -113,11 +102,10 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
               formik.touched.companyName && Boolean(formik.errors.companyName)
             }
             helperText={formik.touched.companyName && formik.errors.companyName}
-            fullWidth
           />
         </Grid>
         <Grid item xs={6}>
-          <TextField
+          <FormField
             label="Email Address"
             variant="outlined"
             name="email"
@@ -125,11 +113,10 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
             onChange={formik.handleChange}
             error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={formik.touched.email && formik.errors.email}
-            fullWidth
           />
         </Grid>
         <Grid item xs={6}>
-          <TextField
+          <FormField
             label="Phone"
             variant="outlined"
             name="phone"
@@ -137,11 +124,10 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
             onChange={formik.handleChange}
             error={formik.touched.phone && Boolean(formik.errors.phone)}
             helperText={formik.touched.phone && formik.errors.phone}
-            fullWidth
           />
         </Grid>
         <Grid item xs={12}>
-          <TextField
+          <FormField
             label="Address"
             variant="outlined"
             name="address"
@@ -149,11 +135,10 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
             onChange={formik.handleChange}
             error={formik.touched.address && Boolean(formik.errors.address)}
             helperText={formik.touched.address && formik.errors.address}
-            fullWidth
           />
         </Grid>
         <Grid item xs={6}>
-          <TextField
+          <FormField
             label="State"
             variant="outlined"
             name="state"
@@ -161,11 +146,10 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
             onChange={formik.handleChange}
             error={formik.touched.state && Boolean(formik.errors.state)}
             helperText={formik.touched.state && formik.errors.state}
-            fullWidth
           />
         </Grid>
         <Grid item xs={6}>
-          <TextField
+          <FormField
             label="City"
             variant="outlined"
             name="city"
@@ -173,11 +157,10 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
             onChange={formik.handleChange}
             error={formik.touched.city && Boolean(formik.errors.city)}
             helperText={formik.touched.city && formik.errors.city}
-            fullWidth
           />
         </Grid>
         <Grid item xs={6}>
-          <TextField
+          <FormField
             label="Zip Code"
             variant="outlined"
             name="zipCode"
@@ -185,36 +168,40 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
             onChange={formik.handleChange}
             error={formik.touched.zipCode && Boolean(formik.errors.zipCode)}
             helperText={formik.touched.zipCode && formik.errors.zipCode}
-            fullWidth
           />
         </Grid>
         <Grid item xs={6}>
-          <DatePicker
+          <FormFieldDate
             label="Joining Date"
+            name="joiningDate"
             value={formik.values.joiningDate}
             onChange={(value) => formik.setFieldValue("joiningDate", value)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                fullWidth
-                error={
+            error={
+              formik.touched.joiningDate && Boolean(formik.errors.joiningDate)
+            }
+            helperText={formik.touched.joiningDate && formik.errors.joiningDate}
+            slots={{
+              textField: TextField, // Gunakan TextField sebagai komponen slot
+            }}
+            slotProps={{
+              textField: {
+                fullWidth: true, // Atur TextField untuk menggunakan lebar penuh
+                error:
                   formik.touched.joiningDate &&
-                  Boolean(formik.errors.joiningDate)
-                }
-                helperText={
-                  formik.touched.joiningDate && formik.errors.joiningDate
-                }
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton>
-                        <CalendarTodayIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            )}
+                  Boolean(formik.errors.joiningDate),
+                helperText:
+                  formik.touched.joiningDate && formik.errors.joiningDate,
+              },
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton>
+                    <CalendarTodayIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </Grid>
       </Grid>
@@ -222,4 +209,4 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
   );
 };
 
-export default EditCompanyForm;
+export default AddCompanyForm;
