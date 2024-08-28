@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchAdminDetail } from "../../redux/slices/adminsSlice";
 import ChangePhotoAdmin from "../../forms/Administrator/ChangePhotoAdmin";
+import InfoDisplay from "../../components/InfoDisplay";
 
 const AdminDetail = () => {
   const [modalEditAdmin, setModalEditAdmin] = useState(false);
@@ -145,57 +146,16 @@ const AdminDetail = () => {
             </Box>
             <TabPanel value="1">
               <Grid container spacing={2} sx={{ marginTop: 2 }}>
-                <Grid item size={6}>
-                  <TextField
-                    fullWidth
-                    label="First Name"
-                    variant="standard"
-                    value={adminDetail.first_name}
-                    InputProps={{ readOnly: true }}
-                  />
-                </Grid>
-                <Grid item size={6}>
-                  <TextField
-                    fullWidth
-                    label="Last Name"
-                    variant="standard"
-                    value={adminDetail.last_name}
-                    InputProps={{ readOnly: true }}
-                  />
-                </Grid>
-                <Grid item size={6}>
-                  <TextField
-                    fullWidth
-                    label="Username"
-                    variant="standard"
-                    value={adminDetail.username}
-                    InputProps={{ readOnly: true }}
-                  />
-                </Grid>
-                <Grid item size={6}>
-                  <TextField
-                    fullWidth
-                    label="Email Address"
-                    variant="standard"
-                    value={adminDetail.email}
-                    InputProps={{ readOnly: true }}
-                  />
-                </Grid>
-                <Grid item size={6}>
-                  <TextField
-                    fullWidth
-                    label="Company Origin"
-                    variant="standard"
-                    value={adminDetail.company?.company_name}
-                    InputProps={{ readOnly: true }}
-                  />
-                </Grid>
+                <InfoDisplay label="First Name" value={adminDetail.first_name} underline />
+                <InfoDisplay label="Last Name" value={adminDetail.last_name} underline />
+                <InfoDisplay label="Username" value={adminDetail.username} underline />
+                <InfoDisplay label="Email Address" value={adminDetail.email} underline />
+                <InfoDisplay label="Company Origin" value={adminDetail.company?.company_name} underline />
               </Grid>
             </TabPanel>
           </TabContext>
         </Box>
       </Box>
-
       <ModalEditAdmin
         open={modalEditAdmin}
         onClose={handleModalEditAdminClose}
