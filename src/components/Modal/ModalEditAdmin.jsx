@@ -19,7 +19,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useFormik } from "formik";
 import Swal from "sweetalert2";
 import * as Yup from "yup";
-import success from "../../assets/icons/success.png";
+import success from "../../../public/icons/success.png";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   getAllCompaniesMaster,
@@ -27,6 +27,8 @@ import {
   editDataAdmin,
   detailAdmin,
 } from "../../services/api/adminService";
+import CustomFormField from "../CustomInput";
+import CustomInput from "../CustomInput";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -280,30 +282,18 @@ const ModalEditAdmin = ({ open, onClose, adminId }) => {
           {activeTab === 1 && (
             <Grid container spacing={3} mt={3}>
               <Grid item xs={12}>
-                <FormField
-                  label="Enter New Password"
-                  type={showNewPassword ? "text" : "password"}
-                  variant="outlined"
+                <CustomInput
+                  label="Password"
                   name="password"
+                  type="password"
                   value={formik.values.password}
                   onChange={formik.handleChange}
-                  error={
-                    formik.touched.password && Boolean(formik.errors.password)
-                  }
+                  error={formik.touched.password && formik.errors.password}
                   helperText={formik.touched.password && formik.errors.password}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle new password visibility"
-                          onClick={handleToggleNewPasswordVisibility}
-                          edge="end"
-                        >
-                          {showNewPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
+                  showPassword={showNewPassword}
+                  handleTogglePasswordVisibility={
+                    handleToggleNewPasswordVisibility
+                  }
                 />
               </Grid>
               <Grid item xs={12}>

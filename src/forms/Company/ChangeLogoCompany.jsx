@@ -5,11 +5,15 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Description } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
-import success from "../../../assets/icons/success.png";
-import CustomModal from "../../CustomModal"; // Import the CustomModal
+import success from "../../../public/icons/success.png";
+import CustomModal from "../../components/CustomModal"; // Import the CustomModal
+import {
+  changeCompanyLogo,
+  detailCompany,
+} from "../../redux/slices/companySlice";
 import { useFormik } from "formik";
-import validationSchema from "../../../validation/fileValidation";
-import { changeAdminPhoto, fetchAdminDetail } from "../../../redux/slices/adminsSlice";
+import validationSchema from "../../validation/fileValidation";
+import CustomFileInput from "../../components/CustomFileInput";
 
 const FileUploadBox = styled(Box)({
   border: "2px dashed #0078D7",
@@ -33,7 +37,7 @@ const SelectedFileBox = styled(Box)({
   marginTop: "16px",
 });
 
-const ChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
+const ChangeLogoCompany = ({ open, onClose, idCompany, title }) => {
   const [activeTab, setActiveTab] = useState(0);
   const dispatch = useDispatch();
 
@@ -44,17 +48,17 @@ const ChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       const formData = new FormData();
-      formData.append("profile_picture", values.file);
+      formData.append("company_logo", values.file);
 
       try {
-        await dispatch(changeAdminPhoto({ idAdmin, formData })).unwrap();
+        await dispatch(changeCompanyLogo({ idCompany, formData })).unwrap();
         Swal.fire({
           title: "Success",
-          text: "Change Admin Photo Success",
+          text: "Change Company Logo Success",
           imageUrl: success,
           imageAlt: "success",
         });
-        await dispatch(fetchAdminDetail(idAdmin));
+        await dispatch(detailCompany(idCompany));
         onCloseModal();
       } catch (error) {
         Swal.fire({
@@ -110,41 +114,13 @@ const ChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
       {activeTab === 0 && (
         <Grid container spacing={1} mt={1}>
           <Grid item xs={12}>
-            <FileUploadBox
+            <CustomFileInput
+              file={formik.values.file}
+              onChange={handleFileChange}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
-              onClick={() => document.getElementById("file-upload").click()}
-            >
-              <input
-                type="file"
-                style={{ display: "none" }}
-                id="file-upload"
-                accept=".jpg,.png"
-                onChange={handleFileChange}
-              />
-              <Typography
-                mb={3}
-                variant="body2"
-                sx={{
-                  fontSize: "16px",
-                  fontFamily: "Inter, sans-serif",
-                  color: "rgba(0, 0, 0, 0.6)", // Muted color
-                }}
-              >
-                Drag 'n' drop .jpg or .png file here, or click to select file
-              </Typography>
-              {formik.values.file && (
-                <SelectedFileBox>
-                  <Description sx={{ marginRight: "8px" }} />
-                  <Typography variant="body2">{formik.values.file.name}</Typography>
-                </SelectedFileBox>
-              )}
-            </FileUploadBox>
-            {formik.touched.file && formik.errors.file && (
-              <Typography variant="body2" color="error" mt={1}>
-                {formik.errors.file}
-              </Typography>
-            )}
+              error={formik.touched.file && formik.errors.file}
+            />
           </Grid>
         </Grid>
       )}
@@ -152,4 +128,4 @@ const ChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
   );
 };
 
-export default ChangePhotoAdmin;
+export default ChangeLogoCompany;

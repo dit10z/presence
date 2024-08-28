@@ -25,7 +25,7 @@ import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchAdminDetail } from "../../redux/slices/adminsSlice";
-import ChangePhotoAdmin from "../../components/Forms/Administrator/ChangePhotoAdmin";
+import ChangePhotoAdmin from "../../forms/Administrator/ChangePhotoAdmin";
 
 const AdminDetail = () => {
   const [modalEditAdmin, setModalEditAdmin] = useState(false);

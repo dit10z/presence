@@ -5,11 +5,14 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Description } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
-import success from "../../../assets/icons/success.png";
-import CustomModal from "../../CustomModal"; // Import the CustomModal
-import { changeCompanyLogo, detailCompany } from "../../../redux/slices/companySlice";
+import success from "../../../public/icons/success.png";
+import CustomModal from "../../components/CustomModal"; // Import the CustomModal
 import { useFormik } from "formik";
-import validationSchema from "../../../validation/fileValidation";
+import validationSchema from "../../validation/fileValidation";
+import {
+  changeAdminPhoto,
+  fetchAdminDetail,
+} from "../../redux/slices/adminsSlice";
 
 const FileUploadBox = styled(Box)({
   border: "2px dashed #0078D7",
@@ -33,7 +36,7 @@ const SelectedFileBox = styled(Box)({
   marginTop: "16px",
 });
 
-const ChangeLogoCompany = ({ open, onClose, idCompany, title }) => {
+const ChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
   const [activeTab, setActiveTab] = useState(0);
   const dispatch = useDispatch();
 
@@ -44,17 +47,17 @@ const ChangeLogoCompany = ({ open, onClose, idCompany, title }) => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       const formData = new FormData();
-      formData.append("company_logo", values.file);
+      formData.append("profile_picture", values.file);
 
       try {
-        await dispatch(changeCompanyLogo({ idCompany, formData })).unwrap();
+        await dispatch(changeAdminPhoto({ idAdmin, formData })).unwrap();
         Swal.fire({
           title: "Success",
-          text: "Change Company Logo Success",
+          text: "Change Admin Photo Success",
           imageUrl: success,
           imageAlt: "success",
         });
-        await dispatch(detailCompany(idCompany));
+        await dispatch(fetchAdminDetail(idAdmin));
         onCloseModal();
       } catch (error) {
         Swal.fire({
@@ -136,7 +139,9 @@ const ChangeLogoCompany = ({ open, onClose, idCompany, title }) => {
               {formik.values.file && (
                 <SelectedFileBox>
                   <Description sx={{ marginRight: "8px" }} />
-                  <Typography variant="body2">{formik.values.file.name}</Typography>
+                  <Typography variant="body2">
+                    {formik.values.file.name}
+                  </Typography>
                 </SelectedFileBox>
               )}
             </FileUploadBox>
@@ -152,4 +157,4 @@ const ChangeLogoCompany = ({ open, onClose, idCompany, title }) => {
   );
 };
 
-export default ChangeLogoCompany;
+export default ChangePhotoAdmin;

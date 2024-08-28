@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import success from "../../assets/icons/success.png";
+import success from "../../../public/icons/success.png";
 import CustomButton from "../../components/CustomButton";
 import CustomDataGrid from "../../components/CustomDataGrid";
 import {
@@ -13,7 +13,6 @@ import {
 } from "@mui/icons-material";
 import Grid from "@mui/material/Grid";
 import theme from "../../styles/theme";
-import ModalAddNewAdministrator from "../../components/Modal/ModalAddNewAdmin";
 import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
 import ModalDateFilter from "../../components/Modal/ModalDateFilter";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,7 +32,7 @@ import {
   Typography,
   InputAdornment,
 } from "@mui/material";
-import AddAdminForm from "../../components/Forms/Administrator/AddAdminForm";
+import AddAdminForm from "../../forms/Administrator/AddAdminForm";
 
 const Administrators = () => {
   const navigate = useNavigate();
