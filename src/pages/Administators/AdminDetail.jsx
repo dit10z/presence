@@ -22,10 +22,10 @@ import TabPanel from "@mui/lab/TabPanel";
 import Grid from "@mui/material/Grid";
 import theme from "../../styles/theme";
 import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
-import ModalChangePhotoAdmin from "../../components/Modal/ModalChangePhotoAdmin";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchAdminDetail } from "../../redux/slices/adminsSlice";
+import ChangePhotoAdmin from "../../components/Forms/Administrator/ChangePhotoAdmin";
 
 const AdminDetail = () => {
   const [modalEditAdmin, setModalEditAdmin] = useState(false);
@@ -202,7 +202,7 @@ const AdminDetail = () => {
         title="Edit Profile"
         adminId={adminDetail.id_admin}
       />
-      <ModalChangePhotoAdmin
+      <ChangePhotoAdmin
         open={modalChangePhotoAdmin}
         onClose={handleModalChangePhotoAdminClose}
         idAdmin={adminDetail.id_admin}

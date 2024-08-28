@@ -14,6 +14,8 @@ import Swal from "sweetalert2";
 import success from "../../assets/icons/success.png";
 import { addAdmin } from "../../redux/slices/adminsSlice";
 import { fetchCompanies } from "../../redux/slices/companySlice";
+import { useFormik } from "formik";
+import validationSchema from "../../validation/adminValidation";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -34,20 +36,8 @@ const FormField = styled(TextField)({
 });
 
 const ModalAddNewAdmin = ({ open, onClose }) => {
-  const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    id_company: "",
-  });
-
-  const [validationErrors, setValidationErrors] = useState({});
   const dispatch = useDispatch();
   const companies = useSelector((state) => state.companies.companies);
-  console.log("company yg ada:", companies)
 
   useEffect(() => {
     if (open) {
@@ -55,134 +45,50 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
     }
   }, [open, dispatch]);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const formik = useFormik({
+    initialValues: {
+      first_name: "",
+      last_name: "",
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      id_company: "", // Pastikan konsisten dengan field id_company
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values, { resetForm }) => {
+      const requestData = {
+        first_name: values.first_name,
+        last_name: values.last_name,
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        id_company: parseInt(values.id_company), // Parsing ke integer seperti pada contoh pertama
+      };
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const handleSubmit = async () => {
-    const errors = {};
-
-    // Validasi first name
-    if (!formData.first_name || formData.first_name.trim() === "") {
-      errors.first_name = "First name must not be empty";
-    } else if (
-      formData.first_name.length < 1 ||
-      formData.first_name.length > 255
-    ) {
-      errors.first_name =
-        "Invalid first name. (Min. 1 characters & Max. 255 characters)";
-    }
-
-    // Validasi last name
-    if (!formData.last_name || formData.last_name.trim() === "") {
-      errors.last_name = "Last name must not be empty";
-    } else if (
-      formData.last_name.length < 1 ||
-      formData.last_name.length > 255
-    ) {
-      errors.last_name =
-        "Invalid last name. (Min. 1 characters & Max. 255 characters)";
-    }
-
-    // Validasi username
-    if (!formData.username || formData.username.trim() === "") {
-      errors.username = "Username must not be empty";
-    } else if (formData.username.length < 7 || formData.username.length > 20) {
-      errors.username =
-        "Invalid username. (Min. 7 characters & Max. 20 characters)";
-    }
-
-    // Validasi email
-    if (!formData.email || formData.email.trim() === "") {
-      errors.email = "Email must not be empty";
-    } else if (!validateEmail(formData.email)) {
-      errors.email = "Invalid email format";
-    } else if (formData.email.length < 1 || formData.email.length > 255) {
-      errors.email = "Invalid email. (Min. 1 characters & Max 255 characters)";
-    }
-
-    // Validasi password
-    if (!formData.password || formData.password.trim() === "") {
-      errors.password = "Password must not be empty";
-    } else if (formData.password.length < 7 || formData.password.length > 20) {
-      errors.password =
-        "Invalid password. (Min. 7 characters & Max 20 characters)";
-    }
-
-    // Validasi confirm password
-    if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = "Passwords do not match";
-    }
-
-    // Validasi company origin
-    if (!formData.id_company) {
-      errors.id_company = "Field must not be empty"
-    }
-    // Jika ada error, set validationErrors dan hentikan submit
-    if (Object.keys(errors).length > 0) {
-      setValidationErrors(errors);
-      return;
-    }
-
-    // Jika tidak ada error, lanjutkan submit
-    const payload = {
-      first_name: formData.first_name,
-      last_name: formData.last_name,
-      username: formData.username,
-      email: formData.email,
-      password: formData.password,
-      id_company: parseInt(formData.id_company),
-    };
-
-    console.log("Posting data: ", payload);
-
-    try {
-      await dispatch(addAdmin(payload)).unwrap();
-      Swal.fire({
-        title: "Success",
-        text: "Add New Admin Success",
-        imageUrl: success,
-        imageAlt: "success",
-      });
-
-      // Reset form dan tutup modal
-      setFormData({
-        first_name: "",
-        last_name: "",
-        username: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        id_company: "",
-      });
-      setValidationErrors({});
-      onClose();
-
-      
-    } catch (error) {
-      console.error("Failed to add admin:", error);
-
-        // alert("Failed to add admin. Please try again.");
+      try {
+        await dispatch(addAdmin(requestData)).unwrap();
+        Swal.fire({
+          title: "Success",
+          text: "Add New Admin Success",
+          imageUrl: success,
+          imageAlt: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        });
+        resetForm();
+        onClose();
+      } catch (error) {
         Swal.fire({
           title: "Error",
-          text: error.response?.data?.message || "Username already exist. Please try again.",
+          text: error.response?.data?.message || "Failed to add admin. Please try again.",
           icon: "error",
         });
-      
-
-    if (error.response && error.response.data && error.response.data.errors) {
-      setValidationErrors(error.response.data.errors);
-    }
-  }
-};
+      }
+    },
+  });
 
   return (
     <StyledModal open={open} onClose={onClose}>
@@ -190,126 +96,114 @@ const ModalAddNewAdmin = ({ open, onClose }) => {
         <Typography variant="h6" mb={8}>
           Add New Administrator
         </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={6}>
-            <FormField
-              label="First Name"
-              variant="outlined"
-              name="first_name"
-              value={formData.first_name}
-              onChange={handleChange}
-              error={!!validationErrors.first_name}
-              helperText={
-                validationErrors.first_name ? validationErrors.first_name : ""
-              }
-            />
+        <form onSubmit={formik.handleSubmit}>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <FormField
+                label="First Name"
+                variant="outlined"
+                name="first_name"
+                value={formik.values.first_name}
+                onChange={formik.handleChange}
+                error={formik.touched.first_name && Boolean(formik.errors.first_name)}
+                helperText={formik.touched.first_name && formik.errors.first_name}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormField
+                label="Last Name"
+                variant="outlined"
+                name="last_name"
+                value={formik.values.last_name}
+                onChange={formik.handleChange}
+                error={formik.touched.last_name && Boolean(formik.errors.last_name)}
+                helperText={formik.touched.last_name && formik.errors.last_name}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormField
+                label="Username"
+                variant="outlined"
+                name="username"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                error={formik.touched.username && Boolean(formik.errors.username)}
+                helperText={formik.touched.username && formik.errors.username}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormField
+                label="Email Address"
+                variant="outlined"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                error={formik.touched.email && Boolean(formik.errors.email)}
+                helperText={formik.touched.email && formik.errors.email}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormField
+                label="Password"
+                type="password"
+                variant="outlined"
+                name="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                error={formik.touched.password && Boolean(formik.errors.password)}
+                helperText={formik.touched.password && formik.errors.password}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormField
+                label="Confirm Password"
+                type="password"
+                variant="outlined"
+                name="confirmPassword"
+                value={formik.values.confirmPassword}
+                onChange={formik.handleChange}
+                error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+                helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormField
+                select
+                label="Company Origin"
+                variant="outlined"
+                name="id_company"
+                value={formik.values.id_company}
+                onChange={formik.handleChange}
+                error={formik.touched.id_company && Boolean(formik.errors.id_company)}
+                helperText={formik.touched.id_company && formik.errors.id_company}
+              >
+                {companies?.map((company) => (
+                  <MenuItem key={company.id_company} value={company.id_company}>
+                    {company.company_name}
+                  </MenuItem>
+                ))}
+              </FormField>
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <FormField
-              label="Last Name"
+          <Box mt={6} display="flex" justifyContent="flex-end">
+            <CustomButton
+              onClick={onClose}
               variant="outlined"
-              name="last_name"
-              value={formData.last_name}
-              onChange={handleChange}
-              error={!!validationErrors.last_name}
-              helperText={
-                validationErrors.last_name ? validationErrors.last_name : ""
-              }
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <FormField
-              label="Username"
-              variant="outlined"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              error={!!validationErrors.username}
-              helperText={
-                validationErrors.username ? validationErrors.username : ""
-              }
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <FormField
-              label="Email Address"
-              variant="outlined"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              error={!!validationErrors.email}
-              helperText={validationErrors.email ? validationErrors.email : ""}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <FormField
-              label="Password"
-              type="password"
-              variant="outlined"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              error={!!validationErrors.password}
-              helperText={
-                validationErrors.password ? validationErrors.password : ""
-              }
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <FormField
-              label="Confirm Password"
-              type="password"
-              variant="outlined"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              error={formData.password !== formData.confirmPassword}
-              helperText={
-                formData.password !== formData.confirmPassword
-                  ? "Passwords do not match"
-                  : ""
-              }
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormField
-              select
-              label="Company Origin"
-              variant="outlined"
-              name="id_company"
-              value={formData.id_company}
-              onChange={handleChange}
-              error={!!validationErrors.id_company}
-              helperText={
-                validationErrors.id_company ? validationErrors.id_company : ""
-              }
+              sx={{ marginRight: 1 }}
+              color="button"
             >
-              {companies?.map((company) => (
-                <MenuItem key={company.id_company} value={company.id_company}>
-                  {company.company_name}
-                </MenuItem>
-              ))}
-            </FormField>
-          </Grid>
-        </Grid>
-        <Box mt={6} display="flex" justifyContent="flex-end">
-          <CustomButton
-            onClick={onClose}
-            variant="outlined"
-            sx={{ marginRight: 1 }}
-            color="button"
-          >
-            Cancel
-          </CustomButton>
-          <CustomButton
-            variant="contained"
-            color="primary"
-            text="white"
-            onClick={handleSubmit}
-          >
-            Add
-          </CustomButton>
-        </Box>
+              Cancel
+            </CustomButton>
+            <CustomButton
+              variant="contained"
+              color="primary"
+              text="white"
+              type="submit"
+            >
+              Add
+            </CustomButton>
+          </Box>
+        </form>
       </ModalContent>
     </StyledModal>
   );

@@ -41,6 +41,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import { useFormik } from "formik";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import AddAdminForm from "../../components/Forms/Administrator/AddAdminForm";
 
 const Administrators = () => {
   const navigate = useNavigate();
@@ -506,7 +507,7 @@ const Administrators = () => {
           />
         </Box>
 
-        <ModalAddNewAdministrator
+        <AddAdminForm
           open={newAdministratorModal}
           onClose={handleClose}
           title="Add"
