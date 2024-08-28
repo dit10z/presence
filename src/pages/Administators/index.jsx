@@ -12,13 +12,7 @@ import {
 } from "@mui/icons-material";
 import Grid from "@mui/material/Grid";
 import theme from "../../styles/theme";
-<<<<<<< HEAD
-import ModalAddNewAdministrator from "../../components/Modal/ModalAddNewAdmin";
-import CustomModal from "../../components/CustomModal";
-// import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
-=======
 import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
->>>>>>> c7df1f2f3208fd7919ece0d2ce234e38327a8324
 import ModalDateFilter from "../../components/Modal/ModalDateFilter";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
