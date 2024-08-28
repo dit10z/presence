@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import success from "../../assets/icons/success.png";
+import success from "../../../public/icons/success.png";
 import CustomButton from "../../components/CustomButton";
 import CustomDataGrid from "../../components/CustomDataGrid";
 import {
@@ -12,9 +12,13 @@ import {
 } from "@mui/icons-material";
 import Grid from "@mui/material/Grid";
 import theme from "../../styles/theme";
+<<<<<<< HEAD
 import ModalAddNewAdministrator from "../../components/Modal/ModalAddNewAdmin";
 import CustomModal from "../../components/CustomModal";
 // import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
+=======
+import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
+>>>>>>> c7df1f2f3208fd7919ece0d2ce234e38327a8324
 import ModalDateFilter from "../../components/Modal/ModalDateFilter";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
@@ -35,13 +39,7 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import { styled } from "@mui/system";
-import validationSchema from "../../validation/adminValidation";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import EditIcon from "@mui/icons-material/Edit";
-import { useFormik } from "formik";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import AddAdminForm from "../../components/Forms/Administrator/AddAdminForm";
+import AddAdminForm from "../../forms/Administrator/AddAdminForm";
 
 const Administrators = () => {
   const navigate = useNavigate();
