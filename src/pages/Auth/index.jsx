@@ -14,8 +14,8 @@ import { styled } from "@mui/system";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/slices/authSlice";
-import Hero from "../../assets/hero-signin.png";
-import Logo from "../../assets/logo.png";
+import Hero from "../../../public/mock/hero-signin.png";
+import Logo from "../../../public/mock/logo.png";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const SignInContainer = styled(Box)({

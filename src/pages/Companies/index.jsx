@@ -16,22 +16,19 @@ import React, { useEffect, useState } from "react";
 import CustomButton from "../../components/CustomButton";
 import CustomDataGrid from "../../components/CustomDataGrid";
 import theme from "../../styles/theme";
-import ModalAddNewCompany from "../../components/Modal/ModalAddNewCompany";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteCompany,
   fetchDataCompanies,
 } from "../../redux/slices/companySlice";
 import DateRangeIcon from "@mui/icons-material/DateRange";
-import ModalEditCompany from "../../components/Modal/ModalEditCompany";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import DateFilterModal from "../../components/Modal/ModalDateFilter";
-import ModalEditCompanyCopy from "../../components/Modal/ModalEditCompanyCopy";
-import EditCompanyForm from "../../components/Forms/Company/EditCompanyForm";
+import EditCompanyForm from "../../forms/Company/EditCompanyForm";
 import Swal from "sweetalert2";
-import success from "../../assets/icons/success.png";
-import AddCompanyForm from "../../components/Forms/Company/AddCompanyForm";
+import success from "../../../public/icons/success.png";
+import AddCompanyForm from "../../forms/Company/AddCompanyForm";
 
 const CompaniesList = () => {
   const dispatch = useDispatch();

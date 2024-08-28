@@ -1,18 +1,14 @@
 import React, { useEffect } from "react";
-import {
-  Grid,
-  MenuItem,
-  TextField,
-} from "@mui/material";
+import { Grid, MenuItem, TextField } from "@mui/material";
 import { styled } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import success from "../../../assets/icons/success.png";
-import { addAdmin } from "../../../redux/slices/adminsSlice";
-import { fetchCompanies } from "../../../redux/slices/companySlice";
+import success from "../../../public/icons/success.png";
+import { addAdmin } from "../../redux/slices/adminsSlice";
+import { fetchCompanies } from "../../redux/slices/companySlice";
 import { useFormik } from "formik";
-import validationSchema from "../../../validation/adminValidation";
-import CustomModal from "../../CustomModal";
+import validationSchema from "../../validation/adminValidation";
+import CustomModal from "../../components/CustomModal";
 
 const FormField = styled(TextField)({
   width: "100%",
@@ -67,7 +63,9 @@ const AddAdminForm = ({ open, onClose }) => {
       } catch (error) {
         Swal.fire({
           title: "Error",
-          text: error.response?.data?.message || "Failed to add admin. Please try again.",
+          text:
+            error.response?.data?.message ||
+            "Failed to add admin. Please try again.",
           icon: "error",
         });
       }
@@ -90,7 +88,9 @@ const AddAdminForm = ({ open, onClose }) => {
             name="first_name"
             value={formik.values.first_name}
             onChange={formik.handleChange}
-            error={formik.touched.first_name && Boolean(formik.errors.first_name)}
+            error={
+              formik.touched.first_name && Boolean(formik.errors.first_name)
+            }
             helperText={formik.touched.first_name && formik.errors.first_name}
           />
         </Grid>
@@ -147,8 +147,13 @@ const AddAdminForm = ({ open, onClose }) => {
             name="confirmPassword"
             value={formik.values.confirmPassword}
             onChange={formik.handleChange}
-            error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
-            helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+            error={
+              formik.touched.confirmPassword &&
+              Boolean(formik.errors.confirmPassword)
+            }
+            helperText={
+              formik.touched.confirmPassword && formik.errors.confirmPassword
+            }
           />
         </Grid>
         <Grid item xs={12}>
@@ -159,7 +164,9 @@ const AddAdminForm = ({ open, onClose }) => {
             name="id_company"
             value={formik.values.id_company}
             onChange={formik.handleChange}
-            error={formik.touched.id_company && Boolean(formik.errors.id_company)}
+            error={
+              formik.touched.id_company && Boolean(formik.errors.id_company)
+            }
             helperText={formik.touched.id_company && formik.errors.id_company}
           >
             {companies?.map((company) => (
