@@ -13,6 +13,7 @@ import {
   changeAdminPhoto,
   fetchAdminDetail,
 } from "../../redux/slices/adminsSlice";
+import CustomFileInput from "../../components/CustomFileInput";
 
 const FileUploadBox = styled(Box)({
   border: "2px dashed #0078D7",
@@ -113,43 +114,14 @@ const ChangePhotoAdmin = ({ open, onClose, idAdmin, title }) => {
       {activeTab === 0 && (
         <Grid container spacing={1} mt={1}>
           <Grid item xs={12}>
-            <FileUploadBox
+          <CustomFileInput
+              file={formik.values.file}
+              onChange={handleFileChange}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
-              onClick={() => document.getElementById("file-upload").click()}
-            >
-              <input
-                type="file"
-                style={{ display: "none" }}
-                id="file-upload"
-                accept=".jpg,.png"
-                onChange={handleFileChange}
-              />
-              <Typography
-                mb={3}
-                variant="body2"
-                sx={{
-                  fontSize: "16px",
-                  fontFamily: "Inter, sans-serif",
-                  color: "rgba(0, 0, 0, 0.6)", // Muted color
-                }}
-              >
-                Drag 'n' drop .jpg or .png file here, or click to select file
-              </Typography>
-              {formik.values.file && (
-                <SelectedFileBox>
-                  <Description sx={{ marginRight: "8px" }} />
-                  <Typography variant="body2">
-                    {formik.values.file.name}
-                  </Typography>
-                </SelectedFileBox>
-              )}
-            </FileUploadBox>
-            {formik.touched.file && formik.errors.file && (
-              <Typography variant="body2" color="error" mt={1}>
-                {formik.errors.file}
-              </Typography>
-            )}
+              error={formik.touched.file && formik.errors.file}
+            />
+            
           </Grid>
         </Grid>
       )}

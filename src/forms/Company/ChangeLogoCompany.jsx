@@ -121,6 +121,7 @@ const ChangeLogoCompany = ({ open, onClose, idCompany, title }) => {
               onDragOver={handleDragOver}
               error={formik.touched.file && formik.errors.file}
             />
+            
           </Grid>
         </Grid>
       )}

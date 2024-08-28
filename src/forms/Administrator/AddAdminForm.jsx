@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { Grid, MenuItem, TextField } from "@mui/material";
-import { styled } from "@mui/system";
+import React, { useEffect, useState } from "react";
+import { Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import success from "../../../public/icons/success.png";
@@ -9,14 +8,14 @@ import { fetchCompanies } from "../../redux/slices/companySlice";
 import { useFormik } from "formik";
 import validationSchema from "../../validation/adminValidation";
 import CustomModal from "../../components/CustomModal";
-
-const FormField = styled(TextField)({
-  width: "100%",
-});
+import CustomInput from "../../components/CustomInput"; // Import CustomInput
 
 const AddAdminForm = ({ open, onClose }) => {
   const dispatch = useDispatch();
   const companies = useSelector((state) => state.companies.companies);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   useEffect(() => {
     if (open) {
@@ -82,22 +81,18 @@ const AddAdminForm = ({ open, onClose }) => {
     >
       <Grid container spacing={3}>
         <Grid item xs={6}>
-          <FormField
+          <CustomInput
             label="First Name"
-            variant="outlined"
             name="first_name"
             value={formik.values.first_name}
             onChange={formik.handleChange}
-            error={
-              formik.touched.first_name && Boolean(formik.errors.first_name)
-            }
+            error={formik.touched.first_name && Boolean(formik.errors.first_name)}
             helperText={formik.touched.first_name && formik.errors.first_name}
           />
         </Grid>
         <Grid item xs={6}>
-          <FormField
+          <CustomInput
             label="Last Name"
-            variant="outlined"
             name="last_name"
             value={formik.values.last_name}
             onChange={formik.handleChange}
@@ -106,9 +101,8 @@ const AddAdminForm = ({ open, onClose }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <FormField
+          <CustomInput
             label="Username"
-            variant="outlined"
             name="username"
             value={formik.values.username}
             onChange={formik.handleChange}
@@ -117,9 +111,8 @@ const AddAdminForm = ({ open, onClose }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <FormField
+          <CustomInput
             label="Email Address"
-            variant="outlined"
             name="email"
             value={formik.values.email}
             onChange={formik.handleChange}
@@ -128,22 +121,24 @@ const AddAdminForm = ({ open, onClose }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <FormField
+          <CustomInput
             label="Password"
             type="password"
-            variant="outlined"
             name="password"
             value={formik.values.password}
             onChange={formik.handleChange}
             error={formik.touched.password && Boolean(formik.errors.password)}
             helperText={formik.touched.password && formik.errors.password}
+            showPassword={showPassword}
+            handleTogglePasswordVisibility={() =>
+              setShowPassword(!showPassword)
+            }
           />
         </Grid>
         <Grid item xs={6}>
-          <FormField
+          <CustomInput
             label="Confirm Password"
             type="password"
-            variant="outlined"
             name="confirmPassword"
             value={formik.values.confirmPassword}
             onChange={formik.handleChange}
@@ -154,27 +149,26 @@ const AddAdminForm = ({ open, onClose }) => {
             helperText={
               formik.touched.confirmPassword && formik.errors.confirmPassword
             }
+            showPassword={showConfirmPassword}
+            handleTogglePasswordVisibility={() =>
+              setShowConfirmPassword(!showConfirmPassword)
+            }
           />
         </Grid>
         <Grid item xs={12}>
-          <FormField
-            select
+          <CustomInput
             label="Company Origin"
-            variant="outlined"
             name="id_company"
+            type="select"
             value={formik.values.id_company}
             onChange={formik.handleChange}
-            error={
-              formik.touched.id_company && Boolean(formik.errors.id_company)
-            }
+            error={formik.touched.id_company && Boolean(formik.errors.id_company)}
             helperText={formik.touched.id_company && formik.errors.id_company}
-          >
-            {companies?.map((company) => (
-              <MenuItem key={company.id_company} value={company.id_company}>
-                {company.company_name}
-              </MenuItem>
-            ))}
-          </FormField>
+            options={companies?.map((company) => ({
+              value: company.id_company,
+              label: company.company_name,
+            }))}
+          />
         </Grid>
       </Grid>
     </CustomModal>

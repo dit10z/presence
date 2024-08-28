@@ -40,7 +40,7 @@ export const fetchCompanies = createAsyncThunk(
   async () => {
     try {
       const response = await instance.get(
-        "http://localhost:8080/company-management/companies"
+        "/company-management/companies"
       );
       return response.data.data; // Mengambil data perusahaan dari respons
     } catch (error) {
@@ -55,7 +55,7 @@ export const addAdmin = createAsyncThunk(
   async (adminData, { rejectWithValue }) => {
     try {
       const response = await instance.post(
-        "http://localhost:8080/admin-management/admins",
+        "/admin-management/admins",
         adminData,
         {
           headers: {
@@ -76,7 +76,7 @@ export const fetchAdminDetail = createAsyncThunk(
   async (idAdmin, { rejectWithValue }) => {
     try {
       const response = await instance.get(
-        `http://localhost:8080/admin-management/admins/${idAdmin}`,
+        `/admin-management/admins/${idAdmin}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -96,7 +96,7 @@ export const changeAdminPhoto = createAsyncThunk(
   async ({ idAdmin, formData }, { rejectWithValue }) => {
     try {
       const response = await instance.patch(
-        `http://localhost:8080/admin-management/admins/photo/${idAdmin}`,
+        `/admin-management/admins/photo/${idAdmin}`,
         formData,
         {
           headers: {
