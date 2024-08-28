@@ -17,6 +17,7 @@ import { detailCompany } from "../../redux/slices/companySlice";
 import ChangeLogoCompany from "../../forms/Company/ChangeLogoCompany";
 import EditCompanyForm from "../../forms/Company/EditCompanyForm";
 import InfoDisplay from "../../components/InfoDisplay"; // Import InfoDisplay
+import { formatCreatedDate } from "../../utils/formatDate";
 
 const TypographyHead = styled(Typography)(({ theme }) => ({
   fontWeight: 300,
@@ -58,7 +59,11 @@ const CompanyDetail = () => {
 
   const handleEditClose = () => setEditCompanyModal(false);
 
-  if (status === true || !companyDetail || Object.keys(companyDetail).length === 0) {
+  if (
+    status === true ||
+    !companyDetail ||
+    Object.keys(companyDetail).length === 0
+  ) {
     return <Typography>Loading...</Typography>;
   }
 
@@ -68,11 +73,18 @@ const CompanyDetail = () => {
         <Card sx={{ marginTop: 3, padding: 3 }}>
           <Grid container spacing={3}>
             <Grid item xs={12} textAlign="start">
-              <Box display="inline-flex" alignItems="center" position="relative">
+              <Box
+                display="inline-flex"
+                alignItems="center"
+                position="relative"
+              >
                 <CardMedia
                   component="img"
                   alt="Company Logo"
-                  image={companyDetail.company_logo || "https://via.placeholder.com/300"}
+                  image={
+                    companyDetail.company_logo ||
+                    "https://via.placeholder.com/300"
+                  }
                   sx={{
                     width: 300,
                     height: 150,
@@ -90,17 +102,36 @@ const CompanyDetail = () => {
             {/* Company Details */}
             <Grid item xs={12} sx={{ marginY: 2 }}>
               <Grid container spacing={4} sx={{ marginX: 3 }}>
-                <InfoDisplay label="Company Name" value={companyDetail.company_name} />
+                <InfoDisplay
+                  label="Company Name"
+                  value={companyDetail.company_name}
+                />
                 <InfoDisplay label="Founder" value={companyDetail.founder} />
-                <InfoDisplay label="Founded at" value={companyDetail.founded_at ? new Date(companyDetail.founded_at).toLocaleDateString() : "N/A"} />
+                <InfoDisplay
+                  label="Founded at"
+                  value={
+                    companyDetail.founded_at
+                      ? new Date(companyDetail.founded_at).toLocaleDateString()
+                      : "N/A"
+                  }
+                />
                 <InfoDisplay label="Phone" value={companyDetail.phone} />
-                <InfoDisplay label="Email Address" value={companyDetail.email} />
+                <InfoDisplay
+                  label="Email Address"
+                  value={companyDetail.email}
+                />
                 <InfoDisplay label="Address" value={companyDetail.address} />
                 <InfoDisplay label="State" value={companyDetail.state} />
                 <InfoDisplay label="City" value={companyDetail.city} />
                 <InfoDisplay label="Zip Code" value={companyDetail.zip_code} />
-                <InfoDisplay label="Joining Date" value={companyDetail.joining_date ? new Date(companyDetail.joining_date).toLocaleDateString() : "N/A"} />
-
+                <InfoDisplay
+                  label="Joining Date"
+                  value={
+                    companyDetail.joining_date
+                      ? formatCreatedDate(companyDetail.joining_date)
+                      : "N/A"
+                  }
+                />
               </Grid>
             </Grid>
 

@@ -29,6 +29,7 @@ import EditCompanyForm from "../../forms/Company/EditCompanyForm";
 import Swal from "sweetalert2";
 import success from "../../../public/icons/success.png";
 import AddCompanyForm from "../../forms/Company/AddCompanyForm";
+import { formatCreatedDate } from "../../utils/formatDate";
 
 const CompaniesList = () => {
   const dispatch = useDispatch();
@@ -171,7 +172,7 @@ const CompaniesList = () => {
       totalAdmin: company.total_admin,
       phone: company.phone,
       createdDay: company.created_date
-        ? dayjs(company.created_date).format("YYYY-MM-DD")
+        ? formatCreatedDate(company.created_date)
         : "N/A", // Handle null or undefined dates
     })) || [];
 
@@ -237,7 +238,7 @@ const CompaniesList = () => {
         {/* Custom Data Grid */}
         <CustomDataGrid
           columns={columns}
-          rows={transformedData} // Using the data from Redux
+          rows={transformedData}
           pageSize={pageSize}
           page={page}
           onPageChange={(newPage) => setPage(newPage)}
@@ -273,11 +274,7 @@ const CompaniesList = () => {
           />
         </Box>
       </Box>
-      <AddCompanyForm
-        open={newCompanyModal}
-        onClose={handleClose}
-        title="Add"
-      />
+      <AddCompanyForm open={newCompanyModal} onClose={handleClose} />
       <EditCompanyForm
         open={editCompanyModal}
         onClose={handleEditClose}
