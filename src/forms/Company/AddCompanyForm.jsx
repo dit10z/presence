@@ -10,7 +10,6 @@ import {
   IconButton,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
@@ -22,13 +21,6 @@ import validationSchema from "../../validation/companyValidation";
 import CustomModal from "../../components/CustomModal";
 import CustomInput from "../../components/CustomInput";
 
-const FormField = styled(TextField)({
-  width: "100%",
-});
-
-const FormFieldDate = styled(DatePicker)({
-  width: "100%",
-});
 const AddCompanyForm = ({ open, onClose }) => {
   const dispatch = useDispatch();
 
@@ -47,9 +39,9 @@ const AddCompanyForm = ({ open, onClose }) => {
     validationSchema: validationSchema,
 
     onSubmit: async (values, { resetForm }) => {
-      const formattedJoiningDate = dayjs(values.joiningDate).format(
-        "YYYY-MM-DD"
-      );
+      const formattedJoiningDate = values.joiningDate
+        ? dayjs(values.joiningDate, "MM-DD-YYYY").format("YYYY-MM-DD")
+        : null;
       const requestData = {
         company_name: values.companyName,
         email: values.email,
@@ -60,6 +52,7 @@ const AddCompanyForm = ({ open, onClose }) => {
         zip_code: values.zipCode,
         joining_date: formattedJoiningDate,
       };
+      console.log(requestData);
       Swal.fire({
         title: "Success",
         text: "Add New Company Success",
@@ -93,9 +86,8 @@ const AddCompanyForm = ({ open, onClose }) => {
     >
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <FormField
+          <CustomInput
             label="Company Name"
-            variant="outlined"
             name="companyName"
             value={formik.values.companyName}
             onChange={formik.handleChange}
@@ -106,9 +98,8 @@ const AddCompanyForm = ({ open, onClose }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <FormField
+          <CustomInput
             label="Email Address"
-            variant="outlined"
             name="email"
             value={formik.values.email}
             onChange={formik.handleChange}
@@ -117,9 +108,8 @@ const AddCompanyForm = ({ open, onClose }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <FormField
+          <CustomInput
             label="Phone"
-            variant="outlined"
             name="phone"
             value={formik.values.phone}
             onChange={formik.handleChange}
@@ -128,9 +118,8 @@ const AddCompanyForm = ({ open, onClose }) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <FormField
+          <CustomInput
             label="Address"
-            variant="outlined"
             name="address"
             value={formik.values.address}
             onChange={formik.handleChange}
@@ -139,9 +128,8 @@ const AddCompanyForm = ({ open, onClose }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <FormField
+          <CustomInput
             label="State"
-            variant="outlined"
             name="state"
             value={formik.values.state}
             onChange={formik.handleChange}
@@ -150,9 +138,8 @@ const AddCompanyForm = ({ open, onClose }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <FormField
+          <CustomInput
             label="City"
-            variant="outlined"
             name="city"
             value={formik.values.city}
             onChange={formik.handleChange}
@@ -161,9 +148,8 @@ const AddCompanyForm = ({ open, onClose }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <FormField
+          <CustomInput
             label="Zip Code"
-            variant="outlined"
             name="zipCode"
             value={formik.values.zipCode}
             onChange={formik.handleChange}
@@ -174,7 +160,6 @@ const AddCompanyForm = ({ open, onClose }) => {
         <Grid item xs={6}>
           <CustomInput
             label="Joining Date"
-            name="joiningDate"
             type="date"
             value={formik.values.joiningDate}
             onChange={(date) => formik.setFieldValue("joiningDate", date)}

@@ -8,8 +8,8 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import MenuItem from "@mui/material/MenuItem";
 import { DatePicker } from "@mui/x-date-pickers";
 import { styled } from "@mui/material/styles";
+import dayjs from "dayjs";
 
-// Styled DatePicker
 const FormFieldDate = styled(DatePicker)({
   width: "100%",
 });
@@ -69,7 +69,7 @@ const CustomInput = ({
     <FormFieldDate
       label={label}
       value={value}
-      onChange={(date) => onChange({ target: { name, value: date } })}
+      onChange={onChange}
       renderInput={(params) => (
         <TextField
           {...params}

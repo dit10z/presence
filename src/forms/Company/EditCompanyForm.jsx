@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, TextField, InputAdornment, IconButton } from "@mui/material";
+import { Grid, InputAdornment, IconButton } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
@@ -11,6 +11,7 @@ import instance from "../../services/axiosInstance";
 import CustomModal from "../../components/CustomModal";
 import Swal from "sweetalert2";
 import success from "../../../public/icons/success.png";
+import CustomInput from "../../components/CustomInput";
 
 const EditCompanyForm = ({ open, onClose, companyId }) => {
   const dispatch = useDispatch();
@@ -103,9 +104,8 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
     >
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TextField
+          <CustomInput
             label="Company Name"
-            variant="outlined"
             name="companyName"
             value={formik.values.companyName}
             onChange={formik.handleChange}
@@ -117,9 +117,8 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <TextField
+          <CustomInput
             label="Email Address"
-            variant="outlined"
             name="email"
             value={formik.values.email}
             onChange={formik.handleChange}
@@ -129,9 +128,8 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <TextField
+          <CustomInput
             label="Phone"
-            variant="outlined"
             name="phone"
             value={formik.values.phone}
             onChange={formik.handleChange}
@@ -141,9 +139,8 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <TextField
+          <CustomInput
             label="Address"
-            variant="outlined"
             name="address"
             value={formik.values.address}
             onChange={formik.handleChange}
@@ -153,9 +150,8 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <TextField
+          <CustomInput
             label="State"
-            variant="outlined"
             name="state"
             value={formik.values.state}
             onChange={formik.handleChange}
@@ -165,9 +161,8 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <TextField
+          <CustomInput
             label="City"
-            variant="outlined"
             name="city"
             value={formik.values.city}
             onChange={formik.handleChange}
@@ -177,9 +172,8 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <TextField
+          <CustomInput
             label="Zip Code"
-            variant="outlined"
             name="zipCode"
             value={formik.values.zipCode}
             onChange={formik.handleChange}
@@ -189,32 +183,13 @@ const EditCompanyForm = ({ open, onClose, companyId }) => {
           />
         </Grid>
         <Grid item xs={6}>
-          <DatePicker
+          <CustomInput
             label="Joining Date"
+            type="date"
             value={formik.values.joiningDate}
-            onChange={(value) => formik.setFieldValue("joiningDate", value)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                fullWidth
-                error={
-                  formik.touched.joiningDate &&
-                  Boolean(formik.errors.joiningDate)
-                }
-                helperText={
-                  formik.touched.joiningDate && formik.errors.joiningDate
-                }
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton>
-                        <CalendarTodayIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            )}
+            onChange={(date) => formik.setFieldValue("joiningDate", date)}
+            error={formik.touched.joiningDate && formik.errors.joiningDate}
+            helperText={formik.touched.joiningDate && formik.errors.joiningDate}
           />
         </Grid>
       </Grid>
