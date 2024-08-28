@@ -8,13 +8,13 @@ import {
   Delete,
   Edit,
   Search,
-  Visibility,
   CalendarMonthOutlined,
 } from "@mui/icons-material";
 import Grid from "@mui/material/Grid";
 import theme from "../../styles/theme";
 import ModalAddNewAdministrator from "../../components/Modal/ModalAddNewAdmin";
-import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
+import CustomModal from "../../components/CustomModal";
+// import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
 import ModalDateFilter from "../../components/Modal/ModalDateFilter";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
@@ -32,7 +32,15 @@ import {
   MenuItem,
   Typography,
   InputAdornment,
+  Tabs,
+  Tab,
 } from "@mui/material";
+import { styled } from "@mui/system";
+import validationSchema from "../../validation/adminValidation";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import EditIcon from "@mui/icons-material/Edit";
+import { useFormik } from "formik";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Administrators = () => {
   const navigate = useNavigate();
@@ -56,6 +64,10 @@ const Administrators = () => {
   const [total, setTotal] = useState(0);
   const [selectedId, setSelectedId] = useState("");
   const totalRowCount = 100;
+  const [activeTab, setActiveTab] = useState(0);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [dataCompanyMaster, setDataCompanyMaster] = useState([]);
 
   const handleOpenModalEdit = (id) => {
     setSelectedId(id);
@@ -93,38 +105,6 @@ const Administrators = () => {
     });
   }
 
-  // const fetchDataAdmin = async (
-  //   searchQuery,
-  //   sortBy,
-  //   pageSize,
-  //   page,
-  //   startDate,
-  //   endDate
-  // ) => {
-  //   try {
-  //     const response = await getAllAdmins(
-  //       searchQuery,
-  //       sortBy,
-  //       pageSize,
-  //       page,
-  //       startDate,
-  //       endDate
-  //     );
-  //     const transformedData = response.data.data.map((admin) => ({
-  //       id: admin.id_admin,
-  //       company_name: admin.company.company_name,
-  //       fullname: `${admin.first_name} ${admin.last_name}`,
-  //       email: admin.email,
-  //       profile_picture: admin.profile_picture,
-  //       created_date: extractDate(admin.created_day),
-  //     }));
-  //     setRow(transformedData);
-  //     setTotal(response.data.meta.total);
-  //     console.log("total", response.data.meta.total);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   useEffect(() => {
     dispatch(
       fetchAllAdmins(searchQuery, sortBy, pageSize, page, startDate, endDate)
@@ -232,6 +212,206 @@ const Administrators = () => {
       ),
     },
   ];
+
+  const ModalEditAdmin = ({ open, onClose, adminId }) => {
+    const [activeTab, setActiveTab] = useState(0);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [dataCompanyMaster, setDataCompanyMaster] = useState([]);
+    const FormField = styled(TextField)({
+      width: "100%",
+    });
+    const handleTabChange = (event, newValue) => {
+      setActiveTab(newValue);
+    };
+
+    const handleToggleNewPasswordVisibility = () => {
+      setShowNewPassword(!showNewPassword);
+    };
+
+    const handleToggleConfirmPasswordVisibility = () => {
+      setShowConfirmPassword(!showConfirmPassword);
+    };
+    return (
+      <CustomModal
+        open={open}
+        onClose={onClose}
+        title="Edit Adminstrator"
+        onSubmit={formik.handleSubmit}
+      >
+        <Tabs
+          value={activeTab}
+          onChange={handleTabChange}
+          indicatorColor="primary"
+          textColor="primary"
+        >
+          <Tab
+            label="Admin Information"
+            icon={<AccountCircleIcon />}
+            iconPosition="start"
+          />
+          <Tab
+            label="Change Password"
+            icon={<EditIcon />}
+            iconPosition="start"
+          />
+        </Tabs>
+        {activeTab === 0 && (
+          <Grid container spacing={3} mt={3}>
+            <Grid item xs={6}>
+              <FormField
+                label="First Name"
+                variant="outlined"
+                name="firstname"
+                value={formik.values.firstname}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.firstname && Boolean(formik.errors.firstname)
+                }
+                helperText={formik.touched.firstname && formik.errors.firstname}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormField
+                label="Last Name"
+                variant="outlined"
+                name="lastname"
+                value={formik.values.lastname}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.lastname && Boolean(formik.errors.lastname)
+                }
+                helperText={formik.touched.lastname && formik.errors.lastname}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormField
+                label="Username"
+                variant="outlined"
+                name="username"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.username && Boolean(formik.errors.username)
+                }
+                helperText={formik.touched.username && formik.errors.username}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FormField
+                label="Email"
+                variant="outlined"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                error={formik.touched.email && Boolean(formik.errors.email)}
+                helperText={formik.touched.email && formik.errors.email}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormField
+                select
+                label="Company"
+                variant="outlined"
+                name="idcompany"
+                value={formik.values.idcompany}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.idcompany && Boolean(formik.errors.idcompany)
+                }
+                helperText={formik.touched.idcompany && formik.errors.idcompany}
+              >
+                {dataCompanyMaster.map((data, index) => (
+                  <MenuItem value={data.id_company} key={index}>
+                    {data.company_name}
+                  </MenuItem>
+                ))}
+              </FormField>
+            </Grid>
+          </Grid>
+        )}
+        {activeTab === 1 && (
+          <Grid container spacing={3} mt={3}>
+            <Grid item xs={12}>
+              <FormField
+                label="Enter New Password"
+                type={showNewPassword ? "text" : "password"}
+                variant="outlined"
+                name="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.password && Boolean(formik.errors.password)
+                }
+                helperText={formik.touched.password && formik.errors.password}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle new password visibility"
+                        onClick={handleToggleNewPasswordVisibility}
+                        edge="end"
+                      >
+                        {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormField
+                label="Re-type New Password"
+                type={showConfirmPassword ? "text" : "password"}
+                variant="outlined"
+                name="confirmPassword"
+                value={formik.values.confirmPassword}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.confirmPassword &&
+                  Boolean(formik.errors.confirmPassword)
+                }
+                helperText={
+                  formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword
+                }
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle confirm password visibility"
+                        onClick={handleToggleConfirmPasswordVisibility}
+                        edge="end"
+                      >
+                        {showConfirmPassword ? (
+                          <VisibilityOff />
+                        ) : (
+                          <Visibility />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+          </Grid>
+        )}
+        <Box mt={6} display="flex" justifyContent="flex-end">
+          <CustomButton
+            onClick={onClose}
+            variant="outlined"
+            sx={{ marginRight: 1 }}
+            color="button"
+          >
+            Cancel
+          </CustomButton>
+          <CustomButton variant="contained" color="primary" type="submit">
+            Save
+          </CustomButton>
+        </Box>
+      </CustomModal>
+    );
+  };
 
   return (
     <Grid
