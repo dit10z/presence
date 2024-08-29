@@ -23,7 +23,7 @@ const Dashboard = () => {
           <StatCard
             title="Total Company"
             value={data.company?.total_company}
-            update="+12%"
+            // update="+12%"
             date={
               data.company?.last_update
                 ? dayjs(data.company?.last_update).format("DD-MM-YYYY")
@@ -35,7 +35,7 @@ const Dashboard = () => {
           <StatCard
             title="Total Admin"
             value={data.admin?.total_admin}
-            update="+5%"
+            // update="+5%"
             date={
               data.admin?.last_update
                 ? dayjs(data.admin?.last_update).format("DD-MM-YYYY")
@@ -47,7 +47,7 @@ const Dashboard = () => {
           <StatCard
             title="Total Employee"
             value={data.employee?.total_employee}
-            update="+12%"
+            // update="+12%"
             date={
               data.employee?.last_update
                 ? dayjs(data.employee?.last_update).format("DD-MM-YYYY")
