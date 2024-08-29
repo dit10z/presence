@@ -9,7 +9,10 @@ const EditAdminForm = ({ initialValues, dataCompanyMaster, onSubmit }) => {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={onSubmit}
+      onSubmit={(values) => onSubmit(values)}
+      onChange={() => {
+        setDataAdmin();
+      }}
     >
       {({ values, handleChange, touched, errors }) => (
         <Form>
@@ -60,21 +63,18 @@ const EditAdminForm = ({ initialValues, dataCompanyMaster, onSubmit }) => {
             </Grid>
             <Grid item xs={12}>
               <CustomInput
-                select
-                label="Company"
-                variant="outlined"
-                name="idcompany"
-                value={values.idcompany}
+                label="Company Origin"
+                name="id_company"
+                type="select"
+                value={values.id_company}
                 onChange={handleChange}
                 error={touched.id_company && Boolean(errors.id_company)}
                 helperText={touched.id_company && errors.id_company}
-              >
-                {dataCompanyMaster.map((data, index) => (
-                  <MenuItem value={data.id_company} key={index}>
-                    {data.company_name}
-                  </MenuItem>
-                ))}
-              </CustomInput>
+                options={dataCompanyMaster?.map((company) => ({
+                  value: company.id_company,
+                  label: company.company_name,
+                }))}
+              />
             </Grid>
           </Grid>
         </Form>

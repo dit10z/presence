@@ -9,21 +9,20 @@ import {
   Edit,
   Search,
   CalendarMonthOutlined,
+  Visibility,
 } from "@mui/icons-material";
 import Grid from "@mui/material/Grid";
 import theme from "../../styles/theme";
-import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
 import ModalDateFilter from "../../components/Modal/ModalDateFilter";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDataAdmins } from "../../redux/slices/adminsSlice";
-import EditAdmin from "../../pages/Administators/EditAdmin";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
-// import { getAllAdmins, deleteDataAdmin } from "../../services/api/adminService";
-import { fetchAllAdmins } from "../../redux/slices/adminsSlice";
+import {
+  fetchAllAdmins,
+  fetchAdminDetail,
+} from "../../redux/slices/adminsSlice";
 import {
   Avatar,
-  Paper,
   Box,
   Pagination,
   IconButton,
@@ -32,16 +31,16 @@ import {
   MenuItem,
   Typography,
   InputAdornment,
-  Tabs,
-  Tab,
 } from "@mui/material";
 import AddAdminForm from "../../forms/Administrator/AddAdminForm";
+import { fetchCompanies } from "../../redux/slices/companySlice";
+import EditAdmin from "../Administators/EditAdmin";
 
 const Administrators = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const { admins, status, pagination } = useSelector((state) => state.admin);
+  const { data, pagination } = useSelector((state) => state.admin);
+  const companies = useSelector((state) => state.companies.companies);
 
   // State management
   const [openModalEdit, setOpenModalEdit] = useState(false);
@@ -49,39 +48,35 @@ const Administrators = () => {
   const [openDateFilter, setOpenDateFilter] = useState(false);
 
   const [pageSize, setPageSize] = useState(10);
-  const [filter, setFilter] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [row, setRow] = useState([]);
+  const [selectedData, setSelectedData] = useState({});
   const [total, setTotal] = useState(0);
-  const [selectedId, setSelectedId] = useState("");
-  const totalRowCount = 100;
-  const [activeTab, setActiveTab] = useState(0);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [dataCompanyMaster, setDataCompanyMaster] = useState([]);
+  const [transformData, setTransformData] = useState();
 
   const handleOpenModalEdit = (id) => {
-    setSelectedId(id);
     setOpenModalEdit(true);
+    dispatch(fetchAdminDetail(id))
+      .unwrap()
+      .then((data) => {
+        setSelectedData(data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch admin details:", error);
+      });
   };
+
   const handleModalEditClose = () => setOpenModalEdit(false);
-  const handleOpenDateFilter = () => {
-    setStartDate({});
-    setEndDate({});
-    setOpenDateFilter(true);
-  };
+  const handleOpenDateFilter = () => setOpenDateFilter(true);
   const handleCloseDateFilter = () => setOpenDateFilter(false);
   const handleOpen = () => setNewAdministratorModal(true);
   const handleClose = () => setNewAdministratorModal(false);
 
   const handleSearch = (e) => {
-    console.log(e.target.value);
     setSearchQuery(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleChangePage = (event, newPage) => setPage(newPage);
@@ -91,28 +86,33 @@ const Administrators = () => {
     setPage(1);
   };
 
-  function extractDate(createdDate) {
-    const date = new Date(createdDate);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  }
-
   useEffect(() => {
-    dispatch(
-      fetchAllAdmins(searchQuery, sortBy, pageSize, page, startDate, endDate)
+    const response = dispatch(
+      fetchAllAdmins(
+        searchQuery,
+        sortBy,
+        pageSize,
+        page,
+        startDate, // Pass startDate as startDateJoined
+        endDate // Pass endDate as endDateJoined
+      )
     );
-    console.log("data", admins);
+    console.log(response);
+    // setTransformData(response);
   }, [dispatch, searchQuery, sortBy, pageSize, page, startDate, endDate]);
 
   useEffect(() => {
     setTotal(pagination.total);
   }, [pagination]);
 
+  useEffect(() => {
+    if (open) {
+      dispatch(fetchCompanies());
+    }
+  }, [open, dispatch]);
+
   const transformedData =
-    admins?.map((admin) => ({
+    data?.map((admin) => ({
       id: admin.id_admin,
       company_name: admin.company.company_name,
       fullname: `${admin.first_name} ${admin.last_name}`,
@@ -124,7 +124,6 @@ const Administrators = () => {
     })) || [];
 
   const handleDelete = async (id) => {
-    console.log("id", id);
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -137,21 +136,24 @@ const Administrators = () => {
 
     if (result.isConfirmed) {
       try {
-        await deleteDataAdmin(id); // Memanggil API deleteAdmin dengan ID admin yang akan dihapus
+        // Replace deleteDataAdmin with the appropriate function to delete the admin
+        await deleteDataAdmin(id);
         Swal.fire({
           title: "Deleted",
           text: "Delete Admin Success",
           imageUrl: success,
           imageAlt: "success",
         });
-        // Refresh data admin setelah berhasil menghapus
-        await fetchDataAdmin(
-          searchQuery,
-          sortBy,
-          pageSize,
-          page,
-          startDate,
-          endDate
+        // Refresh data admin after successful deletion
+        dispatch(
+          fetchAllAdmins(
+            searchQuery,
+            sortBy,
+            pageSize,
+            page,
+            startDate,
+            endDate
+          )
         );
       } catch (error) {
         console.error("Error deleting admin:", error);
@@ -163,6 +165,7 @@ const Administrators = () => {
       }
     }
   };
+
   const columns = [
     { field: "company_name", headerName: "Company Name", flex: 1 },
     {
@@ -184,7 +187,6 @@ const Administrators = () => {
       flex: 1,
       renderCell: (params) => (
         <Box sx={{ display: "flex", justifyContent: "stretch" }}>
-          {/* {console.log("log param", params.row.id)} */}
           <IconButton
             aria-label="view"
             onClick={() => navigate(`/admin-detail/${params.row.id}`)}
@@ -207,206 +209,6 @@ const Administrators = () => {
       ),
     },
   ];
-
-  const ModalEditAdmin = ({ open, onClose, adminId }) => {
-    const [activeTab, setActiveTab] = useState(0);
-    const [showNewPassword, setShowNewPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [dataCompanyMaster, setDataCompanyMaster] = useState([]);
-    const FormField = styled(TextField)({
-      width: "100%",
-    });
-    const handleTabChange = (event, newValue) => {
-      setActiveTab(newValue);
-    };
-
-    const handleToggleNewPasswordVisibility = () => {
-      setShowNewPassword(!showNewPassword);
-    };
-
-    const handleToggleConfirmPasswordVisibility = () => {
-      setShowConfirmPassword(!showConfirmPassword);
-    };
-    return (
-      <CustomModal
-        open={open}
-        onClose={onClose}
-        title="Edit Adminstrator"
-        onSubmit={formik.handleSubmit}
-      >
-        <Tabs
-          value={activeTab}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-        >
-          <Tab
-            label="Admin Information"
-            icon={<AccountCircleIcon />}
-            iconPosition="start"
-          />
-          <Tab
-            label="Change Password"
-            icon={<EditIcon />}
-            iconPosition="start"
-          />
-        </Tabs>
-        {activeTab === 0 && (
-          <Grid container spacing={3} mt={3}>
-            <Grid item xs={6}>
-              <FormField
-                label="First Name"
-                variant="outlined"
-                name="firstname"
-                value={formik.values.firstname}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.firstname && Boolean(formik.errors.firstname)
-                }
-                helperText={formik.touched.firstname && formik.errors.firstname}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <FormField
-                label="Last Name"
-                variant="outlined"
-                name="lastname"
-                value={formik.values.lastname}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.lastname && Boolean(formik.errors.lastname)
-                }
-                helperText={formik.touched.lastname && formik.errors.lastname}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <FormField
-                label="Username"
-                variant="outlined"
-                name="username"
-                value={formik.values.username}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.username && Boolean(formik.errors.username)
-                }
-                helperText={formik.touched.username && formik.errors.username}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <FormField
-                label="Email"
-                variant="outlined"
-                name="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormField
-                select
-                label="Company"
-                variant="outlined"
-                name="idcompany"
-                value={formik.values.idcompany}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.idcompany && Boolean(formik.errors.idcompany)
-                }
-                helperText={formik.touched.idcompany && formik.errors.idcompany}
-              >
-                {dataCompanyMaster.map((data, index) => (
-                  <MenuItem value={data.id_company} key={index}>
-                    {data.company_name}
-                  </MenuItem>
-                ))}
-              </FormField>
-            </Grid>
-          </Grid>
-        )}
-        {activeTab === 1 && (
-          <Grid container spacing={3} mt={3}>
-            <Grid item xs={12}>
-              <FormField
-                label="Enter New Password"
-                type={showNewPassword ? "text" : "password"}
-                variant="outlined"
-                name="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.password && Boolean(formik.errors.password)
-                }
-                helperText={formik.touched.password && formik.errors.password}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle new password visibility"
-                        onClick={handleToggleNewPasswordVisibility}
-                        edge="end"
-                      >
-                        {showNewPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormField
-                label="Re-type New Password"
-                type={showConfirmPassword ? "text" : "password"}
-                variant="outlined"
-                name="confirmPassword"
-                value={formik.values.confirmPassword}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.confirmPassword &&
-                  Boolean(formik.errors.confirmPassword)
-                }
-                helperText={
-                  formik.touched.confirmPassword &&
-                  formik.errors.confirmPassword
-                }
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle confirm password visibility"
-                        onClick={handleToggleConfirmPasswordVisibility}
-                        edge="end"
-                      >
-                        {showConfirmPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-          </Grid>
-        )}
-        <Box mt={6} display="flex" justifyContent="flex-end">
-          <CustomButton
-            onClick={onClose}
-            variant="outlined"
-            sx={{ marginRight: 1 }}
-            color="button"
-          >
-            Cancel
-          </CustomButton>
-          <CustomButton variant="contained" color="primary" type="submit">
-            Save
-          </CustomButton>
-        </Box>
-      </CustomModal>
-    );
-  };
 
   return (
     <Grid
@@ -471,7 +273,7 @@ const Administrators = () => {
           onPageChange={(newPage) => setPage(newPage)}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           searchQuery={searchQuery}
-          totalRowCount={totalRowCount}
+          totalRowCount={total}
           hidePagination={true}
         />
 
@@ -515,18 +317,14 @@ const Administrators = () => {
           endDate={endDate}
           setStartDate={setStartDate}
           setEndDate={setEndDate}
-          // handleApply={handleApplyDateFilter}
-        />
-        <ModalEditAdmin
-          open={openModalEdit}
-          onClose={handleModalEditClose}
-          title="edit"
-          adminId={selectedId}
         />
         <EditAdmin
           open={openModalEdit}
           onClose={handleModalEditClose}
-        ></EditAdmin>
+          adminData={selectedData}
+          setAdminData={setSelectedData}
+          companyData={companies}
+        />
       </Box>
     </Grid>
   );

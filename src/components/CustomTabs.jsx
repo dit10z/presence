@@ -43,7 +43,7 @@ CustomTabs.propTypes = {
   onChange: PropTypes.func.isRequired,
   tabs: PropTypes.arrayOf(
     PropTypes.shape({
-      icon: PropTypes.string.isRequired,
+      icon: PropTypes.node.isRequired,
       label: PropTypes.string.isRequired,
     })
   ).isRequired,
