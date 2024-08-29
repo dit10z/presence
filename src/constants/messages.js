@@ -28,7 +28,7 @@ const messages = {
   },
   confirmPassword: {
     required: "Confirm Password is required",
-    mismatch: "Passwords must match",
+    notMatch: "Passwords must match",
   },
   companyName: {
     required: "Company Name is required",
