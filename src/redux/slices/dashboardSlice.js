@@ -23,23 +23,22 @@ export const fetchDataDashboard = createAsyncThunk(
 
 export const fetchDataChart = createAsyncThunk(
   "dashboard/fetchDataChart",
-  async () => {
+  async ({ startDate, endDate }) => {
     try {
-      const response = await instance.get(`/superadmin/company-overview`);
-      console.log("data company:", response.data);  
-
-      // if (response.data && Array.isArray(response.data.data)) {
-        return response.data;
-      // } else {
-      //   throw new Error("Unexpected data format");
-      // }
+      const response = await instance.get(`/superadmin/company-overview`, {
+        params: {
+          start_date_filter: startDate,
+          end_date_filter: endDate,
+        },
+      });
+      console.log("API Called:", `/superadmin/company-overview?start_date_filter=${startDate}&end_date_filter=${endDate}`);
+      return response.data;
     } catch (error) {
       console.error("Error in fetchDataChart:", error); // Log error
-      return console.log(error.response.data);
+      throw error.response?.data || error.message;
     }
   }
 );
-
 
 const dashboardSlice = createSlice({
   name: "dashboard",
