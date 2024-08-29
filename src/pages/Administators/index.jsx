@@ -15,6 +15,8 @@ import theme from "../../styles/theme";
 import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
 import ModalDateFilter from "../../components/Modal/ModalDateFilter";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchDataAdmins } from "../../redux/slices/adminsSlice";
+import EditAdmin from "../../pages/Administators/EditAdmin";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 // import { getAllAdmins, deleteDataAdmin } from "../../services/api/adminService";
@@ -521,6 +523,10 @@ const Administrators = () => {
           title="edit"
           adminId={selectedId}
         />
+        <EditAdmin
+          open={openModalEdit}
+          onClose={handleModalEditClose}
+        ></EditAdmin>
       </Box>
     </Grid>
   );
