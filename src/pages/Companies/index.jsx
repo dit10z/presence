@@ -29,7 +29,8 @@ import EditCompanyForm from "../../forms/Company/EditCompanyForm";
 import Swal from "sweetalert2";
 import success from "../../../public/icons/success.png";
 import AddCompanyForm from "../../forms/Company/AddCompanyForm";
-import { formatCreatedDate } from "../../utils/formatDate";
+import { formatCreatedDate, formatFilterDate } from "../../utils/formatDate";
+import DateFilter from "../../forms/DateFilter";
 
 const CompaniesList = () => {
   const dispatch = useDispatch();
@@ -45,10 +46,10 @@ const CompaniesList = () => {
   const [editCompanyModal, setEditCompanyModal] = useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = useState(null);
   const [openDateFilter, setOpenDateFilter] = useState(false);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  console.log("start date : ", startDate);
-  console.log("end date : ", endDate);
+  const [startDate, setStartDate] = useState({});
+  const [endDate, setEndDate] = useState({});
+  console.log("start date : ", formatFilterDate(startDate));
+  console.log("end date : ", formatFilterDate(endDate));
 
   const handleEditOpen = (id) => {
     setSelectedCompanyId(id);
@@ -119,7 +120,7 @@ const CompaniesList = () => {
     { field: "email", headerName: "Email", flex: 1 },
     { field: "totalAdmin", headerName: "Total Admin", flex: 1 },
     { field: "phone", headerName: "Phone", flex: 1 },
-    { field: "createdDay", headerName: "Joining Date", flex: 1 },
+    { field: "joiningDate", headerName: "Joining Date", flex: 1 },
     {
       field: "actions",
       headerName: "Action",
@@ -171,8 +172,8 @@ const CompaniesList = () => {
       email: company.email,
       totalAdmin: company.total_admin,
       phone: company.phone,
-      createdDay: company.created_date
-        ? formatCreatedDate(company.created_date)
+      joiningDate: company.joining_date
+        ? formatCreatedDate(company.joining_date)
         : "N/A", // Handle null or undefined dates
     })) || [];
 
@@ -281,10 +282,9 @@ const CompaniesList = () => {
         companyId={selectedCompanyId}
       />
 
-      <DateFilterModal
+      <DateFilter
         open={openDateFilter}
         onClose={handleCloseDateFilter}
-        title="Date Filter"
         startDate={startDate}
         endDate={endDate}
         setStartDate={(date) => setStartDate(new Date(date))}
