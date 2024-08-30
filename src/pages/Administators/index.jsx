@@ -13,7 +13,7 @@ import {
 } from "@mui/icons-material";
 import Grid from "@mui/material/Grid";
 import theme from "../../styles/theme";
-import ModalDateFilter from "../../components/Modal/ModalDateFilter";
+import DateFilter from "../../forms/DateFilter";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
@@ -55,7 +55,7 @@ const Administrators = () => {
   const [endDate, setEndDate] = useState("");
   const [selectedData, setSelectedData] = useState({});
   const [total, setTotal] = useState(0);
-  const [transformData, setTransformData] = useState();
+  const [transformData, setTransformData] = useState([]);
 
   const handleOpenModalEdit = (id) => {
     setOpenModalEdit(true);
@@ -87,20 +87,46 @@ const Administrators = () => {
   };
 
   useEffect(() => {
-    const response = dispatch(
-      fetchAllAdmins(
-        searchQuery,
+    console.log("Sebelum Kirim", pageSize);
+    dispatch(
+      fetchAllAdmins({
         sortBy,
         pageSize,
         page,
-        startDate, // Pass startDate as startDateJoined
-        endDate // Pass endDate as endDateJoined
-      )
-    );
-    console.log(response);
-    // setTransformData(response);
-  }, [dispatch, searchQuery, sortBy, pageSize, page, startDate, endDate]);
+        startDateJoined: startDate,
+        endDateJoined: endDate,
+      })
+    ).then((responseData) => {
+      console.log("Hasil Dispatch", responseData);
+      setTransformData(
+        responseData?.payload?.data.map((admin) => ({
+          id: admin.id_admin,
+          company_name: admin.company.company_name,
+          fullname: `${admin.first_name} ${admin.last_name}`,
+          email: admin.email,
+          profile_picture: admin.profile_picture,
+          created_date: admin.created_day
+            ? dayjs(admin.created_day).format("YYYY-MM-DD")
+            : "N/A",
+        }))
+      );
+    });
+    // setTransformData(
+    //   data?.map((admin) => ({
+    //     id: admin.id_admin,
+    //     company_name: admin.company.company_name,
+    //     fullname: `${admin.first_name} ${admin.last_name}`,
+    //     email: admin.email,
+    //     profile_picture: admin.profile_picture,
+    //     created_date: admin.created_day
+    //       ? dayjs(admin.created_day).format("YYYY-MM-DD")
+    //       : "N/A",
+    //   }))
+    // );
+  }, [dispatch, sortBy, pageSize, page, startDate, endDate]);
 
+  console.log("data", data);
+  console.log("transformData", transformData);
   useEffect(() => {
     setTotal(pagination.total);
   }, [pagination]);
@@ -110,18 +136,6 @@ const Administrators = () => {
       dispatch(fetchCompanies());
     }
   }, [open, dispatch]);
-
-  const transformedData =
-    data?.map((admin) => ({
-      id: admin.id_admin,
-      company_name: admin.company.company_name,
-      fullname: `${admin.first_name} ${admin.last_name}`,
-      email: admin.email,
-      profile_picture: admin.profile_picture,
-      created_date: admin.created_day
-        ? dayjs(admin.created_day).format("YYYY-MM-DD")
-        : "N/A",
-    })) || [];
 
   const handleDelete = async (id) => {
     const result = await Swal.fire({
@@ -145,16 +159,7 @@ const Administrators = () => {
           imageAlt: "success",
         });
         // Refresh data admin after successful deletion
-        dispatch(
-          fetchAllAdmins(
-            searchQuery,
-            sortBy,
-            pageSize,
-            page,
-            startDate,
-            endDate
-          )
-        );
+        dispatch(fetchAllAdmins(sortBy, pageSize, page, startDate, endDate));
       } catch (error) {
         console.error("Error deleting admin:", error);
         Swal.fire(
@@ -267,7 +272,7 @@ const Administrators = () => {
 
         <CustomDataGrid
           columns={columns}
-          rows={transformedData}
+          rows={transformData}
           pageSize={pageSize}
           page={page}
           onPageChange={(newPage) => setPage(newPage)}
@@ -309,7 +314,7 @@ const Administrators = () => {
           title="Add"
         />
 
-        <ModalDateFilter
+        <DateFilter
           open={openDateFilter}
           onClose={handleCloseDateFilter}
           title="Date Filter"

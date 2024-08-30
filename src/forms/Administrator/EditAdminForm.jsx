@@ -4,15 +4,22 @@ import CustomInput from "../../components/CustomInput";
 import { Formik, Form } from "formik";
 import validationSchema from "../../validation/adminValidation";
 
-const EditAdminForm = ({ initialValues, dataCompanyMaster, onSubmit }) => {
+const EditAdminForm = ({
+  initialValues, // Pass initial values as a prop
+  dataCompanyMaster,
+  onSubmit,
+  setInitialValues, // Function to set initial values externally
+}) => {
+  const handleInputChange = (e, setInitialValues, handleChange, values) => {
+    handleChange(e);
+    setInitialValues({ ...values, [e.target.name]: e.target.value });
+  };
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(values) => onSubmit(values)}
-      onChange={() => {
-        setDataAdmin();
-      }}
+      enableReinitialize={true} // Allow reinitialization of the form when initialValues change
     >
       {({ values, handleChange, touched, errors }) => (
         <Form>
@@ -22,8 +29,11 @@ const EditAdminForm = ({ initialValues, dataCompanyMaster, onSubmit }) => {
                 label="First Name"
                 variant="outlined"
                 name="firstname"
-                value={values.firstname}
-                onChange={handleChange}
+                value={values.first_name}
+                // onChange={(e) =>
+                //   handleInputChange(e, setInitialValues, handleChange, values)
+                // }
+                onChange={(e) => handleChange(e)}
                 error={touched.first_name && Boolean(errors.first_name)}
                 helperText={touched.first_name && errors.first_name}
               />
@@ -33,8 +43,11 @@ const EditAdminForm = ({ initialValues, dataCompanyMaster, onSubmit }) => {
                 label="Last Name"
                 variant="outlined"
                 name="lastname"
-                value={values.lastname}
-                onChange={handleChange}
+                value={values.last_name}
+                // onChange={(e) =>
+                //   handleInputChange(e, setInitialValues, handleChange, values)
+                // }
+                onChange={(e) => handleChange(e)}
                 error={touched.last_name && Boolean(errors.last_name)}
                 helperText={touched.last_name && errors.last_name}
               />
@@ -45,7 +58,10 @@ const EditAdminForm = ({ initialValues, dataCompanyMaster, onSubmit }) => {
                 variant="outlined"
                 name="username"
                 value={values.username}
-                onChange={handleChange}
+                // onChange={(e) =>
+                //   handleInputChange(e, setInitialValues, handleChange, values)
+                // }
+                onChange={(e) => handleChange(e)}
                 error={touched.username && Boolean(errors.username)}
                 helperText={touched.username && errors.username}
               />
@@ -56,18 +72,24 @@ const EditAdminForm = ({ initialValues, dataCompanyMaster, onSubmit }) => {
                 variant="outlined"
                 name="email"
                 value={values.email}
-                onChange={handleChange}
+                // onChange={(e) =>
+                //   handleInputChange(e, setInitialValues, handleChange, values)
+                // }
+                onChange={(e) => handleChange(e)}
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}
               />
             </Grid>
             <Grid item xs={12}>
               <CustomInput
-                label="Company Origin"
+                label={values.company_name}
                 name="id_company"
                 type="select"
                 value={values.id_company}
-                onChange={handleChange}
+                // onChange={(e) =>
+                //   handleInputChange(e, setInitialValues, handleChange, values)
+                // }
+                onChange={(e) => handleChange(e)}
                 error={touched.id_company && Boolean(errors.id_company)}
                 helperText={touched.id_company && errors.id_company}
                 options={dataCompanyMaster?.map((company) => ({

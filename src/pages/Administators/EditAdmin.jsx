@@ -8,8 +8,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import validationSchema from "../../validation/adminValidation";
 import Swal from "sweetalert2";
 const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
+  console.log("adminData", adminData);
   const [tabValue, setTabValue] = useState(0);
-
+  const [initialValues, setInitialValues] = useState({});
+  console.log("hasil initial value", initialValues);
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -39,7 +41,7 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
       } else if (tabValue === 1) {
         // Change admin password
         console.log("Password", values.password);
-        await editPassword(adminData.id, values.password);
+        // await editPassword(adminData.id, values.password);
         Swal.fire({
           title: "Success",
           text: "Update Password Success",
@@ -53,19 +55,16 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
     }
   };
 
-  const initialValues = {
-    firstname: adminData?.first_name || "",
-    lastname: adminData?.last_name || "",
-    email: adminData?.email || "",
-    username: adminData?.username || "",
-    idcompany: adminData?.company?.id_company || "",
-    password: "",
-    confirmPassword: "",
-  };
-
   useEffect(() => {
-    console.log("Modal sudah ditutup");
-    
+    setInitialValues({
+      first_name: adminData?.first_name || "",
+      last_name: adminData?.last_name || "",
+      email: adminData?.email || "",
+      username: adminData?.username || "",
+      idcompany: adminData?.company?.id_company || "",
+      password: "",
+      confirmPassword: "",
+    });
   }, [onClose]);
 
   const handleSaveAdmin = () => {
@@ -101,16 +100,15 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
       <CustomTabs value={tabValue} onChange={handleTabChange} tabs={tabs} />
       {tabValue === 0 && (
         <EditAdminForm
-          initialValues={dataAdmin} // Pass initial values to the form
-          setDataAdmin=
+          initialValues={initialValues} // Pass initial values to the form
           dataCompanyMaster={companyData} // Pass company data for the dropdown
           onSubmit={handleSubmit} // Handle form submission
           validationSchema={validationSchema} // Validation schema for the form
+          setInitialValues={setInitialValues}
         />
       )}
       {tabValue === 1 && (
-        <ChangePasswordAdmin
-          initialValues={initialValues} // Pass initial values for the password form
+        <ChangePasswordAdmin // Pass initial values for the password form
           onSubmit={handleSubmit} // Handle password change form submission
           validationSchema={validationSchema} // Validation schema for password
         />

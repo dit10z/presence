@@ -24,7 +24,7 @@ import {
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import DateFilterModal from "../../components/Modal/ModalDateFilter";
+import DateFilter from "../../forms/DateFilter";
 import EditCompanyForm from "../../forms/Company/EditCompanyForm";
 import Swal from "sweetalert2";
 import success from "../../../public/icons/success.png";
@@ -281,7 +281,7 @@ const CompaniesList = () => {
         companyId={selectedCompanyId}
       />
 
-      <DateFilterModal
+      <DateFilter
         open={openDateFilter}
         onClose={handleCloseDateFilter}
         title="Date Filter"

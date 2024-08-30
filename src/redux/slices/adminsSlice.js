@@ -22,9 +22,9 @@ const initialState = {
 export const fetchAllAdmins = createAsyncThunk(
   "admin/fetchAllAdmins",
   async (params, { rejectWithValue }) => {
+    console.log(params);
     try {
       const response = await getAllAdmins(
-        params,
         params.sortBy,
         params.pageSize,
         params.pageNumber,
