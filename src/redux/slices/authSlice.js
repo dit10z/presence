@@ -5,6 +5,7 @@ const initialState = {
   isAuthenticated: !!localStorage.getItem("token"),
   userRole: localStorage.getItem("userRole") || null,
   token: localStorage.getItem("token") || null,
+  superadminDetails: null,
   loading: false,
   error: null,
 };
@@ -36,6 +37,24 @@ export const login = createAsyncThunk(
   }
 );
 
+export const getSuperadminDetails = createAsyncThunk(
+  "auth/getSuperadminDetails",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await instance.get("/superadmin/superadmin");
+      const data = response.data;
+      console.log("API Called: superadmin/superadmin", data);
+      return data.data; // Access the nested data object directly
+    } catch (err) {
+      if (err.response && err.response.data) {
+        return rejectWithValue(err.response.data);
+      } else {
+        return rejectWithValue(err.message);
+      }
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -44,6 +63,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.userRole = null;
       state.token = null;
+      state.superadminDetails = null;
       localStorage.removeItem("token");
       localStorage.removeItem("userRole");
     },
@@ -66,6 +86,19 @@ const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getSuperadminDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getSuperadminDetails.fulfilled, (state, action) => {
+        console.log("Fulfilled payload:", action.payload);
+        state.superadminDetails = action.payload; // Directly assign the payload to superadminDetails
+        state.loading = false;
+      })
+      .addCase(getSuperadminDetails.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
