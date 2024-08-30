@@ -16,16 +16,17 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import NavItem from "./NavItem";
 
-import { useDispatch } from "react-redux";
-import { logout } from "../../redux/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getSuperadminDetails, logout } from "../../redux/slices/authSlice";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useRouter } from "../../hooks/use-router";
+import BreadCrumbs from "../BreadCrumbs";
 
 const drawerWidth = 240;
 
@@ -54,6 +55,19 @@ const SuperAdminSidebar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = true;
   const dispatch = useDispatch();
+  const { id_company, idAdmin } = useParams();
+
+  const { superadminDetails, loading, error } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(() => {
+    dispatch(getSuperadminDetails());
+  }, [dispatch]);
+
+  // console.log("id_company: ", id_company);
+  // console.log("id_admin: ", idAdmin);
+  console.log("superadminDetails: ", superadminDetails);
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -108,6 +122,25 @@ const SuperAdminSidebar = () => {
     timeOfDay = "night";
   }
 
+  const getTitle = () => {
+    if (!superadminDetails) {
+      return ""; // Or some loading message or default title
+    }
+
+    if (location.pathname === "/") {
+      return `Hello ${superadminDetails.name}👋🏻`;
+    } else if (location.pathname === "/administrators") {
+      return "All Administrators";
+    } else if (location.pathname === "/companies") {
+      return "All Companies";
+    } else if (location.pathname.includes(`/companies/${id_company}`)) {
+      return `Company Profile`;
+    } else if (location.pathname.includes(`/administrators/${idAdmin}`)) {
+      return "Admin Profile";
+    }
+    return "";
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -124,11 +157,9 @@ const SuperAdminSidebar = () => {
         >
           <Stack>
             <Typography variant="h6" fontWeight="bold" noWrap>
-              {location.pathname === "/" && `Hello Robert👋🏻`}
-              {location.pathname === "/administrators" && "All Administators"}
-              {location.pathname === "/companies" && "All Companies"}
+              {getTitle()}
             </Typography>
-            <Typography variant="body2" color={`${theme.palette.grey[400]}`}>
+            <Typography variant="body2" color={theme.palette.grey[400]}>
               {location.pathname === "/" &&
                 `Good ${timeOfDay}! Now it's ${currentDate.toLocaleString(
                   "en-US",
@@ -140,6 +171,12 @@ const SuperAdminSidebar = () => {
                 "All Administators Information"}
               {location.pathname === "/companies" &&
                 "All Companies Information"}
+              {location.pathname === `/companies/${id_company}` && (
+                <BreadCrumbs />
+              )}
+              {location.pathname === `/administrators/${idAdmin}` && (
+                <BreadCrumbs />
+              )}
             </Typography>
           </Stack>
           <Box
@@ -156,9 +193,11 @@ const SuperAdminSidebar = () => {
                 />
               </IconButton>
               <Stack>
-                <Typography variant="body2" sx={{ display: "inline" }}>
-                  Robert Allen
-                </Typography>
+                {superadminDetails && (
+                  <Typography variant="body2" sx={{ display: "inline" }}>
+                    {superadminDetails.name}
+                  </Typography>
+                )}
                 <Typography
                   variant="body2"
                   sx={{ display: "inline" }}

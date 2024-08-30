@@ -11,7 +11,15 @@ import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDataChart } from "../../redux/slices/dashboardSlice";
-import { MenuItem, Select, FormControl, InputLabel } from "@mui/material";
+import {
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  Card,
+  Box,
+  Typography,
+} from "@mui/material";
 import dayjs from "dayjs";
 
 // Register the necessary components
@@ -27,7 +35,7 @@ ChartJS.register(
 const CompanyOverview = () => {
   const dispatch = useDispatch();
   const { dataChart, loading, error } = useSelector((state) => state.dashboard);
-  
+
   const [dateRange, setDateRange] = useState("today");
 
   const handleDateRangeChange = (event) => {
@@ -50,11 +58,15 @@ const CompanyOverview = () => {
   console.log("dataChart:", dataChart);
 
   const chartData = {
-    labels: Array.isArray(dataChart) ? dataChart.map((item) => item.company_name) : [],
+    labels: Array.isArray(dataChart)
+      ? dataChart.map((item) => item.company_name)
+      : [],
     datasets: [
       {
         label: "Percentage",
-        data: Array.isArray(dataChart) ? dataChart.map((item) => item.percentage) : [],
+        data: Array.isArray(dataChart)
+          ? dataChart.map((item) => item.percentage)
+          : [],
         backgroundColor: [
           "#FFC107",
           "#2196F3",
@@ -78,21 +90,24 @@ const CompanyOverview = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
-      <FormControl variant="outlined" style={{ marginBottom: "20px" }}>
-        <InputLabel>Date Range</InputLabel>
-        <Select
-          value={dateRange}
-          onChange={handleDateRangeChange}
-          label="Date Range"
-        >
-          <MenuItem value="today">Today</MenuItem>
-          <MenuItem value="this_week">This Week</MenuItem>
-          <MenuItem value="this_month">This Month</MenuItem>
-        </Select>
-      </FormControl>
+    <Card sx={{ padding: 2 }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography variant="h6">Company Overview</Typography>
+        <FormControl variant="outlined" sx={{ minWidth: 150 }}>
+          <InputLabel>Date Range</InputLabel>
+          <Select
+            value={dateRange}
+            onChange={handleDateRangeChange}
+            label="Date Range"
+          >
+            <MenuItem value="today">Today</MenuItem>
+            <MenuItem value="this_week">This Week</MenuItem>
+            <MenuItem value="this_month">This Month</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
       <Bar data={chartData} options={options} />
-    </div>
+    </Card>
   );
 };
 

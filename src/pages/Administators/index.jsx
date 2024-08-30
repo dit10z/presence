@@ -212,7 +212,7 @@ const Administrators = () => {
           {/* {console.log("log param", params.row.id)} */}
           <IconButton
             aria-label="view"
-            onClick={() => navigate(`/admin-detail/${params.row.id}`)}
+            onClick={() => navigate(`/administrators/${params.row.id}`)}
           >
             <Visibility />
           </IconButton>

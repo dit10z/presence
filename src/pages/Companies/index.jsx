@@ -62,7 +62,7 @@ const CompaniesList = () => {
   const navigate = useNavigate();
 
   const handleViewClick = (id_company) => {
-    navigate(`/company-detail/${id_company}`);
+    navigate(`/companies/${id_company}`);
   };
 
   const handleOpenDateFilter = () => {
