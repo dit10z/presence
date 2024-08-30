@@ -24,7 +24,7 @@ import {
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import DateFilterModal from "../../components/Modal/ModalDateFilter";
+import DateFilter from "../../forms/DateFilter";
 import EditCompanyForm from "../../forms/Company/EditCompanyForm";
 import Swal from "sweetalert2";
 import success from "../../../public/icons/success.png";
@@ -63,7 +63,7 @@ const CompaniesList = () => {
   const navigate = useNavigate();
 
   const handleViewClick = (id_company) => {
-    navigate(`/company-detail/${id_company}`);
+    navigate(`/companies/${id_company}`);
   };
 
   const handleOpenDateFilter = () => {

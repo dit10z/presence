@@ -54,7 +54,6 @@ export const editPassword = (id, password) => {
 };
 
 export const getAllAdmins = (
-  search,
   sortBy,
   pageSize,
   pageNumber,
@@ -63,7 +62,6 @@ export const getAllAdmins = (
 ) => {
   const url = `${baseUrl}/admin-management/admins`;
   const apiUrl = buildUrl(url, {
-    search,
     sortBy,
     pageSize,
     pageNumber,

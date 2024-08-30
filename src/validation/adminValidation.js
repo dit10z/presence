@@ -18,9 +18,9 @@ const validationSchema = Yup.object().shape({
     .max(20, messages.username.maxLength),
   id_company: Yup.string().required(messages.id_company.required),
   password: Yup.string()
-      .min(8, messages.password.minLength)
-      .max(50, messages.password.maxLength)
-      .required(messages.password.required),
+    .min(8, messages.password.minLength)
+    .max(50, messages.password.maxLength)
+    .required(messages.password.required),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], messages.confirmPassword.notMatch)
     .required(messages.confirmPassword.required),
