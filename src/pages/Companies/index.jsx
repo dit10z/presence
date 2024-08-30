@@ -30,7 +30,6 @@ import Swal from "sweetalert2";
 import success from "../../../public/icons/success.png";
 import AddCompanyForm from "../../forms/Company/AddCompanyForm";
 import { formatCreatedDate, formatFilterDate } from "../../utils/formatDate";
-import DateFilter from "../../forms/DateFilter";
 
 const CompaniesList = () => {
   const dispatch = useDispatch();
@@ -46,8 +45,8 @@ const CompaniesList = () => {
   const [editCompanyModal, setEditCompanyModal] = useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = useState(null);
   const [openDateFilter, setOpenDateFilter] = useState(false);
-  const [startDate, setStartDate] = useState({});
-  const [endDate, setEndDate] = useState({});
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   console.log("start date : ", formatFilterDate(startDate));
   console.log("end date : ", formatFilterDate(endDate));
 
@@ -155,8 +154,8 @@ const CompaniesList = () => {
       sortBy: sortBy,
       pageSize: pageSize,
       pageNumber: page,
-      start_date_joined: startDate || undefined,
-      end_date_joined: endDate || undefined,
+      startDateJoined: startDate || undefined,
+      endDateJoined: endDate || undefined,
     };
     dispatch(fetchDataCompanies(params));
   }, [dispatch, sortBy, pageSize, page, startDate, endDate]);
@@ -174,7 +173,7 @@ const CompaniesList = () => {
       phone: company.phone,
       joiningDate: company.joining_date
         ? formatCreatedDate(company.joining_date)
-        : "N/A", // Handle null or undefined dates
+        : "N/A",
     })) || [];
 
   const [newCompanyModal, setNewCompanyModal] = useState(false);
@@ -285,10 +284,11 @@ const CompaniesList = () => {
       <DateFilter
         open={openDateFilter}
         onClose={handleCloseDateFilter}
+        title="Date Filter"
         startDate={startDate}
         endDate={endDate}
-        setStartDate={(date) => setStartDate(new Date(date))}
-        setEndDate={(date) => setEndDate(new Date(date))}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
       />
     </Grid>
   );
