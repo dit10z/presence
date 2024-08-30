@@ -26,10 +26,10 @@ const Pages = () => {
   return (
     <>
       {/* Conditional Sidebar Rendering */}
-      {isAuthenticated && userRole === "Superadmin" && (
+      {/* {isAuthenticated && userRole === "Superadmin" && (
         // <div>Superadmin Sidebar</div> // Replace with actual Sidebar component for Superadmin
         <SuperadminSidebar />
-      )}
+      )} */}
 
       <Routes>
         {/* Public Route */}
@@ -38,7 +38,7 @@ const Pages = () => {
         <Route
           path="/"
           element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
+            <PrivateRoute isAuthenticated={isAuthenticated} userRole={userRole}>
               {/* <Container sx={{ width: '100%', p: 0 }}> */}
               <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
                 <Dashboard />
@@ -49,7 +49,7 @@ const Pages = () => {
         <Route
           path="/administrators"
           element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
+            <PrivateRoute isAuthenticated={isAuthenticated} userRole={userRole}>
               <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
                 <Administrators />
               </Box>
@@ -57,10 +57,11 @@ const Pages = () => {
           }
         />
         <Route
-          path="/admin-detail/:idAdmin"
+          path="/administrators/:idAdmin"
           element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
+            <PrivateRoute isAuthenticated={isAuthenticated} userRole={userRole}>
               <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
+                {/* <SuperadminSidebar /> */}
                 <AdminDetail />
               </Box>
             </PrivateRoute>
@@ -69,7 +70,7 @@ const Pages = () => {
         <Route
           path="/companies"
           element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
+            <PrivateRoute isAuthenticated={isAuthenticated} userRole={userRole}>
               <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
                 <CompaniesList />
               </Box>
@@ -77,10 +78,11 @@ const Pages = () => {
           }
         />
         <Route
-          path="/company-detail/:id_company"
+          path="/companies/:id_company"
           element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
+            <PrivateRoute isAuthenticated={isAuthenticated} userRole={userRole}>
               <Box sx={{ my: 4, width: "100%", mx: "2rem" }}>
+                {/* <SuperadminSidebar /> */}
                 <CompanyDetail />
               </Box>
             </PrivateRoute>

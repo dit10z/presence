@@ -194,7 +194,7 @@ const Administrators = () => {
         <Box sx={{ display: "flex", justifyContent: "stretch" }}>
           <IconButton
             aria-label="view"
-            onClick={() => navigate(`/admin-detail/${params.row.id}`)}
+            onClick={() => navigate(`/administrators/${params.row.id}`)}
           >
             <Visibility />
           </IconButton>

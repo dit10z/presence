@@ -17,7 +17,6 @@ import { detailCompany } from "../../redux/slices/companySlice";
 import ChangeLogoCompany from "../../forms/Company/ChangeLogoCompany";
 import EditCompanyForm from "../../forms/Company/EditCompanyForm";
 import InfoDisplay from "../../components/InfoDisplay"; // Import InfoDisplay
-import { formatCreatedDate } from "../../utils/formatDate";
 
 const TypographyHead = styled(Typography)(({ theme }) => ({
   fontWeight: 300,
@@ -128,7 +127,9 @@ const CompanyDetail = () => {
                   label="Joining Date"
                   value={
                     companyDetail.joining_date
-                      ? formatCreatedDate(companyDetail.joining_date)
+                      ? new Date(
+                          companyDetail.joining_date
+                        ).toLocaleDateString()
                       : "N/A"
                   }
                 />
