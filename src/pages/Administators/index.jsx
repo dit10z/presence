@@ -8,21 +8,21 @@ import {
   Delete,
   Edit,
   Search,
-  Visibility,
   CalendarMonthOutlined,
+  Visibility,
 } from "@mui/icons-material";
 import Grid from "@mui/material/Grid";
 import theme from "../../styles/theme";
-import ModalEditAdmin from "../../components/Modal/ModalEditAdmin";
-import ModalDateFilter from "../../components/Modal/ModalDateFilter";
+import DateFilter from "../../forms/DateFilter";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
-// import { getAllAdmins, deleteDataAdmin } from "../../services/api/adminService";
-import { fetchAllAdmins } from "../../redux/slices/adminsSlice";
+import {
+  fetchAllAdmins,
+  fetchAdminDetail,
+} from "../../redux/slices/adminsSlice";
 import {
   Avatar,
-  Paper,
   Box,
   Pagination,
   IconButton,
@@ -33,12 +33,14 @@ import {
   InputAdornment,
 } from "@mui/material";
 import AddAdminForm from "../../forms/Administrator/AddAdminForm";
+import { fetchCompanies } from "../../redux/slices/companySlice";
+import EditAdmin from "../Administators/EditAdmin";
 
 const Administrators = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const { admins, status, pagination } = useSelector((state) => state.admin);
+  const { data, pagination } = useSelector((state) => state.admin);
+  const companies = useSelector((state) => state.companies.companies);
 
   // State management
   const [openModalEdit, setOpenModalEdit] = useState(false);
@@ -46,35 +48,35 @@ const Administrators = () => {
   const [openDateFilter, setOpenDateFilter] = useState(false);
 
   const [pageSize, setPageSize] = useState(10);
-  const [filter, setFilter] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [row, setRow] = useState([]);
+  const [selectedData, setSelectedData] = useState({});
   const [total, setTotal] = useState(0);
-  const [selectedId, setSelectedId] = useState("");
-  const totalRowCount = 100;
+  const [transformData, setTransformData] = useState([]);
 
   const handleOpenModalEdit = (id) => {
-    setSelectedId(id);
     setOpenModalEdit(true);
+    dispatch(fetchAdminDetail(id))
+      .unwrap()
+      .then((data) => {
+        setSelectedData(data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch admin details:", error);
+      });
   };
+
   const handleModalEditClose = () => setOpenModalEdit(false);
-  const handleOpenDateFilter = () => {
-    setStartDate({});
-    setEndDate({});
-    setOpenDateFilter(true);
-  };
+  const handleOpenDateFilter = () => setOpenDateFilter(true);
   const handleCloseDateFilter = () => setOpenDateFilter(false);
   const handleOpen = () => setNewAdministratorModal(true);
   const handleClose = () => setNewAdministratorModal(false);
 
   const handleSearch = (e) => {
-    console.log(e.target.value);
     setSearchQuery(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleChangePage = (event, newPage) => setPage(newPage);
@@ -84,72 +86,58 @@ const Administrators = () => {
     setPage(1);
   };
 
-  function extractDate(createdDate) {
-    const date = new Date(createdDate);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  }
-
-  // const fetchDataAdmin = async (
-  //   searchQuery,
-  //   sortBy,
-  //   pageSize,
-  //   page,
-  //   startDate,
-  //   endDate
-  // ) => {
-  //   try {
-  //     const response = await getAllAdmins(
-  //       searchQuery,
-  //       sortBy,
-  //       pageSize,
-  //       page,
-  //       startDate,
-  //       endDate
-  //     );
-  //     const transformedData = response.data.data.map((admin) => ({
-  //       id: admin.id_admin,
-  //       company_name: admin.company.company_name,
-  //       fullname: `${admin.first_name} ${admin.last_name}`,
-  //       email: admin.email,
-  //       profile_picture: admin.profile_picture,
-  //       created_date: extractDate(admin.created_day),
-  //     }));
-  //     setRow(transformedData);
-  //     setTotal(response.data.meta.total);
-  //     console.log("total", response.data.meta.total);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   useEffect(() => {
+    console.log("Sebelum Kirim", pageSize);
     dispatch(
-      fetchAllAdmins(searchQuery, sortBy, pageSize, page, startDate, endDate)
-    );
-    console.log("data", admins);
-  }, [dispatch, searchQuery, sortBy, pageSize, page, startDate, endDate]);
+      fetchAllAdmins({
+        sortBy,
+        pageSize,
+        page,
+        startDateJoined: startDate,
+        endDateJoined: endDate,
+      })
+    ).then((responseData) => {
+      console.log("Hasil Dispatch", responseData);
+      setTransformData(
+        responseData?.payload?.data.map((admin) => ({
+          id: admin.id_admin,
+          company_name: admin.company.company_name,
+          fullname: `${admin.first_name} ${admin.last_name}`,
+          email: admin.email,
+          profile_picture: admin.profile_picture,
+          created_date: admin.created_day
+            ? dayjs(admin.created_day).format("YYYY-MM-DD")
+            : "N/A",
+        }))
+      );
+    });
+    // setTransformData(
+    //   data?.map((admin) => ({
+    //     id: admin.id_admin,
+    //     company_name: admin.company.company_name,
+    //     fullname: `${admin.first_name} ${admin.last_name}`,
+    //     email: admin.email,
+    //     profile_picture: admin.profile_picture,
+    //     created_date: admin.created_day
+    //       ? dayjs(admin.created_day).format("YYYY-MM-DD")
+    //       : "N/A",
+    //   }))
+    // );
+  }, [dispatch, sortBy, pageSize, page, startDate, endDate]);
 
+  console.log("data", data);
+  console.log("transformData", transformData);
   useEffect(() => {
     setTotal(pagination.total);
   }, [pagination]);
 
-  const transformedData =
-    admins?.map((admin) => ({
-      id: admin.id_admin,
-      company_name: admin.company.company_name,
-      fullname: `${admin.first_name} ${admin.last_name}`,
-      email: admin.email,
-      profile_picture: admin.profile_picture,
-      created_date: admin.created_day
-        ? dayjs(admin.created_day).format("YYYY-MM-DD")
-        : "N/A",
-    })) || [];
+  useEffect(() => {
+    if (open) {
+      dispatch(fetchCompanies());
+    }
+  }, [open, dispatch]);
 
   const handleDelete = async (id) => {
-    console.log("id", id);
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -162,22 +150,16 @@ const Administrators = () => {
 
     if (result.isConfirmed) {
       try {
-        await deleteDataAdmin(id); // Memanggil API deleteAdmin dengan ID admin yang akan dihapus
+        // Replace deleteDataAdmin with the appropriate function to delete the admin
+        await deleteDataAdmin(id);
         Swal.fire({
           title: "Deleted",
           text: "Delete Admin Success",
           imageUrl: success,
           imageAlt: "success",
         });
-        // Refresh data admin setelah berhasil menghapus
-        await fetchDataAdmin(
-          searchQuery,
-          sortBy,
-          pageSize,
-          page,
-          startDate,
-          endDate
-        );
+        // Refresh data admin after successful deletion
+        dispatch(fetchAllAdmins(sortBy, pageSize, page, startDate, endDate));
       } catch (error) {
         console.error("Error deleting admin:", error);
         Swal.fire(
@@ -188,6 +170,7 @@ const Administrators = () => {
       }
     }
   };
+
   const columns = [
     { field: "company_name", headerName: "Company Name", flex: 1 },
     {
@@ -209,7 +192,6 @@ const Administrators = () => {
       flex: 1,
       renderCell: (params) => (
         <Box sx={{ display: "flex", justifyContent: "stretch" }}>
-          {/* {console.log("log param", params.row.id)} */}
           <IconButton
             aria-label="view"
             onClick={() => navigate(`/administrators/${params.row.id}`)}
@@ -290,13 +272,13 @@ const Administrators = () => {
 
         <CustomDataGrid
           columns={columns}
-          rows={transformedData}
+          rows={transformData}
           pageSize={pageSize}
           page={page}
           onPageChange={(newPage) => setPage(newPage)}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           searchQuery={searchQuery}
-          totalRowCount={totalRowCount}
+          totalRowCount={total}
           hidePagination={true}
         />
 
@@ -332,7 +314,7 @@ const Administrators = () => {
           title="Add"
         />
 
-        <ModalDateFilter
+        <DateFilter
           open={openDateFilter}
           onClose={handleCloseDateFilter}
           title="Date Filter"
@@ -340,13 +322,13 @@ const Administrators = () => {
           endDate={endDate}
           setStartDate={setStartDate}
           setEndDate={setEndDate}
-          // handleApply={handleApplyDateFilter}
         />
-        <ModalEditAdmin
+        <EditAdmin
           open={openModalEdit}
           onClose={handleModalEditClose}
-          title="edit"
-          adminId={selectedId}
+          adminData={selectedData}
+          setAdminData={setSelectedData}
+          companyData={companies}
         />
       </Box>
     </Grid>
