@@ -15,15 +15,17 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
   console.log("adminData", adminData);
   const [tabValue, setTabValue] = useState(0);
   const [initialValues, setInitialValues] = useState({});
+  const [idAdmin, setIdAdmin] = useState("");
   console.log("hasil initial value", initialValues);
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
 
-  const handleSubmit = async (values, tabValue) => {
+  const handleSubmit = async () => {
     try {
       if (tabValue === 0) {
         // Update admin details
+        // console.log("values handleSubmit", values);
         state.admins.push(action.payload);
 
         const payload = {
@@ -33,9 +35,10 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
           email: values.email,
           id_company: values.idcompany,
         };
-        console.log("values", values);
-        console.log("payload", payload);
-        await editDataAdmin(adminData.id, payload);
+        console.log("values handleSubmit", values);
+        console.log("adminData handleSubmit", adminData.id);
+        console.log("payload handleSubmit", payload);
+        await editDataAdmin(idAdmin, payload);
         Swal.fire({
           title: "Success",
           text: "Update Admin Success",
@@ -53,7 +56,7 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
           imageAlt: "success",
         });
       }
-      onClose();
+      // onClose();
     } catch (error) {
       Swal.fire("Error", "There was an error updating the admin", "error");
     }
@@ -65,21 +68,60 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
       last_name: adminData?.last_name || "",
       email: adminData?.email || "",
       username: adminData?.username || "",
-      idcompany: adminData?.company?.id_company || "",
+      id_company: adminData?.company?.id_company || "",
       password: "",
       confirmPassword: "",
     });
-  }, []);
+    setIdAdmin(adminData.id);
+  }, [open, adminData]);
 
-  const handleSaveAdmin = () => {
+  console.log("initialValues", initialValues);
+  const handleSaveAdmin = async () => {
     // Logic to save admin data
 
-    console.log("Admin data saved");
+    try {
+      state.admins.push(action.payload);
+
+      const payload = {
+        first_name: values.first_name,
+        last_name: values.last_name,
+        username: values.username,
+        email: values.email,
+        id_company: values.idcompany,
+      };
+      console.log("values handleSubmit", values);
+      console.log("adminData handleSubmit", adminData.id);
+      console.log("payload handleSubmit", payload);
+      await editDataAdmin(idAdmin, payload);
+      Swal.fire({
+        title: "Success",
+        text: "Update Admin Success",
+        imageUrl: success,
+        imageAlt: "success",
+      });
+
+      console.log("Admin data saved");
+    } catch (error) {
+      Swal.fire("Error", "There was an error updating the admin", "error");
+    }
   };
 
-  const editPassword = () => {
+  const editPassword = async () => {
     // Logic to edit password
+
     console.log("Password edited");
+    try {
+      console.log("Password", values.password);
+      await editPassword(adminData.id, values.password);
+      Swal.fire({
+        title: "Success",
+        text: "Update Password Success",
+        imageUrl: success,
+        imageAlt: "success",
+      });
+    } catch (error) {
+      Swal.fire("Error", "There was an error updating the password", "error");
+    }
   };
 
   const tabs = [
@@ -106,7 +148,7 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
         <Formik
           initialValues={initialValues} // Pass initial values to the form
           dataCompanyMaster={companyData} // Pass company data for the dropdown
-          onSubmit={handleSubmit} // Handle form submission
+          onSubmit={() => handleSaveAdmin(values, tabValue)} // Handle form submission
           validationSchema={validationSchema} // Validation schema for the form
           enableReinitialize={true}
         >
@@ -126,7 +168,7 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+          onSubmit={() => editPassword(values, tabValue)}
         >
           {({ values, handleChange, touched, errors }) => (
             <ChangePasswordAdmin
@@ -134,7 +176,7 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
               handleChange={handleChange}
               touched={touched}
               errors={errors}
-              onSubmit={() => handleSubmit(values, tabValue)}
+              // onSubmit={() => handleSubmit(values, tabValue)}
             />
           )}
         </Formik>

@@ -85,6 +85,7 @@ export const fetchAdminDetail = createAsyncThunk(
           },
         }
       );
+      console.log("fetchAdminDetail", response.data.data);
       return response.data.data; // Mengembalikan data dari respons
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);

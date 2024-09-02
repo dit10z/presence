@@ -62,6 +62,7 @@ const Administrators = () => {
     dispatch(fetchAdminDetail(id))
       .unwrap()
       .then((data) => {
+        console.log("selectedData", data);
         setSelectedData(data);
       })
       .catch((error) => {
