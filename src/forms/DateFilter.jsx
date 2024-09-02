@@ -4,7 +4,6 @@ import CustomInput from "../components/CustomInput";
 import CustomModal from "../components/CustomModal";
 import Grid from "@mui/material/Grid";
 import dayjs from "dayjs";
-
 const DateFilter = ({
   open,
   onClose,
@@ -23,9 +22,11 @@ const DateFilter = ({
   const handleApply = (e) => {
     e.preventDefault();
     console.log("startdate", temporalStartDate);
+    console.log("enddate", temporalEndDate);
     setStartDate(formatDate(temporalStartDate));
     console.log("startdate", startDate);
     setEndDate(formatDate(temporalEndDate));
+    console.log("enddate", endDate);
     onClose();
   };
 

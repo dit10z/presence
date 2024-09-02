@@ -27,15 +27,16 @@ import { useParams } from "react-router-dom";
 import { fetchAdminDetail } from "../../redux/slices/adminsSlice";
 import ChangePhotoAdmin from "../../forms/Administrator/ChangePhotoAdmin";
 import InfoDisplay from "../../components/InfoDisplay";
+import EditAdmin from "./EditAdmin";
+import { fetchCompanies } from "../../redux/slices/companySlice";
 
 const AdminDetail = () => {
   const [modalEditAdmin, setModalEditAdmin] = useState(false);
   const [modalChangePhotoAdmin, setModalChangePhotoAdmin] = useState(false);
   const dispatch = useDispatch();
   const { idAdmin } = useParams();
-  console.log("idAdmin from useParams:", idAdmin);
   const adminDetail = useSelector((state) => state.admin.adminDetail);
-  console.log("adminDetail:", adminDetail);
+  const companies = useSelector((state) => state.companies.companies);
 
   useEffect(() => {
     if (idAdmin) {
@@ -43,6 +44,11 @@ const AdminDetail = () => {
     }
   }, [dispatch, idAdmin]);
 
+  useEffect(() => {
+    if (open) {
+      dispatch(fetchCompanies());
+    }
+  }, [open, dispatch]);
   const handleModalEditAdminOpen = () => {
     setModalEditAdmin(!modalEditAdmin);
   };
@@ -146,22 +152,49 @@ const AdminDetail = () => {
             </Box>
             <TabPanel value="1">
               <Grid container spacing={2} sx={{ marginTop: 2 }}>
-                <InfoDisplay label="First Name" value={adminDetail.first_name} underline />
-                <InfoDisplay label="Last Name" value={adminDetail.last_name} underline />
-                <InfoDisplay label="Username" value={adminDetail.username} underline />
-                <InfoDisplay label="Email Address" value={adminDetail.email} underline />
-                <InfoDisplay label="Company Origin" value={adminDetail.company?.company_name} underline />
+                <InfoDisplay
+                  label="First Name"
+                  value={adminDetail.first_name}
+                  underline
+                />
+                <InfoDisplay
+                  label="Last Name"
+                  value={adminDetail.last_name}
+                  underline
+                />
+                <InfoDisplay
+                  label="Username"
+                  value={adminDetail.username}
+                  underline
+                />
+                <InfoDisplay
+                  label="Email Address"
+                  value={adminDetail.email}
+                  underline
+                />
+                <InfoDisplay
+                  label="Company Origin"
+                  value={adminDetail.company?.company_name}
+                  underline
+                />
               </Grid>
             </TabPanel>
           </TabContext>
         </Box>
       </Box>
-      <ModalEditAdmin
+      {/* <ModalEditAdmin
         open={modalEditAdmin}
         onClose={handleModalEditAdminClose}
         title="Edit Profile"
         adminId={adminDetail.id_admin}
+      /> */}
+      <EditAdmin
+        open={modalEditAdmin}
+        onClose={handleModalEditAdminClose}
+        adminData={adminDetail}
+        companyData={companies}
       />
+
       <ChangePhotoAdmin
         open={modalChangePhotoAdmin}
         onClose={handleModalChangePhotoAdminClose}
