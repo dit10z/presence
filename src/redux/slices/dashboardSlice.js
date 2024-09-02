@@ -13,7 +13,7 @@ export const fetchDataDashboard = createAsyncThunk(
   "dashboard/fetchDataDashboard",
   async () => {
     try {
-      const response = await instance.get(`/superadmin/data-overview`);
+      const response = await instance.get(`/superadmin/overview-data`);
       return response.data;
     } catch (error) {
       return console.log(error.response.data);
