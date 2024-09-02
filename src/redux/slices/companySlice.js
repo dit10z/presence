@@ -14,19 +14,31 @@ const initialState = {
 export const fetchDataCompanies = createAsyncThunk(
   "company/companies",
   async (
-    { pageNumber, pageSize, sortBy, startDatejoined, endDateJoined },
+    { pageNumber, pageSize, sortBy, startDateJoined, endDateJoined },
     { rejectWithValue }
   ) => {
     try {
-      const response = await instance.get(`/company-management/companies`, {
+      console.log("Start Date:", startDateJoined, "End Date:", endDateJoined);
+
+      const config = {
         params: {
           sortBy: sortBy,
           pageSize: pageSize,
           pageNumber: pageNumber,
-          startDatejoined: startDatejoined,
+          startDateJoined: startDateJoined,
           endDateJoined: endDateJoined,
         },
+      };
+      const urlWithParams = instance.getUri({
+        url: "/company-management/companies",
+        ...config,
       });
+      console.log("Requested URL:", urlWithParams);
+      const response = await instance.get(
+        `/company-management/companies`,
+        config
+      );
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
