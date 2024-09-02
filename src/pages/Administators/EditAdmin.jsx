@@ -49,13 +49,12 @@ const ModalContent = styled(Box)({
 const FormField = styled(TextField)({
   width: "100%",
 });
-const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
-  console.log("adminData", adminData);
+const EditAdmin = ({ open, onClose, adminData, companyData }) => {
   const [tabValue, setTabValue] = useState(0);
   const [initialValues, setInitialValues] = useState({});
   const [idAdmin, setIdAdmin] = useState("");
   const [activeTab, setActiveTab] = useState(0);
-  console.log("hasil initial value", initialValues);
+
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -111,16 +110,11 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
       id_company: adminData?.company?.id_company || "",
     });
     setIdAdmin(adminData.id_admin);
-    console.log("Id", idAdmin);
   }, [open, adminData]);
 
-  console.log("initialValues", initialValues);
-  console.log("Id", idAdmin);
   const handleSaveAdmin = async (values) => {
     // Logic to save admin data
     try {
-      // state.admins.push(action.payload);
-
       const payload = {
         first_name: values.first_name,
         last_name: values.last_name,
@@ -128,9 +122,6 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
         email: values.email,
         id_company: values.idcompany,
       };
-      console.log("values handleSubmit", values);
-      console.log("adminData handleSubmit", idAdmin);
-      console.log("payload handleSubmit", payload);
       await dispatch(fetchEditDataAdmin({ id: idAdmin, data: payload }));
       Swal.fire({
         title: "Success",
@@ -140,18 +131,13 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
       });
       onClose();
     } catch (error) {
-      console.log("error", error);
-
       Swal.fire("Error", "There was an error updating the admin", "error");
     }
   };
 
   const editPassword = async (values) => {
     // Logic to edit password
-
-    console.log("values", values);
     try {
-      console.log("Password", values.password);
       await dispatch(
         fetchEditPassword({ id: idAdmin, password: values.password })
       );
@@ -163,7 +149,6 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
       });
       onClose();
     } catch (error) {
-      console.log("error", error);
       Swal.fire("Error", "There was an error updating the password", "error");
     }
   };
@@ -202,44 +187,35 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
       validateOnChange={true} // Validate when a field value changes
     >
       {({ values, handleChange, handleBlur, touched, errors, onSubmit }) => (
-        console.log("Touched", touched),
-        console.log("Errors", errors),
-        console.log("validationSchema", validationSchema),
-        (
-          <CustomModal
-            open={open}
-            onClose={onClose}
-            title="Edit Administrator"
-            titleButton="Save"
-            onSubmit={(e) => handleSubmit(e, values)} // Submit formik form on modal save button click
-          >
-            <CustomTabs
-              value={tabValue}
-              onChange={handleTabChange}
-              tabs={tabs}
-            />
-            {tabValue === 0 ? (
-              <Form>
-                <EditAdminForm
-                  values={values}
-                  handleChange={handleChange}
-                  touched={touched}
-                  errors={errors}
-                  dataCompanyMaster={companyData}
-                  handleBlur={handleBlur}
-                />
-              </Form>
-            ) : (
-              <ChangePasswordAdmin
+        <CustomModal
+          open={open}
+          onClose={onClose}
+          title="Edit Administrator"
+          titleButton="Save"
+          onSubmit={(e) => handleSubmit(e, values)} // Submit formik form on modal save button click
+        >
+          <CustomTabs value={tabValue} onChange={handleTabChange} tabs={tabs} />
+          {tabValue === 0 ? (
+            <Form>
+              <EditAdminForm
                 values={values}
                 handleChange={handleChange}
                 touched={touched}
                 errors={errors}
+                dataCompanyMaster={companyData}
                 handleBlur={handleBlur}
               />
-            )}
-          </CustomModal>
-        )
+            </Form>
+          ) : (
+            <ChangePasswordAdmin
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+              handleBlur={handleBlur}
+            />
+          )}
+        </CustomModal>
       )}
     </Formik>
   );

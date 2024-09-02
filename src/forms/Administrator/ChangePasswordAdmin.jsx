@@ -23,8 +23,10 @@ const ChangePasswordAdmin = ({
           value={values.password}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={touched.password && Boolean(errors.password)}
-          helperText={touched.password && errors.password}
+          error={errors.password}
+          helperText={errors.password}
+          // error={touched.password && Boolean(errors.password)}
+          // helperText={touched.password && errors.password}
           showPassword={showPassword}
           handleTogglePasswordVisibility={() => setShowPassword(!showPassword)}
         />
@@ -37,8 +39,10 @@ const ChangePasswordAdmin = ({
           value={values.confirmPassword}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={touched.confirmPassword && Boolean(errors.confirmPassword)}
-          helperText={touched.confirmPassword && errors.confirmPassword}
+          error={errors.confirmPassword}
+          helperText={errors.confirmPassword}
+          // error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+          // helperText={touched.confirmPassword && errors.confirmPassword}
           showPassword={showConfirmPassword}
           handleTogglePasswordVisibility={() =>
             setShowConfirmPassword(!showConfirmPassword)

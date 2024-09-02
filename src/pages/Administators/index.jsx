@@ -20,6 +20,7 @@ import Swal from "sweetalert2";
 import {
   fetchAllAdmins,
   fetchAdminDetail,
+  deleteAdmin,
 } from "../../redux/slices/adminsSlice";
 import {
   Avatar,
@@ -63,7 +64,6 @@ const Administrators = () => {
     dispatch(fetchAdminDetail(id))
       .unwrap()
       .then((data) => {
-        console.log("selectedData", data);
         setSelectedData(data);
       })
       .catch((error) => {
@@ -89,7 +89,6 @@ const Administrators = () => {
   };
 
   useEffect(() => {
-    console.log("Sebelum Kirim", pageSize);
     dispatch(
       fetchAllAdmins({
         sortBy,
@@ -99,7 +98,6 @@ const Administrators = () => {
         endDateJoined: endDate,
       })
     ).then((responseData) => {
-      console.log("Hasil Dispatch", responseData);
       setTransformData(
         responseData?.payload?.data.map((admin) => ({
           id: admin.id_admin,
@@ -127,8 +125,6 @@ const Administrators = () => {
     // );
   }, [dispatch, sortBy, pageSize, page, startDate, endDate]);
 
-  console.log("data", data);
-  console.log("transformData", transformData);
   useEffect(() => {
     setTotal(pagination.total);
   }, [pagination]);
@@ -153,7 +149,7 @@ const Administrators = () => {
     if (result.isConfirmed) {
       try {
         // Replace deleteDataAdmin with the appropriate function to delete the admin
-        await deleteDataAdmin(id);
+        await dispatch(deleteAdmin(id)).unwrap();
         Swal.fire({
           title: "Deleted",
           text: "Delete Admin Success",

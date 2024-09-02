@@ -12,8 +12,6 @@ const EditAdminForm = ({
   errors,
   handleBlur,
 }) => {
-  console.log("values", values);
-  console.log("dataCompanyMaster", dataCompanyMaster);
   return (
     <Grid container spacing={3} mt={3}>
       <Grid item xs={6}>
@@ -24,8 +22,10 @@ const EditAdminForm = ({
           value={values.first_name}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={touched.first_name && Boolean(errors.first_name)}
-          helperText={touched.first_name && errors.first_name}
+          error={errors.first_name}
+          helperText={errors.first_name}
+          // error={touched.first_name && Boolean(errors.first_name)}
+          // helperText={touched.first_name && errors.first_name}
         />
       </Grid>
       <Grid item xs={6}>
@@ -36,8 +36,10 @@ const EditAdminForm = ({
           value={values.last_name}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={touched.last_name && Boolean(errors.last_name)}
-          helperText={touched.last_name && errors.last_name}
+          error={errors.last_name}
+          helperText={errors.last_name}
+          // error={touched.last_name && Boolean(errors.last_name)}
+          // helperText={touched.last_name && errors.last_name}
         />
       </Grid>
       <Grid item xs={6}>
@@ -48,8 +50,10 @@ const EditAdminForm = ({
           value={values.username}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={touched.username && Boolean(errors.username)}
-          helperText={touched.username && errors.username}
+          error={errors.username}
+          helperText={errors.username}
+          // error={touched.username && Boolean(errors.username)}
+          // helperText={touched.username && errors.username}
         />
       </Grid>
       <Grid item xs={6}>
@@ -60,8 +64,10 @@ const EditAdminForm = ({
           value={values.email}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={touched.email && Boolean(errors.email)}
-          helperText={touched.email && errors.email}
+          error={errors.email}
+          helperText={errors.email}
+          // error={touched.email && Boolean(errors.email)}
+          // helperText={touched.email && errors.email}
         />
       </Grid>
       <Grid item xs={12}>
@@ -71,8 +77,10 @@ const EditAdminForm = ({
           type="select"
           value={values.id_company}
           onChange={handleChange}
-          error={touched.id_company && Boolean(errors.id_company)}
-          helperText={touched.id_company && errors.id_company}
+          error={errors.id_company}
+          helperText={errors.id_company}
+          // error={touched.id_company && Boolean(errors.id_company)}
+          // helperText={touched.id_company && errors.id_company}
           options={dataCompanyMaster?.map((company) => ({
             value: company.id_company,
             label: company.company_name,

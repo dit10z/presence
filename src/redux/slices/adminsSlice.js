@@ -4,6 +4,7 @@ import {
   getAllAdmins,
   editDataAdmin,
   editPassword,
+  deleteDataAdmin,
 } from "../../services/api/adminService";
 import axios from "axios";
 
@@ -22,7 +23,6 @@ const initialState = {
 export const fetchAllAdmins = createAsyncThunk(
   "admin/fetchAllAdmins",
   async (params, { rejectWithValue }) => {
-    console.log(params);
     try {
       const response = await getAllAdmins(
         params.sortBy,
@@ -31,7 +31,6 @@ export const fetchAllAdmins = createAsyncThunk(
         params.startDateJoined,
         params.endDateJoined
       );
-      console.log("response", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -130,11 +129,22 @@ export const fetchEditPassword = createAsyncThunk(
   "admin/editPassword",
   async ({ id, password }, { rejectWithValue }) => {
     try {
-      console.log("data password", password);
       const response = await editPassword(id, password);
       return response.data; // or response depending on what you need
     } catch (error) {
       console(error);
+      return rejectWithValue(error.response.data || error.message);
+    }
+  }
+);
+
+export const deleteAdmin = createAsyncThunk(
+  "admin/deleteAdmin",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await deleteDataAdmin(id);
+      return response.data;
+    } catch (error) {
       return rejectWithValue(error.response.data || error.message);
     }
   }
@@ -252,6 +262,17 @@ const adminSlice = createSlice({
       .addCase(fetchEditPassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(deleteAdmin.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteAdmin.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.message = action.payload.message;
+      })
+      .addCase(deleteAdmin.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });

@@ -72,7 +72,6 @@ export const getAllAdmins = (
   return instance
     .get(apiUrl)
     .then((response) => {
-      console.log("response: ", response);
       return response;
     })
     .catch((error) => {
