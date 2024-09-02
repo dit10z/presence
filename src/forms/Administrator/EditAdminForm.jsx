@@ -10,73 +10,76 @@ const EditAdminForm = ({
   handleChange,
   touched,
   errors,
+  handleBlur,
 }) => {
   console.log("values", values);
   console.log("dataCompanyMaster", dataCompanyMaster);
   return (
-    <Form>
-      <Grid container spacing={3} mt={3}>
-        <Grid item xs={6}>
-          <CustomInput
-            label="First Name"
-            variant="outlined"
-            name="first_name" // Make sure it matches initialValues key
-            value={values.first_name}
-            onChange={handleChange}
-            error={touched.first_name && Boolean(errors.first_name)}
-            helperText={touched.first_name && errors.first_name}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <CustomInput
-            label="Last Name"
-            variant="outlined"
-            name="last_name" // Make sure it matches initialValues key
-            value={values.last_name}
-            onChange={handleChange}
-            error={touched.last_name && Boolean(errors.last_name)}
-            helperText={touched.last_name && errors.last_name}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <CustomInput
-            label="Username"
-            variant="outlined"
-            name="username"
-            value={values.username}
-            onChange={handleChange}
-            error={touched.username && Boolean(errors.username)}
-            helperText={touched.username && errors.username}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <CustomInput
-            label="Email"
-            variant="outlined"
-            name="email"
-            value={values.email}
-            onChange={handleChange}
-            error={touched.email && Boolean(errors.email)}
-            helperText={touched.email && errors.email}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <CustomInput
-            label={values.company_name}
-            name="id_company"
-            type="select"
-            value={values.id_company}
-            onChange={handleChange}
-            error={touched.id_company && Boolean(errors.id_company)}
-            helperText={touched.id_company && errors.id_company}
-            options={dataCompanyMaster?.map((company) => ({
-              value: company.id_company,
-              label: company.company_name,
-            }))}
-          />
-        </Grid>
+    <Grid container spacing={3} mt={3}>
+      <Grid item xs={6}>
+        <CustomInput
+          label="First Name"
+          variant="outlined"
+          name="first_name" // Make sure it matches initialValues key
+          value={values.first_name}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={touched.first_name && Boolean(errors.first_name)}
+          helperText={touched.first_name && errors.first_name}
+        />
       </Grid>
-    </Form>
+      <Grid item xs={6}>
+        <CustomInput
+          label="Last Name"
+          variant="outlined"
+          name="last_name" // Make sure it matches initialValues key
+          value={values.last_name}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={touched.last_name && Boolean(errors.last_name)}
+          helperText={touched.last_name && errors.last_name}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <CustomInput
+          label="Username"
+          variant="outlined"
+          name="username"
+          value={values.username}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={touched.username && Boolean(errors.username)}
+          helperText={touched.username && errors.username}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <CustomInput
+          label="Email"
+          variant="outlined"
+          name="email"
+          value={values.email}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          error={touched.email && Boolean(errors.email)}
+          helperText={touched.email && errors.email}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <CustomInput
+          label={values.company_name}
+          name="id_company"
+          type="select"
+          value={values.id_company}
+          onChange={handleChange}
+          error={touched.id_company && Boolean(errors.id_company)}
+          helperText={touched.id_company && errors.id_company}
+          options={dataCompanyMaster?.map((company) => ({
+            value: company.id_company,
+            label: company.company_name,
+          }))}
+        />
+      </Grid>
+    </Grid>
   );
 };
 

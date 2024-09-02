@@ -31,6 +31,7 @@ import {
   MenuItem,
   Typography,
   InputAdornment,
+  Modal,
 } from "@mui/material";
 import AddAdminForm from "../../forms/Administrator/AddAdminForm";
 import { fetchCompanies } from "../../redux/slices/companySlice";

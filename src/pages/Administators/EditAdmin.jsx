@@ -2,65 +2,105 @@ import React, { useEffect, useState } from "react";
 import CustomModal from "../../components/CustomModal";
 import CustomTabs from "../../components/CustomTabs";
 import EditAdminForm from "../../forms/Administrator/EditAdminForm";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  MenuItem,
+  Tabs,
+  Tab,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
+import CustomButton from "../../components/CustomButton";
 import ChangePasswordAdmin from "../../forms/Administrator/ChangePasswordAdmin";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import validationSchema from "../../validation/adminValidation";
 import Swal from "sweetalert2";
-import { Formik, Form } from "formik";
-import { editDataAdmin, editPassword } from "../../services/api/adminService";
+import { Formik, Form, useFormik } from "formik";
+// import { editDataAdmin, editPassword } from "../../services/api/adminService";
 // import { editDataAdmin, } from "../../services/api/adminService";
+import {
+  fetchEditDataAdmin,
+  fetchEditPassword,
+} from "../../redux/slices/adminsSlice";
+import { styled } from "@mui/system";
+import success from "../../../public/icons/success.png";
+import { useDispatch } from "react-redux";
+import * as Yup from "yup";
+const StyledModal = styled(Modal)({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+});
 
+const ModalContent = styled(Box)({
+  backgroundColor: "#fff",
+  borderRadius: "10px",
+  padding: "20px",
+  width: "750px", // Increase width from 500px to 600px
+  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+});
+
+const FormField = styled(TextField)({
+  width: "100%",
+});
 const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
   console.log("adminData", adminData);
   const [tabValue, setTabValue] = useState(0);
   const [initialValues, setInitialValues] = useState({});
   const [idAdmin, setIdAdmin] = useState("");
+  const [activeTab, setActiveTab] = useState(0);
   console.log("hasil initial value", initialValues);
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
+  const dispatch = useDispatch();
 
-  const handleSubmit = async () => {
-    try {
-      if (tabValue === 0) {
-        // Update admin details
-        // console.log("values handleSubmit", values);
-        state.admins.push(action.payload);
+  // const handleSubmit = async () => {
+  //   try {
+  //     if (tabValue === 0) {
+  //       // Update admin details
+  //       // console.log("values handleSubmit", values);
+  //       state.admins.push(action.payload);
 
-        const payload = {
-          first_name: values.first_name,
-          last_name: values.last_name,
-          username: values.username,
-          email: values.email,
-          id_company: values.idcompany,
-        };
-        console.log("values handleSubmit", values);
-        console.log("adminData handleSubmit", adminData.id);
-        console.log("payload handleSubmit", payload);
-        await editDataAdmin(idAdmin, payload);
-        Swal.fire({
-          title: "Success",
-          text: "Update Admin Success",
-          imageUrl: success,
-          imageAlt: "success",
-        });
-      } else if (tabValue === 1) {
-        // Change admin password
-        console.log("Password", values.password);
-        await editPassword(adminData.id, values.password);
-        Swal.fire({
-          title: "Success",
-          text: "Update Password Success",
-          imageUrl: success,
-          imageAlt: "success",
-        });
-      }
-      // onClose();
-    } catch (error) {
-      Swal.fire("Error", "There was an error updating the admin", "error");
-    }
-  };
+  //       const payload = {
+  //         first_name: values.first_name,
+  //         last_name: values.last_name,
+  //         username: values.username,
+  //         email: values.email,
+  //         id_company: values.idcompany,
+  //       };
+  //       console.log("values handleSubmit", values);
+  //       console.log("adminData handleSubmit", adminData.id);
+  //       console.log("payload handleSubmit", payload);
+  //       await fetchEditDataAdmin(idAdmin, payload);
+  //       Swal.fire({
+  //         title: "Success",
+  //         text: "Update Admin Success",
+  //         imageUrl: success,
+  //         imageAlt: "success",
+  //       });
+  //     } else if (tabValue === 1) {
+  //       // Change admin password
+  //       console.log("Password", values.password);
+  //       await editPassword(adminData.id, values.password);
+  //       Swal.fire({
+  //         title: "Success",
+  //         text: "Update Password Success",
+  //         imageUrl: success,
+  //         imageAlt: "success",
+  //       });
+  //     }
+  //     // onClose();
+  //   } catch (error) {
+  //     Swal.fire("Error", "There was an error updating the admin", "error");
+  //   }
+  // };
 
   useEffect(() => {
     setInitialValues({
@@ -69,18 +109,17 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
       email: adminData?.email || "",
       username: adminData?.username || "",
       id_company: adminData?.company?.id_company || "",
-      password: "",
-      confirmPassword: "",
     });
-    setIdAdmin(adminData.id);
+    setIdAdmin(adminData.id_admin);
+    console.log("Id", idAdmin);
   }, [open, adminData]);
 
   console.log("initialValues", initialValues);
-  const handleSaveAdmin = async () => {
+  console.log("Id", idAdmin);
+  const handleSaveAdmin = async (values) => {
     // Logic to save admin data
-
     try {
-      state.admins.push(action.payload);
+      // state.admins.push(action.payload);
 
       const payload = {
         first_name: values.first_name,
@@ -90,37 +129,54 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
         id_company: values.idcompany,
       };
       console.log("values handleSubmit", values);
-      console.log("adminData handleSubmit", adminData.id);
+      console.log("adminData handleSubmit", idAdmin);
       console.log("payload handleSubmit", payload);
-      await editDataAdmin(idAdmin, payload);
+      await dispatch(fetchEditDataAdmin({ id: idAdmin, data: payload }));
       Swal.fire({
         title: "Success",
         text: "Update Admin Success",
         imageUrl: success,
         imageAlt: "success",
       });
-
-      console.log("Admin data saved");
+      onClose();
     } catch (error) {
+      console.log("error", error);
+
       Swal.fire("Error", "There was an error updating the admin", "error");
     }
   };
 
-  const editPassword = async () => {
+  const editPassword = async (values) => {
     // Logic to edit password
 
-    console.log("Password edited");
+    console.log("values", values);
     try {
       console.log("Password", values.password);
-      await editPassword(adminData.id, values.password);
+      await dispatch(
+        fetchEditPassword({ id: idAdmin, password: values.password })
+      );
       Swal.fire({
         title: "Success",
         text: "Update Password Success",
         imageUrl: success,
         imageAlt: "success",
       });
+      onClose();
     } catch (error) {
+      console.log("error", error);
       Swal.fire("Error", "There was an error updating the password", "error");
+    }
+  };
+
+  const handleSubmit = (event, values) => {
+    event.preventDefault();
+
+    if (tabValue === 0) {
+      handleSaveAdmin(values);
+    }
+
+    if (tabValue === 1) {
+      editPassword(values);
     }
   };
 
@@ -136,52 +192,56 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
   ];
 
   return (
-    <CustomModal
-      open={open}
-      onClose={onClose}
-      title="Edit Administrator"
-      titleButton="Save"
-      onSubmit={handleSubmit} // Submit formik form on modal save button click
+    <Formik
+      initialValues={initialValues} // Pass initial values to the form
+      dataCompanyMaster={companyData} // Pass company data for the dropdown
+      // onSubmit={handleSaveAdmin} // Handle form submission
+      validationSchema={validationSchema} // Validation schema for the form
+      enableReinitialize={true}
+      validateOnBlur={true} // Validate when a field loses focus
+      validateOnChange={true} // Validate when a field value changes
     >
-      <CustomTabs value={tabValue} onChange={handleTabChange} tabs={tabs} />
-      {tabValue === 0 && (
-        <Formik
-          initialValues={initialValues} // Pass initial values to the form
-          dataCompanyMaster={companyData} // Pass company data for the dropdown
-          onSubmit={() => handleSaveAdmin(values, tabValue)} // Handle form submission
-          validationSchema={validationSchema} // Validation schema for the form
-          enableReinitialize={true}
-        >
-          {({ values, handleChange, touched, errors }) => (
-            <EditAdminForm
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-              dataCompanyMaster={companyData}
-              onSubmit={() => handleSubmit(values, tabValue)}
+      {({ values, handleChange, handleBlur, touched, errors, onSubmit }) => (
+        console.log("Touched", touched),
+        console.log("Errors", errors),
+        console.log("validationSchema", validationSchema),
+        (
+          <CustomModal
+            open={open}
+            onClose={onClose}
+            title="Edit Administrator"
+            titleButton="Save"
+            onSubmit={(e) => handleSubmit(e, values)} // Submit formik form on modal save button click
+          >
+            <CustomTabs
+              value={tabValue}
+              onChange={handleTabChange}
+              tabs={tabs}
             />
-          )}
-        </Formik>
+            {tabValue === 0 ? (
+              <Form>
+                <EditAdminForm
+                  values={values}
+                  handleChange={handleChange}
+                  touched={touched}
+                  errors={errors}
+                  dataCompanyMaster={companyData}
+                  handleBlur={handleBlur}
+                />
+              </Form>
+            ) : (
+              <ChangePasswordAdmin
+                values={values}
+                handleChange={handleChange}
+                touched={touched}
+                errors={errors}
+                handleBlur={handleBlur}
+              />
+            )}
+          </CustomModal>
+        )
       )}
-      {tabValue === 1 && (
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={() => editPassword(values, tabValue)}
-        >
-          {({ values, handleChange, touched, errors }) => (
-            <ChangePasswordAdmin
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-              // onSubmit={() => handleSubmit(values, tabValue)}
-            />
-          )}
-        </Formik>
-      )}
-    </CustomModal>
+    </Formik>
   );
 };
 

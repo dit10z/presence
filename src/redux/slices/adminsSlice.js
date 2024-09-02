@@ -120,6 +120,7 @@ export const fetchEditDataAdmin = createAsyncThunk(
       const response = await editDataAdmin(id, data);
       return response.data; // or response depending on what you need
     } catch (error) {
+      console(error);
       return rejectWithValue(error.response.data || error.message);
     }
   }
@@ -129,9 +130,11 @@ export const fetchEditPassword = createAsyncThunk(
   "admin/editPassword",
   async ({ id, password }, { rejectWithValue }) => {
     try {
+      console.log("data password", password);
       const response = await editPassword(id, password);
       return response.data; // or response depending on what you need
     } catch (error) {
+      console(error);
       return rejectWithValue(error.response.data || error.message);
     }
   }
