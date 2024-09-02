@@ -3,7 +3,7 @@ import { Typography, Button, TextField } from "@mui/material";
 import CustomInput from "../components/CustomInput";
 import CustomModal from "../components/CustomModal";
 import Grid from "@mui/material/Grid";
-
+import dayjs from "dayjs";
 const DateFilter = ({
   open,
   onClose,
@@ -16,15 +16,17 @@ const DateFilter = ({
   const [temporalEndDate, setTemporalEndDate] = useState({});
 
   const formatDate = (date) => {
-    return date ? date.toISOString().split("T")[0] : "";
+    return date ? dayjs(date).format("YYYY-MM-DD") : "";
   };
 
   const handleApply = (e) => {
     e.preventDefault();
     console.log("startdate", temporalStartDate);
+    console.log("enddate", temporalEndDate);
     setStartDate(formatDate(temporalStartDate));
     console.log("startdate", startDate);
     setEndDate(formatDate(temporalEndDate));
+    console.log("enddate", endDate);
     onClose();
   };
 

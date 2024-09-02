@@ -7,6 +7,10 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import validationSchema from "../../validation/adminValidation";
 import Swal from "sweetalert2";
+import { Formik, Form } from "formik";
+import { editDataAdmin, editPassword } from "../../services/api/adminService";
+// import { editDataAdmin, } from "../../services/api/adminService";
+
 const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
   console.log("adminData", adminData);
   const [tabValue, setTabValue] = useState(0);
@@ -23,15 +27,15 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
         state.admins.push(action.payload);
 
         const payload = {
-          first_name: values.firstname,
-          last_name: values.lastname,
+          first_name: values.first_name,
+          last_name: values.last_name,
           username: values.username,
           email: values.email,
           id_company: values.idcompany,
         };
         console.log("values", values);
         console.log("payload", payload);
-        // await editDataAdmin(adminData.id, payload);
+        await editDataAdmin(adminData.id, payload);
         Swal.fire({
           title: "Success",
           text: "Update Admin Success",
@@ -41,7 +45,7 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
       } else if (tabValue === 1) {
         // Change admin password
         console.log("Password", values.password);
-        // await editPassword(adminData.id, values.password);
+        await editPassword(adminData.id, values.password);
         Swal.fire({
           title: "Success",
           text: "Update Password Success",
@@ -65,7 +69,7 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
       password: "",
       confirmPassword: "",
     });
-  }, [onClose]);
+  }, []);
 
   const handleSaveAdmin = () => {
     // Logic to save admin data
@@ -99,19 +103,41 @@ const EditAdmin = ({ open, onClose, adminData, companyData, setAdminData }) => {
     >
       <CustomTabs value={tabValue} onChange={handleTabChange} tabs={tabs} />
       {tabValue === 0 && (
-        <EditAdminForm
+        <Formik
           initialValues={initialValues} // Pass initial values to the form
           dataCompanyMaster={companyData} // Pass company data for the dropdown
           onSubmit={handleSubmit} // Handle form submission
           validationSchema={validationSchema} // Validation schema for the form
-          setInitialValues={setInitialValues}
-        />
+          enableReinitialize={true}
+        >
+          {({ values, handleChange, touched, errors }) => (
+            <EditAdminForm
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+              dataCompanyMaster={companyData}
+              onSubmit={() => handleSubmit(values, tabValue)}
+            />
+          )}
+        </Formik>
       )}
       {tabValue === 1 && (
-        <ChangePasswordAdmin // Pass initial values for the password form
-          onSubmit={handleSubmit} // Handle password change form submission
-          validationSchema={validationSchema} // Validation schema for password
-        />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ values, handleChange, touched, errors }) => (
+            <ChangePasswordAdmin
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+              onSubmit={() => handleSubmit(values, tabValue)}
+            />
+          )}
+        </Formik>
       )}
     </CustomModal>
   );
